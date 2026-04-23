@@ -1951,6 +1951,63 @@
     if (e.target === document.getElementById('cbs-overlay')) closeContactBS();
   }
 
+  // ── Swipe-to-dismiss for bottom sheets ──
+  function makeSwipeable(handleEl, sheetEl, closeFn) {
+    const DISMISS_PX  = 120;   // 需要拖超過 120px 才關閉
+    const DISMISS_VEL = 0.45;  // 或速度夠快（px/ms）
+    let startY = 0, startTime = 0, dy = 0, active = false;
+
+    handleEl.addEventListener('touchstart', e => {
+      startY    = e.touches[0].clientY;
+      startTime = Date.now();
+      dy        = 0;
+      active    = true;
+      sheetEl.style.transition = 'none';
+    }, { passive: true });
+
+    handleEl.addEventListener('touchmove', e => {
+      if (!active) return;
+      dy = Math.max(0, e.touches[0].clientY - startY); // 只允許往下
+      sheetEl.style.transform = `translateY(${dy}px)`;
+    }, { passive: true });
+
+    handleEl.addEventListener('touchend', () => {
+      if (!active) return;
+      active = false;
+      const vel = dy / Math.max(1, Date.now() - startTime);
+      if (dy > DISMISS_PX || vel > DISMISS_VEL) {
+        // 關閉：先滑出畫面再執行 closeFn
+        sheetEl.style.transition = 'transform 0.28s cubic-bezier(0.32,0.72,0,1)';
+        sheetEl.style.transform  = 'translateY(100%)';
+        setTimeout(() => {
+          sheetEl.style.transition = '';
+          sheetEl.style.transform  = '';
+          closeFn();
+        }, 280);
+      } else {
+        // 彈回：回到原位
+        sheetEl.style.transition = 'transform 0.35s cubic-bezier(0.32,0.72,0,1)';
+        sheetEl.style.transform  = 'translateY(0)';
+        setTimeout(() => {
+          sheetEl.style.transition = '';
+          sheetEl.style.transform  = '';
+        }, 350);
+      }
+    }, { passive: true });
+  }
+
+  // 綁定兩個 sheet 的 grabber
+  makeSwipeable(
+    document.querySelector('.bs-header'),
+    document.querySelector('.bs'),
+    closeBS
+  );
+  makeSwipeable(
+    document.querySelector('.cbs-grabber-wrap'),
+    document.querySelector('.cbs'),
+    closeContactBS
+  );
+
   // Keyboard: ESC closes
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
