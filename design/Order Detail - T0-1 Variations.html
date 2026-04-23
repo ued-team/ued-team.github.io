@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>行中關懷 — 集合地點特化</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #f0eee9; font-family: var(--font-sans); }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  button { font-family: inherit; }
+  .dc-card *::-webkit-scrollbar { display: none; }
+  .dc-card * { scrollbar-width: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js?v=5"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="components/Primitives.jsx"></script>
+<script type="text/babel" src="components/OrderSections.jsx"></script>
+<script type="text/babel" src="components/Shell.jsx"></script>
+<script type="text/babel" src="components/ScreenBase.jsx"></script>
+<script type="text/babel" src="components/FamilyA.jsx"></script>
+<script type="text/babel" src="components/FamilyB.jsx"></script>
+<script type="text/babel" src="components/FamilyC.jsx"></script>
+<script type="text/babel" src="components/FamilyD.jsx"></script>
+<script type="text/babel" src="components/FamilyE.jsx"></script>
+<script type="text/babel" src="components/FamilyF1.jsx"></script>
+<script type="text/babel" src="components/FamilyF2.jsx"></script>
+
+<script type="text/babel">
+  const InPhone = ({ children }) => (
+    <IOSDevice width={390} height={780}>
+      {children}
+    </IOSDevice>
+  );
+
+  const App = () => (
+    <DesignCanvas>
+      <DCSection id="ref" title="Reference · 現行版本" subtitle="所有集合點全展開 — 作為對照">
+        <DCArtboard id="base" label="Base · 全展開" width={430} height={820}>
+          <InPhone><ScreenBase order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="familyA" title="Family A · 合併 Section（集合 + 聯絡 + 提醒）" subtitle="一個 section 把三件事包在一起、全部 inline 可見，不用 bottom sheet。5 種不同的內部組織邏輯。">
+        <DCArtboard id="a1" label="A1 · Timeline 時間軸" width={430} height={820}>
+          <InPhone><ScreenA1 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="a2" label="A2 · Segmented Tabs" width={430} height={820}>
+          <InPhone><ScreenA2 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="a3" label="A3 · Accordion 手風琴" width={430} height={820}>
+          <InPhone><ScreenA3 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="a4" label="A4 · Priority Stack" width={430} height={820}>
+          <InPhone><ScreenA4 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="a5" label="A5 · Icon Tabs" width={430} height={820}>
+          <InPhone><ScreenA5 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="familyB" title="Family B · Inline Entry → Bottom Sheet" subtitle="頁面上嵌一個入口（list row / button / preview / 數字列表 / 地圖 banner），點擊開 sheet 看完整集合地點。">
+        <DCArtboard id="b1" label="B1 · List Row 入口" width={430} height={820}>
+          <InPhone><ScreenB1 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="b2" label="B2 · CTA Button" width={430} height={820}>
+          <InPhone><ScreenB2 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="b3" label="B3 · Preview Card" width={430} height={820}>
+          <InPhone><ScreenB3 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="b4" label="B4 · 數字列表" width={430} height={820}>
+          <InPhone><ScreenB4 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="b5" label="B5 · Map Banner" width={430} height={820}>
+          <InPhone><ScreenB5 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="familyC" title="Family C · 任務完成感（Task Completion）" subtitle="延伸 A3/A4/A5 + B4/B5 的精神 — 加入「一項一項解」的打卡/進度感，讓用戶清楚看完什麼、還差什麼。">
+        <DCArtboard id="c1" label="C1 · Checklist 打勾清單" width={430} height={820}>
+          <InPhone><ScreenC1 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="c2" label="C2 · Wizard 一步一步" width={430} height={820}>
+          <InPhone><ScreenC2 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="c3" label="C3 · Stamp Card 集章卡" width={430} height={820}>
+          <InPhone><ScreenC3 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="c4" label="C4 · T-minus Timeline" width={430} height={820}>
+          <InPhone><ScreenC4 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="c5" label="C5 · Priority + Task Footer" width={430} height={820}>
+          <InPhone><ScreenC5 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="familyD" title="Family D · 任務完成感（更多隱喻）" subtitle="玩不同的「完成」隱喻 — 滑動、解鎖、卡堆、倒數、圓環。每個版型的情緒不同。">
+        <DCArtboard id="d1" label="D1 · Swipe-to-complete 滑動完成" width={430} height={820}>
+          <InPhone><ScreenD1 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="d2" label="D2 · Unlock Gate 解鎖式" width={430} height={820}>
+          <InPhone><ScreenD2 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="d3" label="D3 · Briefing Cards 卡堆" width={430} height={820}>
+          <InPhone><ScreenD3 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="d4" label="D4 · Countdown Dashboard 倒數" width={430} height={820}>
+          <InPhone><ScreenD4 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="d5" label="D5 · Progress Ring 圓環進度" width={430} height={820}>
+          <InPhone><ScreenD5 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="familyE" title="Family E · 獨立頁入口（主頁無 inline 內容）" subtitle="主頁只有入口 + 狀態，點 row 跳各自獨立頁（利用現有的三個獨立頁面）。最省首頁空間。點任一項可看 overlay 模擬的獨立頁。">
+        <DCArtboard id="e1" label="E1 · Menu List 清單入口" width={430} height={820}>
+          <InPhone><ScreenE1 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="e2" label="E2 · Icon Grid 三宮格" width={430} height={820}>
+          <InPhone><ScreenE2 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="e3" label="E3 · Task Hub + 進度條" width={430} height={820}>
+          <InPhone><ScreenE3 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="e4" label="E4 · Priority Hub 集合大卡" width={430} height={820}>
+          <InPhone><ScreenE4 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="familyF" title="Family F · 任務連續性（進子頁也保有任務感）" subtitle="延伸 E 系列 — 子頁不只是「看資料」，還有打勾、答題、解鎖、收集、角色推進等任務感，讓整段流程感覺連貫。">
+        <DCArtboard id="f1" label="F1 · Return-with-check 看完回主頁打勾" width={430} height={820}>
+          <InPhone><ScreenF1 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f2" label="F2 · Scroll-to-done 滑到底自動完成" width={430} height={820}>
+          <InPhone><ScreenF2 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f3" label="F3 · Sub-checklist 子頁內小任務" width={430} height={820}>
+          <InPhone><ScreenF3 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f4" label="F4 · Swipeable Next 串流三項" width={430} height={820}>
+          <InPhone><ScreenF4 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f5" label="F5 · XP / Level 經驗值升級" width={430} height={820}>
+          <InPhone><ScreenF5 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f6" label="F6 · Streak Trail 步道推進" width={430} height={820}>
+          <InPhone><ScreenF6 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f7" label="F7 · Quiz Gate 答對才過關" width={430} height={820}>
+          <InPhone><ScreenF7 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f8" label="F8 · Collectible Cards 收集明信片" width={430} height={820}>
+          <InPhone><ScreenF8 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f9" label="F9 · Map Quest 地圖小旅程" width={430} height={820}>
+          <InPhone><ScreenF9 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f10" label="F10 · Sticker Reward 限定貼圖" width={430} height={820}>
+          <InPhone><ScreenF10 order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

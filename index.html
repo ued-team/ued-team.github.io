@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=430, initial-scale=1">
+<title>行中關懷 — 訂單明細 Demo</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal: #13A3B6;
+  --text-darker: #212121;
+  --text-dark: #727272;
+  --text-light: #9C9DA0;
+  --bg-lighter: #F7FAFC;
+  --bg-page: #F0F2F5;
+  --border: #E6E9ED;
+}
+
+body {
+  background: #888;
+  font-family: -apple-system, "PingFang TC", "Helvetica Neue", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px 80px;
+  min-height: 100vh;
+}
+
+/* ── Phone frame ── */
+.phone {
+  width: 375px;
+  height: 812px;
+  background: var(--bg-page);
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 0 0 12px #1a1a1a, 0 30px 80px rgba(0,0,0,.6);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Status bar */
+.status-bar {
+  background: white;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.status-bar .time { font-size: 15px; font-weight: 600; color: var(--text-darker); }
+.status-bar .icons { display: flex; gap: 6px; align-items: center; }
+
+/* Nav bar */
+.nav-bar {
+  background: white;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.nav-back {
+  display: flex; align-items: center; gap: 2px;
+  font-size: 16px; color: var(--teal); cursor: pointer;
+}
+.nav-title {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  font-size: 17px; font-weight: 600; color: var(--text-darker);
+}
+.nav-more { margin-left: auto; }
+
+/* Scrollable content */
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  background: var(--bg-page);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+.scroll::-webkit-scrollbar { display: none; }
+
+/* Product card */
+.product-card {
+  background: white;
+  padding: 16px;
+}
+.product-img-placeholder {
+  width: 100%; height: 148px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6a85b6 0%, #bac8e0 100%);
+  margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.product-img-placeholder span { color: rgba(255,255,255,.6); font-size: 13px; }
+.product-title {
+  font-size: 16px; font-weight: 600; color: var(--text-darker);
+  line-height: 1.45; margin-bottom: 8px;
+}
+.product-meta {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 13px; color: var(--text-dark);
+}
+
+/* Status card */
+.status-card {
+  background: white;
+  padding: 14px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.status-pill {
+  font-size: 13px; font-weight: 600;
+  background: #FEF3C7; color: #92400E;
+  padding: 4px 12px; border-radius: 20px;
+}
+.countdown-text { font-size: 13px; color: var(--text-dark); }
+.countdown-text b { color: var(--teal); }
+
+/* ── 出發前提醒 ── */
+.pre-dep-card { background: var(--bg-lighter); }
+
+.pd-section-title {
+  padding: 16px 16px 0;
+  font-size: 16px; font-weight: 600; color: var(--text-darker); line-height: 24px;
+}
+
+.pd-inner { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+
+/* 行前提醒 inline */
+.remind-box {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.remind-body { flex: 1; font-size: 14px; color: var(--text-darker); line-height: 20px; }
+.remind-body b { font-weight: 600; }
+.remind-body-overflow { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.remind-chevron { flex-shrink: 0; margin-top: 2px; }
+
+/* 時間 / 地點 info rows */
+.info-row { display: flex; gap: 8px; align-items: flex-start; }
+.info-row-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.info-row-body { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+.info-main-line { display: flex; align-items: center; gap: 8px; line-height: 20px; }
+.info-main { font-size: 14px; font-weight: 600; color: var(--text-darker); }
+.info-aside { font-size: 14px; color: var(--text-dark); }
+
+.info-addr-line {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.info-addr { font-size: 14px; color: var(--text-darker); line-height: 20px; flex: 1; }
+
+.text-link {
+  font-size: 14px; font-weight: 500; color: var(--text-darker);
+  text-decoration: underline; text-underline-offset: 2px;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* Map */
+.map-img {
+  width: 100%; border-radius: 8px; display: block;
+  aspect-ratio: 16/9; object-fit: cover;
+}
+
+.info-directions {
+  font-size: 12px; color: var(--text-dark); line-height: 18px;
+  white-space: pre-wrap;
+}
+
+/* TextLink with arrow */
+.tl-arrow {
+  display: flex; align-items: center; gap: 4px; cursor: pointer;
+}
+.tl-arrow span {
+  font-size: 14px; font-weight: 500; color: var(--text-darker);
+  text-decoration: underline; text-underline-offset: 2px;
+  white-space: nowrap;
+}
+
+/* divider */
+.pd-divider { height: 1px; background: var(--border); margin: 0 16px; }
+
+/* 司導 section */
+.pd-driver { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.driver-detail { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.driver-name { font-size: 14px; font-weight: 600; color: var(--text-darker); line-height: 20px; }
+.driver-lang { font-size: 14px; color: var(--text-darker); line-height: 20px; }
+.driver-vehicle { font-size: 16px; color: var(--text-darker); line-height: 24px; }
+
+/* 以上資訊清楚嗎 */
+.feedback-box {
+  background: var(--bg-lighter);
+  padding: 12px 16px 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.feedback-title { font-size: 14px; font-weight: 600; color: var(--text-darker); }
+.feedback-btns { display: flex; gap: 24px; }
+.feedback-btn {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 14px; font-weight: 600; color: var(--text-darker);
+  background: none; border: none; cursor: pointer; padding: 0;
+}
+
+/* Tool card */
+.tool-card { background: white; padding: 0 16px; }
+.tool-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.tool-row:last-child { border-bottom: none; }
+.tool-icon-wrap {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--bg-lighter);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.tool-label { flex: 1; font-size: 14px; font-weight: 500; color: var(--text-darker); }
+.tool-chevron { color: var(--text-light); }
+
+/* Bottom CTA bar */
+.bottom-bar {
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 10px 16px 12px;
+  flex-shrink: 0;
+  display: flex; gap: 10px;
+}
+.btn-secondary {
+  flex: 1; padding: 12px;
+  border: 1.5px solid var(--teal); border-radius: 8px;
+  background: white;
+  font-size: 15px; font-weight: 600; color: var(--teal); cursor: pointer;
+}
+.btn-primary {
+  flex: 1; padding: 12px;
+  border: none; border-radius: 8px;
+  background: var(--teal);
+  font-size: 15px; font-weight: 600; color: white; cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <div class="icons">
+      <svg width="17" height="12" viewBox="0 0 17 12" fill="#212121">
+        <rect x="0" y="4" width="3" height="8" rx="1"/>
+        <rect x="4.5" y="2.5" width="3" height="9.5" rx="1"/>
+        <rect x="9" y="0" width="3" height="12" rx="1"/>
+        <rect x="13.5" y="0" width="3.5" height="12" rx="1" opacity=".25"/>
+      </svg>
+      <svg width="16" height="12" viewBox="0 0 20 14" fill="none" stroke="#212121" stroke-width="1.5" stroke-linecap="round">
+        <path d="M1 4.5C4.8 1 15.2 1 19 4.5"/><path d="M3.5 7.2C6.3 4.5 13.7 4.5 16.5 7.2"/>
+        <path d="M6.5 9.8C8.2 8.1 11.8 8.1 13.5 9.8"/><circle cx="10" cy="13" r="1" fill="#212121" stroke="none"/>
+      </svg>
+      <svg width="26" height="13" viewBox="0 0 26 13" fill="none">
+        <rect x=".5" y=".5" width="22" height="12" rx="3.5" stroke="#212121" stroke-opacity=".35"/>
+        <rect x="2" y="2" width="17" height="9" rx="2" fill="#212121"/>
+        <path d="M24 4.5v4a2.1 2.1 0 000-4z" fill="#212121" fill-opacity=".4"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Nav Bar -->
+  <div class="nav-bar">
+    <div class="nav-back">
+      <svg width="10" height="17" viewBox="0 0 10 18" fill="none">
+        <path d="M9 1L1 9l8 8" stroke="#13A3B6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>返回</span>
+    </div>
+    <div class="nav-title">訂單明細</div>
+    <div class="nav-more">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <circle cx="5" cy="12" r="1.5" fill="#212121"/>
+        <circle cx="12" cy="12" r="1.5" fill="#212121"/>
+        <circle cx="19" cy="12" r="1.5" fill="#212121"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Scrollable area -->
+  <div class="scroll">
+
+    <!-- Product info -->
+    <div class="product-card">
+      <div class="product-img-placeholder"><span>商品圖片</span></div>
+      <div class="product-title">大阪道頓堀蟹料理半日遊 ＋ 大阪城導覽</div>
+      <div class="product-meta">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="4" width="18" height="17" rx="2" stroke="#727272" stroke-width="1.5"/>
+          <path d="M3 9h18" stroke="#727272" stroke-width="1.5"/>
+          <path d="M8 2v4M16 2v4" stroke="#727272" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        2026 年 4 月 19 日（日）・2 大人
+      </div>
+    </div>
+
+    <!-- Status -->
+    <div class="status-card">
+      <div>
+        <div style="font-size:12px;color:#727272;margin-bottom:5px">訂單狀態</div>
+        <span class="status-pill">即將出發</span>
+      </div>
+      <div class="countdown-text">出發倒數 <b>2 天</b></div>
+    </div>
+
+    <!-- ── 出發前提醒 ── -->
+    <div class="pre-dep-card">
+      <div class="pd-section-title">出發前提醒</div>
+      <div class="pd-inner">
+
+        <!-- 行前提醒 -->
+        <div class="remind-box">
+          <div class="remind-body">
+            <span class="remind-body-overflow">
+              <b>行前提醒：</b>集合後請主動尋找穿著橘色背心、手持 KKDAY 牌子的工作人員報到。如需輪椅協助請提前告知。本行程含午餐，如有飲食禁忌請事先告知導遊。
+            </span>
+          </div>
+          <div class="remind-chevron">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 18l6-6-6-6" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- 時間 -->
+        <div class="info-row">
+          <div class="info-row-icon">
+            <img src="https://www.figma.com/api/mcp/asset/675683f0-62ee-4265-b9f7-418ae80eb09d" width="24" height="24" alt="">
+          </div>
+          <div class="info-row-body">
+            <div class="info-main-line">
+              <span class="info-main">07:00</span>
+              <span class="info-aside">(07:15 出發)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 地點 -->
+        <div class="info-row">
+          <div class="info-row-icon">
+            <img src="https://www.figma.com/api/mcp/asset/6e195437-d4b1-4498-9a36-bed0dc6eff2c" width="24" height="24" alt="">
+          </div>
+          <div class="info-row-body">
+            <div class="info-main-line">
+              <span class="info-main">蟹道樂道頓堀東店＊請至日本橋側集合</span>
+            </div>
+            <div class="info-addr-line">
+              <span class="info-addr">大阪府大阪市中央区道頓堀1丁目1-3</span>
+              <span class="text-link">導航</span>
+            </div>
+            <img
+              src="https://www.figma.com/api/mcp/asset/29b9e69c-e7e6-4171-9b78-38631d60569b"
+              class="map-img" alt="地圖縮圖"
+            >
+            <div class="info-directions">搭乘電車的情況：
+從地下鐵「近鐵日本橋站」步行約2分鐘
+＊集合地點不在蟹道樂道頓堀東店的門口，敬請留意
+＊請至有大巴停車處的那側（日本橋側），主動尋找KKDAY導領人員報到
+＊此行程無法於京都車站上下車，敬請知悉</div>
+          </div>
+        </div>
+
+        <!-- 查看其他集合地點 -->
+        <div class="tl-arrow">
+          <span>查看其他 2 個集合地點時間</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M9 18l6-6-6-6" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+      </div><!-- /pd-inner -->
+
+      <div class="pd-divider"></div>
+
+      <!-- 司導資訊 -->
+      <div class="pd-driver">
+        <div class="info-row">
+          <div class="info-row-icon">
+            <img src="https://www.figma.com/api/mcp/asset/57b6483b-ba07-4b33-970e-a25fa698dbff" width="24" height="24" alt="">
+          </div>
+          <div class="driver-detail">
+            <span class="driver-name">司機/導遊：王大明</span>
+            <span class="driver-lang">可溝通語言：中文、英文、日語</span>
+            <span class="driver-vehicle">EAP-2923 (Toyota Atlatis / 黑色)</span>
+          </div>
+        </div>
+        <div class="tl-arrow">
+          <span>查看聯絡資訊</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M9 18l6-6-6-6" stroke="#212121" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="pd-divider"></div>
+
+      <!-- 以上資訊清楚嗎 -->
+      <div class="feedback-box">
+        <div class="feedback-title">以上資訊清楚嗎？</div>
+        <div class="feedback-btns">
+          <button class="feedback-btn">
+            <img src="https://www.figma.com/api/mcp/asset/4d17bbb1-84ef-4233-9e3d-e41dde3b1f10" width="16" height="16" alt="">
+            清楚
+          </button>
+          <button class="feedback-btn">
+            <img src="https://www.figma.com/api/mcp/asset/04f8963a-2983-4af8-bec1-24b327c451ae" width="16" height="16" alt="">
+            不清楚
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /pre-dep-card -->
+
+    <!-- Tool card -->
+    <div class="tool-card">
+      <div class="tool-row">
+        <div class="tool-icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" fill="#9C9DA0"/>
+          </svg>
+        </div>
+        <span class="tool-label">體驗地點</span>
+        <svg width="8" height="13" viewBox="0 0 8 14" fill="none" class="tool-chevron">
+          <path d="M1 1l6 6-6 6" stroke="#9C9DA0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="tool-row">
+        <div class="tool-icon-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="18" height="18" rx="3" stroke="#9C9DA0" stroke-width="1.5"/>
+            <path d="M8 12h8M8 8h5M8 16h6" stroke="#9C9DA0" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="tool-label">如何使用</span>
+        <svg width="8" height="13" viewBox="0 0 8 14" fill="none" class="tool-chevron">
+          <path d="M1 1l6 6-6 6" stroke="#9C9DA0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+  </div><!-- /scroll -->
+
+  <!-- Bottom CTA bar -->
+  <div class="bottom-bar">
+    <button class="btn-secondary">聯絡客服</button>
+    <button class="btn-primary">查看憑證</button>
+  </div>
+
+</div><!-- /phone -->
+</body>
+</html>

@@ -1,0 +1,889 @@
+template ver: 20220511
+User Feedback - 輕量版
+2026 / 03 / 20
+PRD Status: Draft | Finalized
+功能教學說明文件連結：《請貼連結》
+平台 	版本號 	發布日期 	PM
+Web
+iOS
+Android
+mWeb
+Backend
+Personnel 參與人員
+PO |
+PM (Backend) |
+Design |
+Web |
+mWeb |
+Android |
+iOS |
+B2C |
+
+-- 1 of 27 --
+
+template ver: 20220511
+Description 專案簡介與需求來源
+1. 業務與商品特性驅動
+日遊商品相較票券商品更複雜，涉及：
+● 多方案與差異比較
+● 集合資訊與交通安排
+● 成團、天候、時間、使用限制等不確定因素
+● 現場履約品質高度依賴供應商與導遊 / 司機執行
+因此單靠轉換率、訂單結果、事後評論，無法完整反映使用者在決策前與履約中的真實
+問題。
+2. 內容治理與前台優化需求
+目前團隊正在推進商品 / 方案內容治理與前台優化，希望確認：
+● 哪些資訊對使用者最重要
+● 哪些資訊雖已補充，但仍未真正被理解或感知
+● 內容治理是否有實際改善決策品質與購買信心
+需要透過更細緻的 feedback，建立「治理項目 ↔ 使用者感受 ↔ 成效指標」之間的對應
+關係。
+3. 營運與風險管理需求
+在體驗當下，平台需要比事後評論更早掌握：
+● 集合失敗
+● 導遊 / 司機支援不足
+● 行程延誤或調整未被妥善處理
+● 商品描述與現場體驗落差
+這類問題若能在旅程中提早識別並介入，有機會降低：
+● 最終不滿
+● 客訴升級
+● 社群擴散
+● 品牌與公關風險
+4. 現有資料不足
+目前可取得的資料多為：
+
+-- 2 of 27 --
+
+template ver: 20220511
+● 行為數據：瀏覽、點擊、下單、取消
+● 被動回饋：客服工單、申訴、退款
+● 事後評價：評論、低分回饋
+缺口在於：
+● 決策前的疑慮不夠明確
+● 體驗中的問題無法即時捕捉
+● feedback 難以直接回扣到治理面向與後續 action
+因此針對 KKday 日遊商品 user journey 中兩個高影響節點，建立更可行動的 user
+feedback 機制，補足現有行為數據與事後評論之間的資訊斷層，協助產品、內容治理、
+營運與供應商管理團隊更即時且更精準地掌握使用者需求與風險。
+本專案將聚焦兩個節點：
+1. 評估與比較
+使用者在商品頁、方案頁與比較決策過程中，面對日遊商品資訊複雜、方案差異
+多、限制條件多的特性，常有「不知道還缺什麼資訊才能下決定」或「頁面雖有資
+訊但未被有效理解」的情況。
+本專案希望透過結構化 feedback，更清楚辨識：
+a. 使用者最在意哪些資訊
+b. 目前資訊呈現是否足以支撐決策
+c. 哪些內容治理與前台優化仍未真正解決問題
+2. 體驗當下
+日遊商品屬於長時段履約型體驗，從集合、找導遊、交通移動、景點停留、天候變
+化、延誤調整到現場應變，都可能影響使用者感受。若平台僅在旅程結束後才透
+過評論或客訴得知問題，往往已錯失介入時機，並可能演變為大客訴、社群負評
+或公關事件。
+本專案希望建立體驗中的 feedback 與風險感知能力，用於：
+a. 及早發現履約異常
+b. 支援客服 / 營運及時介入
+Goal 要達成的目標
+產品目標
+建立兩套可持續運作的 feedback 機制，分別支援：
+
+-- 3 of 27 --
+
+template ver: 20220511
+1. 評估與比較階段的決策洞察
+了解使用者在決策前的主要疑慮、資訊缺口與未被滿足的資訊需求，作為商品內
+容治理、方案呈現優化與商品頁 UX 調整依據。
+2. 體驗當下階段的履約監控
+在旅程進行中更早掌握使用者是否遇到問題、問題是否已被現場人員處理，以及
+平台是否需要介入，作為客服營運、供應商品質管理與風險控管依據。
+具體目標
+● 評估與比較
+○ 找出使用者在日遊商品決策時最常見的疑慮類型
+○ 釐清疑慮可對應到哪些治理面向，如商品定位、行程流程、費用資訊、成
+團條件等
+○ 驗證目前商品 / 方案內容治理與前台資訊優化是否真正滿足需求
+○ 建立可排序的問題清單，支援後續 backlog prioritization
+● 體驗當下
+○ 建立旅途中可被平台感知的關鍵體驗訊號
+○ 及早辨識高風險事件，如集合失敗、行程明顯異常、現場支援不足
+○ 提供營運 / 客服可即時介入的判斷依據
+○ 累積供應商履約品質資料，支援長期供應商治理
+● 系統性目標
+○ 讓 user feedback 可結構化分類，而非只停留在開放文字
+○ 讓 feedback 可以對應回 user journey 節點與治理面向
+○ 讓 feedback 能與行為資料、客服資料、訂單資料整合，形成可分析、可追
+蹤、可行動的系統
+Key Metrics 衡量指標
+● 結果指標
+○ 評估與比較
+■ 商品頁到下單流程的轉換提升
+■ 商品頁停留但未下單族群的流失率下
+■ 因資訊不清造成的客服諮詢占比下降（現況售前客服因量能問題暫
+時關閉）
+■ 商品內容 / 方案資訊相關負評占比下降
+○ 體驗當下
+■ 旅途中高風險問題被及時發現的比例提升
+
+-- 4 of 27 --
+
+template ver: 20220511
+■ 旅程後低分評價率下降
+■ 重大客訴 / 升級申訴 / 社群爆料案件占比下降
+■ 可歸因於供應商履約異常的客訴率下降
+● 診斷指標
+○ 評估與比較
+■ feedback 填答率
+■ 各疑慮類別分布
+● 行程內容不清楚
+● 價格 / 費用疑慮
+● 集合 / 交通疑慮
+● 成團 / 取消風險疑慮
+● 時間安排疑慮
+● 評價信任度不足
+■ 有疑慮使用者後續是否仍下單
+■ 各疑慮類別對轉換率的影響差異
+■ 各內容治理優化項目的對應疑慮占比是否下降
+○ 體驗當下
+■ 各時點 feedback 觸發率 / 回覆率
+■ 問題回報分布
+● 找不到集合地點 / 導遊
+● 行程 delay
+● 天氣應變不佳
+● 導遊 / 司機協助不足
+● 行程與描述不符
+■ 高風險訊號占比
+■ 高風險訊號後平台介入率
+■ 介入後是否避免後續低分 / 客訴
+● 系統健康指標
+○ feedback 觸發是否精準
+■ 避免過度打擾，控制觸發後關閉率、略過率
+○ feedback 是否足夠結構化
+■ 可成功映射到治理面向與問題類別的比例
+○ 從 feedback 產生 actionable insight 的週期縮短
+○ 由 feedback 驅動的優化項目數量與成效追蹤率
+User Story / Job Story 使用者故事/ 工作故事
+● 評估與比較階段 feedback
+○ User Story 1
+作為一位正在評估日遊商品的使用者，
+
+-- 5 of 27 --
+
+template ver: 20220511
+當我對商品內容、方案差異、費用或成團條件仍有疑慮時，
+我希望可以用低負擾的方式快速表達我還缺什麼資訊，
+讓平台提供更合適的資訊呈現，幫助我做出購買決策。
+○ User Story 2
+作為一位正在猶豫是否下單的使用者，
+當我停留在商品頁、反覆查看方案或 FAQ 時，
+我希望平台能理解我卡住的原因，
+而不是只看到我沒有下單的結果。
+○ User Story 3
+作為 KKday 的 PM / 內容治理負責人，
+我希望能知道使用者在評估與比較階段最常見的資訊缺口是什麼
+，
+並且可以對應到商品定位、行程流程、費用資訊等治理面向，
+以便決定優先優化哪些內容與頁面模組。
+○ User Story 4
+作為 KKday 的設計 / 內容團隊成員，
+我希望知道目前已上線的資訊優化是否真的解決使用者疑慮，
+而不只是看到頁面有被瀏覽，
+以便驗證優化是否有效。
+● 體驗當下階段 feedback
+○ User Story 5
+作為一位參加日遊行程的使用者，
+當我在集合、找導遊、跟團移動或行程進行中遇到問題時，
+我希望能在不影響旅程的情況下快速回報狀況，
+並在需要時獲得平台或現場人員協助。
+○ User Story 6
+作為一位參加日遊行程的使用者，
+當旅途中發生延誤、天候變化或臨時調整時，
+我希望平台能知道我的感受與現場處理是否到位，
+避免問題累積到旅程結束後才變成不滿。
+○ User Story 7
+作為 KKday 的營運 / 客服人員，
+
+-- 6 of 27 --
+
+template ver: 20220511
+我希望在旅程進行中就能看到高風險訊號，
+例如集合失敗、明顯異常或支援不足，
+以便及時介入，降低後續客訴與升級事件。
+○ User Story 8
+作為 KKday 的供應商管理 / 商務人員，
+我希望取得與供應商履約品質直接相關的即時與結構化 feedback
+，
+而不只依賴事後評論，
+以便更準確監控供應商表現並做後續治理。
+○ User Story 9
+作為 KKday 的 PM，
+我希望能把體驗當下的 user feedback 與訂單、商品、供應商及最
+終評價串接，
+以便分析哪些旅途中問題最容易導致低分、客訴或品牌風險。
+● 系統整合與決策應用
+○ User Story 10
+作為 KKday 的產品 / 數據團隊，
+我希望這套 feedback 資料可以被結構化、標準化並與既有資料源
+整合，
+以便形成可持續追蹤的 dashboard 與治理機制。
+○ User Story 11
+作為專案相關 stakeholder，
+我希望每一筆 feedback 都能對應到 user journey 階段、治理面向
+與問題類型，
+以便清楚知道該由哪個團隊處理、優先順序為何，以及優化後成效
+如何。
+
+-- 7 of 27 --
+
+template ver: 20220511
+Design
+User Flow
+評估與比較
+進入商品頁
+↓
+使用者瀏覽商品內容 / 切換方案 / 查看 FAQ / 評價
+↓
+系統判斷是否符合 trigger 條件
+↓
+[否] 不顯示 feedback
+↓
+[是]
+↓
+顯示輕量 feedback card / bottom sheet
+題目：你目前還在考慮的主要原因是？
+選項：
+- 不確定行程內容是否適合我
+- 價格不清楚 / 不確定值不值得
+- 不確定集合 / 交通方式
+- 不確定是否會成團
+- 不確定時間安排
+- 評價不夠可信
+- 其他
+- 先略過
+↓
+使用者選擇
+↓
+若選擇有效選項
+↓
+顯示第 2 題（conditional）
+例：
+- 若選價格 → 你最想再確認什麼？
+- 若選集合 → 你最擔心什麼？
+↓
+送出
+↓
+顯示 thank you 狀態
+↓
+
+-- 8 of 27 --
+
+template ver: 20220511
+回到原頁，不中斷購買流程
+T0-1：出發前 24 小時（預期建立，確認「理解是否足夠」）
+訂單進入出發日前一天
+↓
+達到 T0-1 觸發時間（例：出發前 24 小時）
+↓
+顯示 in-app card / push / email
+（建議優先：push + 訂單頁卡片）
+顯示「行前資訊卡」
+內容：
+- 📍 集合地點（簡述 + map 入口）
+- 🕐 集合時間
+- 📌 行程重點摘要（半天 / 全天 / 主要景點）
+- 📄 voucher 入口
+- 📞 聯絡方式（若有）
+↓
+顯示輕量確認（非強制）
+題目：你對明天的行程資訊是否清楚？
+選項：
+- 很清楚 👍
+- 有點不確定
+- 不太清楚 ❗
+- 略過
+↓
+使用者選擇
+↓
+若為正向
+→ 顯示感謝並結束
+↓
+若為「有點不確定」
+
+-- 9 of 27 --
+
+template ver: 20220511
+→ 展開補充資訊區塊：
+- 集合說明（文字）
+- FAQ（精簡版）
+- voucher 重點提示
+↓
+若為「不太清楚」
+→ 強導行動：
+- 查看完整集合資訊
+- 查看 voucher
+- 聯絡客服 / 商家（若有）
+↓
+送出（若有回覆）
+↓
+系統寫入：
+- clarity_signal（clear / partial / unclear）
+- 綁定 order_id / product_id
+（不進 ops queue，僅作為預警與內容優化資料）
+T0-2：出發前 2–3 小時（行動確認，確認「行動是否有信心」）
+訂單接近集合時間
+↓
+達到 T0-2 觸發時間（例：集合前 2–3 小時）
+↓
+顯示 in-app card / push / 訂單頁卡片
+顯示「出發準備卡」
+內容：
+- 📍 集合地點（map + 導航 CTA）
+- 🕐 集合時間（強調即將開始）
+- 👤 導遊 / 聯絡資訊（若有）
+- 󰣯 前往方式（導航入口）
+↓
+顯示關鍵確認（核心🔥）
+
+-- 10 of 27 --
+
+template ver: 20220511
+題目：你有信心順利找到集合地點嗎？
+選項：
+- 沒問題 👍
+- 有點不確定
+- 不太確定 ❗
+- 略過
+↓
+使用者選擇
+↓
+若為正向
+→ 顯示感謝並結束
+↓
+若為「有點不確定」
+→ 展開補強資訊：
+- 集合點圖片 / landmark
+- 更明確路線說明
+- 常見錯誤提醒（如：不要走錯出口）
+↓
+若為「不太確定」
+→ 強導行動（重要🔥）：
+- 開啟導航（map deep link）
+- 一鍵聯絡（客服 / 商家）
+- 查看集合詳細指引
+- 回到訂單頁
+↓
+送出（若有回覆）
+↓
+若為「不太確定」
+→ 系統標記 risk signal（pre-risk）
+↓
+（選配進階）
+→ 可寫入 ops queue（低優先級）
+用於預警（非立即介入）
+
+-- 11 of 27 --
+
+template ver: 20220511
+↓
+系統寫入：
+- meeting_confidence（high / medium / low）
+- 綁定 order_id / product_id
+T1：集合後 / 行程開始初期（驗證「是否真的成功」）
+訂單進入出發日
+↓
+達到 T1 觸發時間（例：集合後 30–60 分鐘）
+↓
+顯示 in-app card / push / 訂單頁卡片
+題目：今天有順利找到集合地點與導遊嗎？
+選項：
+- 很順利
+- 有點困難
+- 沒找到 / 有問題
+- 略過
+↓
+使用者選擇
+↓
+若為正向
+→ 顯示感謝並結束
+↓
+若為負向
+→ 顯示第 2 題
+你遇到的主要問題是？
+- 找不到集合地點
+- 找不到導遊 / 司機
+- 資訊不清楚
+- 時間有變動
+- 其他
+↓
+送出
+↓
+若屬高風險
+顯示 support CTA：
+- 聯繫客服
+
+-- 12 of 27 --
+
+template ver: 20220511
+- 查看集合資訊
+- 回到訂單頁
+↓
+系統同步寫入 risk signal / ops queue
+T2：行程中段
+達到 T2 觸發條件（例：行程中段 / 中午）
+↓
+顯示輕量 feedback
+題目：目前體驗是否順利？
+選項：
+- 一切順利
+- 有小問題
+- 有明顯問題
+- 略過
+↓
+若選負向
+↓
+第 2 題：
+目前主要問題是？
+- 行程 delay
+- 天氣影響
+- 導遊 / 司機協助不足
+- 行程與描述不符
+- 其他
+↓
+送出
+↓
+若屬高風險
+顯示 support CTA / 寫入即時處理機制
+T3：結束前 / 結束後短版（optional）
+接近結束或剛結束
+↓
+顯示短版確認
+題目：整體是否符合預期？
+- 符合
+- 有落差
+- 略過
+
+-- 13 of 27 --
+
+template ver: 20220511
+↓
+送出
+↓
+後續可串接 NPS / 評價流程
+Wireframe / Wireflow
+Figma
+Figma
+Mixpanel
+Youtube - 瀏覽首頁
+
+-- 14 of 27 --
+
+template ver: 20220511
+Foodpanda - 檢查訂單
+滴滴打車
+
+-- 15 of 27 --
+
+template ver: 20220511
+Spec 概覽
+關鍵 5 要素
+1. 觸發時機（Trigger Design）👉 問對時機，比問什麼更重要
+a. 評估與比較
+i. 只在「有猶豫訊號」時問：
+1. 停留久
+2. 切換方案
+3. 回訪商品
+ii. 避免一進頁就問（干擾決策）
+b. 體驗當下
+i. 要「分段問」：
+1. 集合後（最重要）
+
+-- 16 of 27 --
+
+template ver: 20220511
+2. 行程中段
+ii. 不要只在結束後問（太晚）
+iii. 核心原則：問在「使用者還來得及被幫助」的時候
+2. 問題設計（Question Design）👉 目標不是收意見，而是「可行動分類」
+a. 評估與比較
+i. 問「卡點」，不是滿意度
+ii. 一定要可分類：
+1. 行程內容
+2. 價格
+3. 集合
+4. 成團
+iii. 重點：每個選項都要能對應到治理面向
+b. 體驗當下
+i. 問「是否有問題」＋「問題類型」
+ii. 題目要極短（1–2題）
+iii. 重點：讓使用者願意在旅途中回答
+3. 行動機制（Actionability）👉 這是最容易被忽略但最關鍵的
+a. 評估與比較
+i. feedback → 商品頁 / content backlog
+ii. ex：很多人選「價格不清楚」→ 改 pricing module
+b. 體驗當下
+i. feedback ≠ 記錄，而是要「觸發行動」
+ii. 例如：
+1. 找不到集合 → 提供客服入口 / 主動聯繫
+2. 有明顯問題 → 通知 Ops
+iii. 核心原則：沒有 action 的 feedback = 沒價值
+4. 資料結構（Data Structure）👉 不要做成「一堆問卷結果」
+a. 統一分類
+i. 例如
+1. 商品內容問題
+2. 價格問題
+3. 行程流程問題
+4. 履約問題（導遊 / delay）
+ii. 這樣才能：
+1. 接到 dashboard
+2. 對應 owner（PM / 商務 / Ops）
+b. 必須串的資料
+i. 每一筆 feedback 要能連到：
+1. 商品 ID
+2. 訂單 ID
+3. 使用者
+
+-- 17 of 27 --
+
+template ver: 20220511
+4. 供應商
+ii. 不然無法做治理
+5. 體驗干擾控制（UX Trade-off）👉 feedback 很容易「傷轉換」
+a. 評估與比較
+i. 控制頻率（不要每次都問）
+ii. 可跳過 / 不強制
+b. 體驗當下
+i. 極簡（1題）
+ii. 不影響旅程（不要像問卷）
+c. 核心原則：feedback 不應該變成新的摩擦
+Spec
+評估與比較（Decision Insight System）
+1. 觸發時機（Trigger）
+a. 商品頁停留時間 > X 秒（建議 30–60s）
+b. 切換方案（price/option change）2 次以上
+c. 點擊 FAQ / 評價/ 費用說明
+d. 同商品回訪
+e. 加入購物車但未 checkout
+f. 要避免：
+i. 首次進頁 5 秒內觸發
+ii. 每 user / 每商品有 frequency cap（同 session 已觸發過/同商品近
+期已回答過/用戶已略過）
+iii. 使用者正在操作關鍵 CTA 區域
+2. 問題設計（Question）
+a. 樣式：Bottom sheet / 卡片
+b. 第一題為「決策卡點診斷題」（單選）
+i. 選項可 mapping 至治理面向：
+1. 行程內容
+2. 價格 / 費用
+3. 集合 / 交通
+4. 成團 / 風險
+5. 時間安排
+6. 評價信任
+c. 第二題為 conditional（只問一題 deeper why）
+d. 非必填，提供「略過」選項
+3. 行動機制（Actionability）
+a. 每個選項對應一個治理分類 tag
+b. 可輸出 aggregated insight（dashboard）
+
+-- 18 of 27 --
+
+template ver: 20220511
+c. 可對應商品 / 類別 / 國家分析
+d. 可產出 content / UX backlog
+4. 資料結構（Data）-> 初期可用 Mixpanel 紀錄
+a. user_id: string 使用者 ID（可匿名）
+b. session_id: string session
+c. product_id: string 商品
+d. package_id: string 方案
+e. trigger_type: enum dwell / option_switch / revisit
+f. primary_reason: enum 主分類
+g. secondary_reason: string 子分類 / 補充
+h. dwell_time: number 停留秒數
+5. 體驗干擾控制（UX）
+a. 非 blocking UI（可關閉）
+b. 每 session 最多觸發一次
+c. 控制曝光比例（sampling）
+d. mobile 不遮重要 CTA
+6. Edge case 處理
+a. 未回覆 / 關閉
+i. 情境
+1. 使用者直接關閉 feedback
+2. 使用者點「先略過」
+3. 使用者看了但未操作
+ii. 處理方式
+1. 記錄：
+a. feedback_shown
+b. feedback_dismissed / feedback_skipped
+2. 同 session 不再重複觸發
+3. 後續是否重觸發，依 frequency cap 決定
+b. 沒網路 / 弱網路
+i. 應對
+1. feedback UI 可先顯示
+2. submit 時失敗需提示：「目前網路不穩，尚未成功送出」
+3. 不建議要求重填長內容
+ii. 處理方式
+1. 僅暫存單次回答於 local/session storage
+2. 網路恢復時可 background retry 一次
+3. 若 retry 失敗，不重複打擾使用者
+c. 重複觸發
+i. 情境：使用者頻繁切換方案，反覆命中 trigger
+ii. 處理方式
+1. 每 session 最多 1 次
+
+-- 19 of 27 --
+
+template ver: 20220511
+2. 每商品每日 / 每數日最多 1 次
+3. 若已送出或略過，該 session 不再顯示
+d. 使用者快速離頁
+i. 情境：feedback 剛出現即離開頁面
+ii. 處理方式
+1. 只記錄 trigger / shown
+2. 不視為拒答
+3. 後續回訪可重新評估是否再觸發
+e. 已下單後才送出
+i. 情境：使用者回答 feedback 後很快完成購買
+ii. 處理方式
+1. feedback 仍保留
+2. 後續分析可標記：
+a. submit 後下單
+b. submit 後未下單
+f. 選「其他」
+i. 處理方式
+1. 初期可不開放自由填答，避免資料髒亂
+2. 若要開放，限制字數
+3. 後台需能歸類未結構化內容
+體驗當下（Live Monitoring System）
+1. 觸發時機（Trigger）
+a. T1：行程開始後 X 分鐘（建議 30–60）
+b. T2：行程中段（時間 or 行程節點）
+c. T3（optional）：行程結束當下
+d. 補充：
+i. 	根據訂單時間自動觸發
+ii. 	僅限有效訂單
+2. 問題設計（Question）
+a. 極短（1題為主）
+b. T1：是否順利找到集合 / 導遊
+c. T2：體驗是否順利
+d. 若選負向 → 第二題分類：
+i. delay
+ii. 導遊/司機
+iii. 行程落差
+iv. 天氣
+e. 不使用長文字輸入（降低摩擦）
+
+-- 20 of 27 --
+
+template ver: 20220511
+3. 行動機制（Actionability）
+a. 高風險答案：提供 FAQ / 自助
+b. 高風險答案觸發 action
+i. 推出「需要協助嗎」
+ii. 提供客服入口
+c. 可通知
+i. Ops dashboard
+ii. 客服 queue（進階）
+d. 可標記
+i. supplier issue
+ii. order risk
+4. 資料結構（Data）
+a. 每筆 feedback 綁定：
+i. user_id: string 使用者
+ii. order_id: string 訂單
+iii. product_id: string 商品
+iv. supplier_id: string 供應商
+v. stage: enum T1 / T2 / T3
+vi. status: enum smooth / minor / major
+vii. issue_type: enum meeting / delay / guide / mismatch
+viii. severity: enum normal / risk
+b. 可串：
+i. 後續 NPS
+ii. 客訴
+iii. refund
+5. 體驗干擾控制（UX）
+a. 使用 push / in-app card（非強制）
+b. 一次只問一題
+c. 可快速點選（button）
+d. 不在關鍵體驗時刻（如付款 / 登車瞬間）
+6. Edge case 處理
+a. 沒網路 / 訊號差
+i. 情境：日遊場景常見，尤其郊區移動中。
+ii. 處理方式
+1. feedback 入口可先顯示
+2. submit 時若失敗：
+a. 顯示簡短提示：「目前網路不穩，尚未送出」
+3. 可 local cache 單次回答
+4. 網路恢復後自動 retry 一次
+5. 若失敗則放棄，不重複干擾
+b. 未回覆
+
+-- 21 of 27 --
+
+template ver: 20220511
+i. 情境
+1. 使用者忙於集合 / 移動
+2. 看見 push 但沒點
+3. 打開後未操作
+ii. 處理方式
+1. 記錄：
+a. triggered
+b. shown
+c. ignored / skipped
+2. 同一 stage 不重複狂推
+3. 可在訂單頁保留低干擾入口，讓使用者稍後補回覆
+c. 已錯過時點
+i. 情境
+1. T1 時間已過很久才打開 app
+2. 使用者旅途中未開 app
+ii. 處理方式
+1. 超過 stage 有效時間，不補發過期 feedback
+2. 可改進入下一 stage
+3. 避免使用者收到不合時宜問題
+d. 重複送出
+i. 情境
+1. 使用者多次點擊 submit
+2. 同 stage 重複作答
+ii. 處理方式
+1. submit button 防連點
+2. 後端以 order_id + stage 去重
+3. 若允許更新，需明確定義覆寫規則
+e. 高風險但未求助
+i. 情境：使用者回報「有明顯問題」，但未點客服
+ii. 處理方式
+1. 系統仍標記高風險
+2. 依營運規則決定是否自動進 queue
+3. 不應完全依賴使用者主動求助
+f. 已取消 / 已改期 / 行程異常中止
+i. 處理方式
+1. 取消訂單不觸發
+2. 改期訂單以最新行程時間為準
+3. 若訂單已標記中止 / 無法出團，不觸發一般體驗 feedback
+g. 多裝置 / 跨端
+i. 情境
+1. 使用者在 web 下單、app 出發
+
+-- 22 of 27 --
+
+template ver: 20220511
+2. push 與訂單頁入口同時存在
+ii. 處理方式
+1. feedback 狀態需跨端同步
+2. 任一端送出後，其它端不再重複顯示
+h. 供應商已主動處理
+i. 情境：使用者遇到 delay，但現場已妥善說明與安撫
+ii. 處理方式
+1. 問題分類與感受分類分開記錄
+a. 例：
+b. issue_type = delay
+c. resolution_status = resolved_on_site / unresolved
+2. 有助後續判斷供應商處理能力，而非只看是否出問題
+API Design (RD & PM)
+- 需要哪些資源，如 API、DB 資料
+- 可貼上 API 文件
+B2C API Design (RD & PM)
+- 需要哪些資源，如 API、DB 資料
+- 可貼上 API 文件
+Events 事件埋點
+Event Name 	Descriptions 	Property 	Value 	Platform
+ProdCard_View
+ed
+(既有)
+Users viewed a product
+card
+使用者瀏覽一張商品卡
+action
+(既有)
+ProdList 	Web
+mWeb
+iOS
+Android
+ProdID
+(既有)
+(string)
+marketplace
+(新增)
+(boolean) true / false
+SupplierID
+(新增)
+(string)
+
+-- 23 of 27 --
+
+template ver: 20220511
+Translation Strings 翻譯字串
+-
+AB testing design AB測試設計
+for PM & UED
+組別 	驗證假設 	指標 	贏了會做的事 無勝負會做的事 輸了會做的事
+aaa
+bbb
+for RD
+AB test name 	Group
+Name
+Descriptions 	Ratio
+destination_filter_
+on_search_result_
+page
+destination_
+original
+blablabla 	50%
+destination_
+variant
+blablabla 	50%
+填寫 A/B test 管理表：
+https://www.notion.so/A-B-Testing-Management-ce2e5d51d6014cd28cfeea0632b245
+79
+
+-- 24 of 27 --
+
+template ver: 20220511
+Schedule 時程
+項目 	預計所需天數
+Design 設計
+RD 開發
+QA 測試
+- Submit Date：
+- Release Date：
+- Rollout Date：
+- 是否需要強制更新？如需要，請寫強更申請表單
+- 灰階發布後強制更新
+- 直接強制更新
+Risk 風險
+- 新增 feature 或修改流程後的造成的風險
+- 開發上的風險
+- 法律財務風險
+「點對點」 影響評估
+Task Links 開票連結
+Design Jira:
+PC Jira:
+mWeb Jira:
+iOS Jira:
+Android Jira:
+Asana:
+
+-- 25 of 27 --
+
+template ver: 20220511
+Testing Environment 開發/測試環境 (RD)
+Design QA
+平台 	頁面名 	問題描述 	等級
+iOS 	首頁 	XXXXXXXXXXXXXXX 	L1
+Android
+Reference 參考資料
+- 	User Feedback System
+- 	[PRD] User feedback system - 售後問卷
+Preparations & Questions 準備&問題
+In this segment, PMs can write down all the meetings or questions that had been held
+prior to the initiation of development.
+Meeting (	2021-09-16 	Veronica Siu Shane Chi
+)	Roy Chen陳志豪
+notes
+blablablablabla
+: blablablabla	Shane Chi 	Need to be confirmed
+with Tina Xu
+blablablabla
+
+-- 26 of 27 --
+
+template ver: 20220511
+: blablabla	Veronica Siu
+
+-- 27 of 27 --
+

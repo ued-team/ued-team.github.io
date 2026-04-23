@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>行中關懷 — T0-1 訂單明細頁特化</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #f0eee9; font-family: var(--font-sans); }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  button { font-family: inherit; }
+  /* force scrollbars inside the phone frames to be invisible but scrollable */
+  .dc-card *::-webkit-scrollbar { display: none; }
+  .dc-card * { scrollbar-width: none; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="data.js?v=2"></script>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="components/Primitives.jsx"></script>
+<script type="text/babel" src="components/OrderSections.jsx"></script>
+<script type="text/babel" src="components/T01Modules.jsx"></script>
+<script type="text/babel" src="components/T01Directions.jsx"></script>
+<script type="text/babel" src="components/T01Compact.jsx"></script>
+<script type="text/babel" src="components/T01MoreCompact.jsx"></script>
+<script type="text/babel" src="components/T01Five.jsx"></script>
+<script type="text/babel" src="components/Screens.jsx"></script>
+
+<script type="text/babel">
+  // Wrap a screen in an iOS 17 device bezel
+  const InPhone = ({ children }) => (
+    <IOSDevice width={390} height={780}>
+      {children}
+    </IOSDevice>
+  );
+
+  const Note = ({ children, tone = 'default' }) => (
+    <div style={{
+      background: tone === 'warn' ? '#FFF8E1' : '#fef4a8',
+      border: '1px solid rgba(0,0,0,.08)',
+      borderRadius: 6,
+      padding: '10px 12px',
+      fontSize: 12,
+      lineHeight: '18px',
+      color: '#5a4a2a',
+      maxWidth: 240,
+      fontFamily: 'var(--font-sans)',
+    }}>{children}</div>
+  );
+
+  const App = () => (
+    <DesignCanvas>
+      {/* ── Section: Family Taxonomy ─────────────────────────────── */}
+      <DCSection id="family" title="概念分類 — 兩家族" subtitle="Family A｜Inline Section：特化資訊獨立一塊版面，一眼看到。　　　Family B｜Floating + Bottom Sheet：主內容不改，靠漂浮元素觸發 sheet 展開。">
+        <DCArtboard id="base" label="現況 · 無特化（對照）" width={430} height={820}>
+          <InPhone><ScreenBase order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={320}>
+          <strong>Family A · Inline Section</strong><br/>
+          — 特化區塊獨立存在於頁面上<br/>
+          — 一眼看到，被看到率高<br/>
+          — 佔版面，首屏商品資訊被推下<br/><br/>
+          <u>成員</u>：<br/>
+          <strong>R 時鐘錶盤</strong>　<strong>S 便條紙票根</strong>
+        </DCPostIt>
+        <DCPostIt width={320}>
+          <strong>Family B · Floating + Bottom Sheet</strong><br/>
+          — 主內容完全不動，特化靠漂浮<br/>
+          — 首屏特化佔 0~60px<br/>
+          — 被看到率依賴 affordance 設計<br/><br/>
+          <u>成員</u>：<br/>
+          <strong>T Dynamic Banner</strong><br/>
+          <strong>U Side Tab Handle</strong><br/>
+          <strong>V FAB + Radial Menu</strong>
+        </DCPostIt>
+        <DCPostIt width={260} tone="warn">
+          <strong>取捨原則</strong><br/>
+          · 「想讓他必看」→ Family A<br/>
+          · 「不想打擾閱讀」→ Family B<br/>
+          · i18n 敏感度：Family B &gt; Family A（floating 幾乎不怕字長）
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Family A · concepts (R, S) ─────────────────────────── */}
+      <DCSection id="familyA" title="Family A · Inline Section" subtitle="特化資訊獨立一塊版面在首屏，被看到率高、語言 expressive">
+        <DCArtboard id="r" label="R · 時鐘錶盤 Hero" width={430} height={820}>
+          <InPhone><ScreenR order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="s" label="S · 便條紙票根" width={430} height={820}>
+          <InPhone><ScreenS order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>R · 時鐘錶盤</strong><br/>
+          圓形錶盤 12 點方向 = 下一站<br/>
+          N 個集合點繞盤一圈 + 編號 1/2/3<br/>
+          中央放倒數<br/>
+          右側列點可點<br/>
+          ~240px，視覺最 expressive<br/>
+          適合：品牌想加強「你在時間軸上」的感受
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>S · 便條紙票根</strong><br/>
+          鋸齒邊 + 虛線 + 票根質感<br/>
+          N 集合點由上而下列出<br/>
+          行前提醒、feedback 收在票根底部<br/>
+          ~200px<br/>
+          適合：想建立「紀念品 / 儀式感」的情境，分享友善
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Family B · concepts (T, U, V) ─────────────────────── */}
+      <DCSection id="familyB" title="Family B · Floating + Bottom Sheet" subtitle="不動主內容，靠漂浮元素 + sheet 展開">
+        <DCArtboard id="t" label="T · Dynamic Banner（頂部藥丸）" width={430} height={820}>
+          <InPhone><ScreenT order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="u" label="U · Side Tab Handle（右緣把手）" width={430} height={820}>
+          <InPhone><ScreenU order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="v" label="V · FAB + Radial Menu" width={430} height={820}>
+          <InPhone><ScreenV order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>T · Dynamic Banner</strong><br/>
+          貼 notch 下方，iOS 活動通知語言<br/>
+          特化高度 ~32px（貼頂）<br/>
+          點擊 → full sheet 展開<br/>
+          最靠近「通知本身」的語義<br/>
+          i18n：banner 僅 1 行 ellipsis
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>U · Side Tab Handle</strong><br/>
+          頁面右緣垂直把手（~32px 寬）<br/>
+          絕對不打擾主內容<br/>
+          拉 / 點開啟 sheet<br/>
+          缺點：手勢隱性，可能被忽略<br/>
+          i18n：垂直文字 + 數字，字短安全
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>V · FAB + Radial</strong><br/>
+          右下一顆 FAB，點擊放射 4 action<br/>
+          每個 action 獨立 icon + 數字 badge<br/>
+          FAB 主體也有綜合 badge（N+M）<br/>
+          最近 Material Design 的語言<br/>
+          i18n：純 icon，完全免翻譯
+        </DCPostIt>
+        <DCPostIt width={260} tone="warn">
+          <strong>Family B 共同風險</strong><br/>
+          被看到率 = affordance × 使用者熟悉度<br/>
+          · T 最高（像系統通知）<br/>
+          · V 中等（FAB 常見但需學習）<br/>
+          · U 最低（side tab 少見，需 onboarding）
+        </DCPostIt>
+      </DCSection>
+    </DesignCanvas>
+  );
+
+      {/* ── Family A · NEW concepts (R, S) ─────────────────────────── */}
+      <DCSection id="familyA_new" title="Family A — 新概念 R / S" subtitle="Inline Section 家族的 2 個新方向：更 expressive 的視覺語言">
+        <DCArtboard id="r" label="R · 時鐘錶盤 Hero" width={430} height={820}>
+          <InPhone><ScreenR order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="s" label="S · 便條紙票根" width={430} height={820}>
+          <InPhone><ScreenS order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>R · 時鐘錶盤</strong><br/>
+          圓形錶盤 12 點方向 = 下一站<br/>
+          N 個集合點繞盤一圈 + 編號 1/2/3<br/>
+          中央放倒數<br/>
+          右側列點可點<br/>
+          ~240px，視覺最 expressive<br/>
+          適合：品牌想加強「你在時間軸上」的感受
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>S · 便條紙票根</strong><br/>
+          鋸齒邊 + 虛線 + 票根質感<br/>
+          N 集合點由上而下列出<br/>
+          行前提醒、feedback 收在票根底部<br/>
+          ~200px<br/>
+          適合：想建立「紀念品 / 儀式感」的情境，分享友善
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Family B · NEW concepts (T, U, V) ─────────────────────── */}
+      <DCSection id="familyB_new" title="Family B — 新概念 T / U / V" subtitle="Floating 家族的 3 個新方向：不同浮動位置 + 展開機制">
+        <DCArtboard id="t" label="T · Dynamic Banner（頂部藥丸）" width={430} height={820}>
+          <InPhone><ScreenT order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="u" label="U · Side Tab Handle（右緣把手）" width={430} height={820}>
+          <InPhone><ScreenU order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="v" label="V · FAB + Radial Menu" width={430} height={820}>
+          <InPhone><ScreenV order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>T · Dynamic Banner</strong><br/>
+          貼 notch 下方，iOS 活動通知語言<br/>
+          特化高度 ~32px（貼頂）<br/>
+          點擊 → full sheet 展開<br/>
+          最靠近「通知本身」的語義<br/>
+          i18n：banner 僅 1 行 ellipsis
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>U · Side Tab Handle</strong><br/>
+          頁面右緣垂直把手（~32px 寬）<br/>
+          絕對不打擾主內容<br/>
+          拉 / 點開啟 sheet<br/>
+          缺點：手勢隱性，可能被忽略<br/>
+          i18n：垂直文字 + 數字，字短安全
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>V · FAB + Radial</strong><br/>
+          右下一顆 FAB，點擊放射 4 action<br/>
+          每個 action 獨立 icon + 數字 badge<br/>
+          FAB 主體也有綜合 badge（N+M）<br/>
+          最近 Material Design 的語言<br/>
+          i18n：純 icon，完全免翻譯
+        </DCPostIt>
+        <DCPostIt width={260} tone="warn">
+          <strong>Family B 共同風險</strong><br/>
+          被看到率 = affordance × 使用者熟悉度<br/>
+          · T 最高（像系統通知）<br/>
+          · V 中等（FAB 常見但需學習）<br/>
+          · U 最低（side tab 少見，需 onboarding）
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Section 0 — Context / reference ─────────────────────────── */}
+      <DCSection id="ref" title="Reference" subtitle="現行訂單明細頁（無特化）作為對照">
+        <DCArtboard id="base" label="Base · 現行訂單明細頁" width={430} height={820}>
+          <InPhone><ScreenBase order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>這頁目前長這樣。</strong><br/>
+          狀態 banner → 商品 → 集合 → 重點 → 憑證 → 聯絡 → 付款。
+          所有訂單共用，沒有 T0-1 特化。
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Section 1 — T0-1 特化 variations ─────────────────────────── */}
+      <DCSection id="t01" title="T0-1 特化版訂單明細頁" subtitle="出發前 24h — 從通知點進來時的樣貌。全部 6 個方向並陳，feedback 問題皆為「你對明天的行程資訊是否清楚？」">
+        <DCArtboard id="a" label="A · 素淨文字（Calm）" width={430} height={820}>
+          <InPhone><ScreenA order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="b" label="B · 強調色 Hero（Bold）" width={430} height={820}>
+          <InPhone><ScreenB order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="c" label="C · 待辦 Checklist" width={430} height={820}>
+          <InPhone><ScreenC order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="d" label="D · 地圖為主 + Bottom sheet" width={430} height={820}>
+          <InPhone><ScreenD order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="e" label="E · Timeline 時序" width={430} height={820}>
+          <InPhone><ScreenE order={window.ORDER} /></InPhone>
+        </DCArtboard>
+      </DCSection>
+
+      {/* ── Section 2 — Space-saving study ─────────────────────────── */}
+      <DCSection id="space" title="出發前重點資訊 — 省空間排列研究" subtitle="針對你提的三個痛點：(1) 多集合點全展開吃螢幕 (2) 行前提醒 raw text 過長 (3) 地圖/地址/照片重複佔空間。左邊是「現況」作為對照，右邊三個是不同省空間方向。">
+        <DCArtboard id="current" label="現況 · 全展開（對照）" width={430} height={1180}>
+          <InPhone><ScreenCurrent order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="f" label="F · 上車卡片 Tab 切換" width={430} height={820}>
+          <InPhone><ScreenF order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="g" label="G · 明日一天 Timeline" width={430} height={820}>
+          <InPhone><ScreenG order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="h" label="H · 最近一點聚焦 + Drawer" width={430} height={820}>
+          <InPhone><ScreenH order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>F · Tab 切換</strong><br/>
+          多集合點壓成單一卡（恆定一張卡高度）<br/>
+          · 省空間：★★★★★<br/>
+          · 使用者只看到「現在要去的」<br/>
+          · 風險：整體行程感知下降
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>G · Timeline</strong><br/>
+          N 個點一次看到全貌，預設第一個展開<br/>
+          · 省空間：★★★☆☆<br/>
+          · 最保留「整天感」<br/>
+          · 行前提醒 chip 掛在 timeline 上方
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>H · 聚焦 + Drawer</strong><br/>
+          Hero = 下一個點；其他摺成 1 行<br/>
+          · 省空間：★★★★☆<br/>
+          · 兼顧「現在」+「全貌意識」<br/>
+          · Raw reminder 也變 1 行 banner
+        </DCPostIt>
+        <DCPostIt width={260} tone="warn">
+          <strong>三個共用的三招</strong><br/>
+          1. Raw reminder → 4 chips + 原文 sheet<br/>
+          2. 地圖為底、照片縮 54px thumbnail、導航 CTA 貼右下（壓到 ~180px）<br/>
+          3. 時間+角色 chip 化，取代三行文字
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>建議</strong><br/>
+          通知進來（急迫）→ <strong>H</strong>（立即看到下一個點）<br/>
+          Email（含時段較多）→ <strong>G</strong>（timeline 承載最好）<br/>
+          接送為主的商品 → <strong>F</strong>（上下車是主角）
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Section 2.6 — More compact concepts (M–Q) ── */}
+      <DCSection id="more" title="更多概念 M–Q" subtitle="再 5 個方向，各自有不同 trade-off：最輕的（P）首屏完全 0 特化；最符合 context（M）呼應「從通知來」；最具象（Q）用天氣當 anchor。">
+        <DCArtboard id="m" label="M · 通知 Ribbon 封條" width={430} height={820}>
+          <InPhone><ScreenM order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="n" label="N · 一問一答 Accordion" width={430} height={820}>
+          <InPhone><ScreenN order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="o" label="O · Sticky Header 融合" width={430} height={820}>
+          <InPhone><ScreenO order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="p" label="P · 浮動膠囊（0 特化高度）" width={430} height={820}>
+          <InPhone><ScreenP order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="q" label="Q · 天氣 Inline Strip" width={430} height={820}>
+          <InPhone><ScreenQ order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>M · Ribbon</strong>（~40px）<br/>
+          深色封條呼應「從通知來」<br/>
+          · 優：context 最強、情緒連貫<br/>
+          · 缺：夜間模式需另調色<br/>
+          · i18n：單行 ellipsis
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>N · 一問一答</strong>（~180px 收合）<br/>
+          把重點重寫成 3 問<br/>
+          · 優：認知負擔低、可教育<br/>
+          · 缺：重複點擊成本<br/>
+          · i18n：問句短、膨脹限 2 行
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>O · Sticky Header</strong>（~0 新增）<br/>
+          擴展 app top bar，合併原有 nav<br/>
+          · 優：特化不佔內容區<br/>
+          · 缺：得改 global header 元件<br/>
+          · i18n：時間+地點+badge 純數字
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>P · 浮動膠囊</strong>（首屏 0px）<br/>
+          36px cyan pill 浮右上<br/>
+          · 優：最省空間、最「輕」<br/>
+          · 缺：使用者可能沒看到<br/>
+          · i18n：只顯示時間 + 倒數
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>Q · 天氣 Strip</strong>（~68px）<br/>
+          明天天氣當 anchor<br/>
+          · 優：具象、對「明天要幹嘛」最實用<br/>
+          · 缺：需天氣資料源<br/>
+          · i18n：溫度+天氣+地名均短
+        </DCPostIt>
+        <DCPostIt width={260} tone="warn">
+          <strong>排序建議（屏幕效益）</strong><br/>
+          P（0）＞ O（0）＞ M（40）＞ Q（68）＞ J（140）＞ N（180）<br/><br/>
+          <strong>排序建議（被看到率）</strong><br/>
+          M（封條搶眼）＞ Q（天氣有趣）＞ N（問句）＞ O＞ J＞ P（最低）
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Section 2.5 — Ultra-compact (screen-efficient, i18n-safe) ── */}
+      <DCSection id="compact" title="更收斂 — 特化區塊壓到最小" subtitle="目標：特化區塊本身要短（首屏留給商品/憑證/付款）且英日文字數膨脹不破版。核心策略：地圖 / 原文 / 次要地點全部搬進 bottom sheet，靠 badge 數字暗示數量。">
+        <DCArtboard id="j" label="J · 3 行摘要（最小）" width={430} height={820}>
+          <InPhone><ScreenJ order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="k" label="K · Stepper Rail + 動態卡" width={430} height={820}>
+          <InPhone><ScreenK order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCArtboard id="l" label="L · Context Bar + 浮動 Dock" width={430} height={820}>
+          <InPhone><ScreenL order={window.ORDER} /></InPhone>
+        </DCArtboard>
+        <DCPostIt width={260}>
+          <strong>J · 3 行摘要</strong><br/>
+          特化區高 ~140px<br/>
+          行 1 下一站 + 倒數 / 行 2 警示 + <code>+N</code> / 行 3 節奏 strip + feedback<br/>
+          整塊可點，所有細節進 sheet<br/>
+          <u>i18n</u>：長字尾部 ellipsis、重要資訊在前
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>K · Stepper Rail</strong><br/>
+          特化區高 ~220px（含 context bar + 64px rail）<br/>
+          Rail 固定 64px width，右側資訊區 flex，長字自動 2 行 clamp<br/>
+          <u>i18n</u>：rail 只放 time + 短 role 標籤（i18n 字典統一控字數）
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>L · Icon Dock</strong><br/>
+          特化區高 ~56px（僅一條 cyan context bar）<br/>
+          其他全部浮動 dock（地圖 / 提醒 / 行程 / 客服）<br/>
+          Dock 純 icon + numeric badge → <strong>完全不用翻譯</strong><br/>
+          <u>i18n</u>：最穩（dock 不翻譯；bar 只有 1 行，ellipsis）
+        </DCPostIt>
+        <DCPostIt width={260} tone="warn">
+          <strong>i18n 三條安全網</strong><br/>
+          1. 禁用「固定寬 pill / 2x2 chip grid」— 英日膨脹會破版<br/>
+          2. Truncate 時把最重要 token 放前面（時間 / 金額 / 地名）<br/>
+          3. 長文永遠進 sheet；列表 UI 只承擔「數量暗示」
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>屏幕效益估算（與現況比）</strong><br/>
+          現況 ~1180px<br/>
+          J → <strong>~140px（-88%）</strong><br/>
+          K → ~220px（-81%）<br/>
+          L → ~56px（-95%）<br/>
+          但 L 依賴浮動 dock UX 驗證
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>挑選建議</strong><br/>
+          想最快上線 / 保守 → <strong>J</strong>（純 inline、無 dock）<br/>
+          多集合點商品主力 → <strong>K</strong>（rail 一眼多段）<br/>
+          想導入跨頁統一 action 機制 → <strong>L</strong>（dock 也可沿用 T0-2 / T1 之後）
+        </DCPostIt>
+      </DCSection>
+
+      {/* ── Section 3 — Original 5 T0-1 variations (first batch) ──── */}
+      <DCSection id="compare" title="設計重點對照" subtitle="各方向的特化強度、視覺語言、feedback 呈現方式">
+        <DCPostIt width={260}>
+          <strong>A · 素淨文字</strong><br/>
+          - 特化強度：低<br/>
+          - 集合地標為 icon + 連結<br/>
+          - Feedback：inline 卡片底<br/>
+          - 適合：保守派、email 也能沿用
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>B · Bold Hero</strong><br/>
+          - 特化強度：高（整張 cyan 卡）<br/>
+          - 倒數最大<br/>
+          - 圖塊式 info tiles<br/>
+          - Feedback：inline 但底色區分
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>C · Checklist</strong><br/>
+          - 特化強度：中<br/>
+          - 行動優先（勾選機制）<br/>
+          - 護照「必帶」視覺強化<br/>
+          - Feedback：inline，放在待辦後
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>D · Map-first</strong><br/>
+          - 特化強度：高<br/>
+          - 200px 地圖 hero<br/>
+          - Feedback：獨立 bottom sheet（點「還有疑問嗎」觸發）<br/>
+          - 最接近通知的「找路」情境
+        </DCPostIt>
+        <DCPostIt width={260}>
+          <strong>E · Timeline</strong><br/>
+          - 特化強度：中高<br/>
+          - 把「明天的一天」視覺化<br/>
+          - 集合點內嵌在 08:30 節點<br/>
+          - 適合 email（可乘載更多）
+        </DCPostIt>
+        <DCPostIt width={260} tone="warn">
+          <strong>PM 下一步建議</strong><br/>
+          1. 先挑 1 主方向 + 1 次方向做 usability test<br/>
+          2. 通知媒介偏好 B / D（行動急迫）<br/>
+          3. Email 媒介偏好 A / E（承載多）<br/>
+          4. Feedback「不太清楚」的補救連結可共用
+        </DCPostIt>
+      </DCSection>
+    </DesignCanvas>
+  );
+
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

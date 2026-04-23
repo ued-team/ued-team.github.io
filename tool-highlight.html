@@ -1,0 +1,2125 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>前出發特化區塊 — 10 種視覺概念</title>
+<style>
+:root{
+  --teal-darker:#068B9F;--teal-dark:#13A3B6;--teal:#26BEC9;
+  --teal-btn:#1AB6C1;--teal-light:#ADE6EB;--teal-lighter:#CEF0F3;--teal-bg:#F0FAFB;
+  --amber:#FFB400;--amber-dark:#E09600;--amber-light:#FFF8E1;
+  --green:#34C759;--green-light:#E8FAF0;
+  --purple-4:#8172B3;--purple-5:#6C56A1;--purple-6:#5A4787;--purple-1:#F7F2F8;
+  --text:#212121;--text-dark:#727272;--text-med:#9C9DA0;--text-light:#BABBBE;
+  --bg-light:#F1F4F8;--bg-lighter:#F7FAFC;--bg-med:#E6E9ED;
+  --border:#E6E9ED;--border-light:#D5D6DB;
+  --r-xs:2px;--r-sm:4px;--r-md:8px;--r-lg:12px;--r-xl:16px;
+  --sh-action:0 1px 4px rgba(38,50,56,.12);
+  --sh-fixed:0 2px 24px rgba(38,50,56,.12);
+  --sh-raised:0 8px 24px rgba(37,42,49,.24);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  background:#d4d8dc;
+  font-family:"PingFang TC",-apple-system,BlinkMacSystemFont,sans-serif;
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:20px 16px 48px;
+}
+
+/* ────── Carousel ────── */
+.carousel-nav{
+  display:flex;gap:6px;margin-bottom:14px;justify-content:center;flex-wrap:wrap;
+  max-width:420px;width:100%;
+}
+.nav-tab{
+  display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:100px;
+  font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);
+  transition:.2s;user-select:none;
+}
+.nav-tab .tb{background:var(--bg-med);color:var(--text-dark);
+  font-size:9px;font-weight:800;padding:1px 6px;border-radius:100px;transition:.2s;}
+.nav-tab.active{background:var(--teal);border-color:var(--teal);color:white;}
+.nav-tab.active .tb{background:rgba(255,255,255,.25);color:white;}
+.carr-arrow{
+  position:fixed;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;border-radius:50%;background:white;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 12px rgba(37,42,49,.2);color:var(--text);z-index:100;transition:.15s;
+}
+.carr-arrow:hover{background:var(--teal-bg);color:var(--teal-dark);}
+.carr-arrow.L{left:8px;} .carr-arrow.R{right:8px;}
+.carr-arrow svg{width:18px;height:18px;}
+
+/* ────── Phone frame ────── */
+.phone{width:100%;max-width:390px;display:none;}
+.phone.visible{display:block;}
+.phone-label{text-align:center;margin-bottom:10px;}
+.badge{display:inline-block;background:var(--teal);color:white;font-size:10px;font-weight:700;
+  padding:2px 10px;border-radius:100px;margin-bottom:5px;}
+.pname{font-size:13px;font-weight:700;color:#444;}
+.pdesc{font-size:11px;color:#888;margin-top:2px;line-height:15px;}
+.screen{
+  background:var(--bg-lighter);border-radius:16px;overflow:hidden;
+  box-shadow:var(--sh-raised);position:relative;
+}
+.scroll-area{overflow-y:auto;max-height:700px;overscroll-behavior:contain;}
+
+/* ────── Order chrome (shared) ────── */
+.navbar{
+  background:white;height:44px;display:flex;align-items:center;padding:0 16px;
+  border-bottom:.5px solid var(--border);position:sticky;top:0;z-index:10;
+}
+.nb-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--teal-dark);}
+.nb-icon svg{width:20px;height:20px;}
+.nb-title{flex:1;text-align:center;font-size:15px;font-weight:600;color:var(--text);}
+.product-img-ph{
+  width:100%;height:100px;
+  background:linear-gradient(135deg,#0d9da8,#068B9F);
+  display:flex;align-items:center;justify-content:center;
+}
+.product-img-ph svg{width:28px;height:28px;color:rgba(255,255,255,.4);}
+.product-header{background:white;padding:14px 16px 12px;}
+.product-title{font-size:15px;font-weight:700;color:var(--text);line-height:22px;}
+.product-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.meta-tag{background:var(--bg-light);border-radius:var(--r-sm);padding:2px 8px;font-size:11px;color:var(--text-dark);}
+.gap8{height:8px;background:var(--bg-light);}
+
+/* Mode toggle banner (prototype tool) */
+.mode-banner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:7px 16px;background:var(--purple-1);border-bottom:.5px solid #C9C3E1;
+}
+.mb-label{font-size:9px;font-weight:800;color:var(--purple-4);letter-spacing:.6px;text-transform:uppercase;}
+.mb-toggle{display:flex;background:rgba(90,71,135,.1);border-radius:100px;padding:2px;gap:2px;}
+.mb-btn{padding:4px 10px;border-radius:100px;font-size:10px;font-weight:700;color:var(--purple-4);cursor:pointer;transition:.15s;}
+.mb-btn.active{background:white;color:var(--purple-6);box-shadow:0 1px 3px rgba(90,71,135,.2);}
+
+/* Tool card rows */
+.tool-card{background:white;border-top:.5px solid var(--border);}
+.tool-row{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 16px;border-bottom:.5px solid var(--border);
+}
+.tool-row:last-child{border-bottom:none;}
+.tr-ic{width:24px;height:24px;flex-shrink:0;color:var(--text-dark);}
+.tr-ic svg{width:24px;height:24px;}
+.tr-lb{font-size:14px;font-weight:600;color:var(--text);flex:1;}
+.tr-ar{color:var(--text-light);}
+.tr-ar svg{width:20px;height:20px;}
+
+/* ────── Detail overlay ────── */
+.detail-overlay{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:var(--bg-lighter);
+  transform:translateX(100%);
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+  z-index:20;display:flex;flex-direction:column;
+}
+.detail-overlay.open{transform:translateX(0);}
+.detail-nav{
+  background:white;height:44px;display:flex;align-items:center;padding:0 16px;
+  border-bottom:.5px solid var(--border);flex-shrink:0;
+}
+.detail-back{width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--teal-dark);}
+.detail-back svg{width:22px;height:22px;}
+.detail-title-text{flex:1;text-align:center;font-size:15px;font-weight:600;color:var(--text);}
+.detail-spacer{width:32px;}
+.detail-scroll{flex:1;overflow-y:auto;}
+.detail-body{padding:16px;display:flex;flex-direction:column;gap:10px;}
+.d-card{background:white;border-radius:var(--r-md);overflow:hidden;}
+.d-map{width:100%;height:130px;background:linear-gradient(135deg,#d1ebd1,#a8d5a8);
+  display:flex;align-items:center;justify-content:center;font-size:28px;}
+.d-rows{display:flex;flex-direction:column;}
+.d-row{display:flex;gap:10px;padding:12px 16px;border-bottom:.5px solid var(--border);}
+.d-row:last-child{border-bottom:none;}
+.d-row-ic{width:18px;height:18px;flex-shrink:0;margin-top:2px;color:var(--teal-dark);}
+.d-row-ic svg{width:18px;height:18px;}
+.d-row-content{}
+.d-row-label{font-size:11px;color:var(--text-med);margin-bottom:2px;}
+.d-row-value{font-size:14px;font-weight:500;color:var(--text);line-height:20px;}
+.d-person-row{display:flex;align-items:center;gap:12px;padding:14px 16px;}
+.d-avatar{width:44px;height:44px;border-radius:50%;flex-shrink:0;
+  background:var(--teal-lighter);display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:700;color:var(--teal-dark);}
+.d-person-name{font-size:15px;font-weight:700;color:var(--text);}
+.d-person-role{font-size:12px;color:var(--text-dark);margin-top:2px;}
+.d-text{padding:12px 16px;font-size:14px;color:var(--text);line-height:22px;}
+.d-remind-list{display:flex;flex-direction:column;gap:0;}
+.d-remind-item{display:flex;gap:10px;padding:11px 16px;border-bottom:.5px solid var(--border);}
+.d-remind-item:last-child{border-bottom:none;}
+.d-remind-ic{width:18px;height:18px;flex-shrink:0;margin-top:2px;color:var(--teal);}
+.d-remind-ic svg{width:18px;height:18px;}
+.d-remind-text{font-size:13px;color:var(--text);line-height:20px;}
+.detail-bottom-cta{
+  padding:10px 16px 18px;background:white;border-top:.5px solid var(--border);
+  flex-shrink:0;display:flex;gap:8px;
+}
+.cta-primary{
+  flex:1;height:44px;border-radius:var(--r-md);border:none;
+  background:var(--teal-btn);color:white;
+  font-size:14px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.cta-secondary{
+  flex:1;height:44px;border-radius:var(--r-md);
+  border:1.5px solid var(--border-light);background:white;
+  color:var(--text);font-size:14px;font-weight:600;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.cta-primary svg,.cta-secondary svg{width:16px;height:16px;}
+
+/* ────── Animations ────── */
+@keyframes fsUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.anim-in{animation:fsUp .22s ease forwards;}
+
+/* ═══════════════════════════════════════════════
+   V1 — 基準清單  (faithful to Figma)
+═══════════════════════════════════════════════ */
+.v1-wrap{padding:12px 16px;}
+.v1-card{background:var(--bg-lighter);border-radius:var(--r-md);padding:14px;
+  display:flex;flex-direction:column;gap:10px;}
+.v1-hd{display:flex;align-items:center;gap:8px;}
+.v1-hd-ic{width:22px;height:22px;flex-shrink:0;color:var(--teal);}
+.v1-hd-ic svg{width:22px;height:22px;}
+.v1-hd-title{font-size:16px;font-weight:700;color:var(--text);flex:1;}
+.v1-hd-count{font-size:14px;font-weight:700;color:var(--teal-dark);}
+.v1-prog{height:4px;background:var(--bg-med);border-radius:2px;overflow:hidden;}
+.v1-prog-fill{height:100%;background:var(--teal);border-radius:2px;width:33%;}
+.v1-rows{background:white;border-radius:var(--r-md);overflow:hidden;
+  border:.5px solid var(--border);}
+.v1-row{display:flex;align-items:flex-start;gap:10px;padding:11px 12px;
+  cursor:pointer;border-bottom:.5px solid var(--border);transition:background .12s;}
+.v1-row:last-child{border-bottom:none;}
+.v1-row:active{background:var(--bg-lighter);}
+.v1-ri{width:32px;height:32px;border-radius:var(--r-sm);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;background:var(--teal-bg);}
+.v1-ri svg{width:17px;height:17px;color:var(--teal-dark);}
+.v1-rc{flex:1;min-width:0;}
+.v1-rt{display:flex;align-items:center;gap:5px;margin-bottom:2px;}
+.v1-title{font-size:13px;font-weight:700;color:var(--text);}
+.v1-chip{padding:1px 7px;border-radius:100px;font-size:10px;font-weight:700;flex-shrink:0;}
+.v1-chip.done{background:var(--teal-bg);color:var(--teal-dark);}
+.v1-chip.pend{background:var(--bg-light);color:var(--text-med);}
+.v1-chip.act{background:var(--amber-light);color:var(--amber-dark);}
+.v1-sub{font-size:11px;color:var(--text-dark);line-height:16px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.v1-ra{color:var(--text-light);flex-shrink:0;margin-top:5px;}
+.v1-ra svg{width:16px;height:16px;}
+/* 2-3H CTAs */
+.v1-cta{display:none;margin-top:7px;}
+.mode-2h .v1-cta{display:flex;flex-wrap:wrap;gap:6px;animation:fsUp .2s ease;}
+.v1-cta-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 10px;border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;
+}
+.v1-cta-pill.p{background:var(--teal-btn);color:white;border:none;}
+.v1-cta-pill.g{background:white;border:1.5px solid var(--border-light);color:var(--text);}
+.v1-cta-pill svg{width:12px;height:12px;}
+/* Feedback */
+.v1-fb{display:flex;align-items:center;justify-content:space-between;
+  padding:9px 12px;background:var(--bg-light);border-radius:var(--r-sm);}
+.v1-fb-q{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v1-fb-btns{display:flex;gap:5px;}
+.v1-fb-btn{display:flex;align-items:center;gap:3px;padding:4px 10px;border-radius:100px;
+  font-size:11px;font-weight:700;border:1.5px solid var(--border-light);
+  background:white;color:var(--text-dark);cursor:pointer;transition:.12s;}
+.v1-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V2 — 氣泡卡片  (Bubble Cards)
+═══════════════════════════════════════════════ */
+.v2-wrap{padding:12px 16px 4px;}
+.v2-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.v2-hd-left{display:flex;align-items:center;gap:8px;}
+.v2-hd-title{font-size:15px;font-weight:700;color:var(--text);}
+.v2-badge{background:var(--teal);color:white;font-size:12px;font-weight:700;
+  padding:2px 10px;border-radius:100px;}
+.v2-cards{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
+.v2-card{background:white;border-radius:var(--r-md);overflow:hidden;
+  box-shadow:var(--sh-action);cursor:pointer;transition:box-shadow .12s;}
+.v2-card:active{box-shadow:none;}
+.v2-card-top{display:flex;align-items:flex-start;gap:10px;padding:12px 12px 8px;}
+.v2-ico{width:40px;height:40px;border-radius:var(--r-md);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;}
+.v2-ico svg{width:20px;height:20px;}
+.v2-ico.teal{background:var(--teal-bg);color:var(--teal-dark);}
+.v2-ico.amber{background:var(--amber-light);color:var(--amber-dark);}
+.v2-ico.purple{background:var(--purple-1);color:var(--purple-4);}
+.v2-card-info{flex:1;min-width:0;padding-top:2px;}
+.v2-card-title{font-size:14px;font-weight:700;color:var(--text);}
+.v2-card-sub{font-size:12px;color:var(--text-dark);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.v2-status{padding:3px 8px;border-radius:var(--r-sm);font-size:10px;font-weight:700;flex-shrink:0;}
+.v2-status.done{background:var(--teal-lighter);color:var(--teal-dark);}
+.v2-status.pend{background:var(--bg-light);color:var(--text-med);}
+.v2-status.act{background:var(--amber-light);color:var(--amber-dark);}
+.v2-preview{padding:0 12px 8px 62px;font-size:11px;color:var(--text-dark);line-height:16px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.v2-card-foot{
+  display:flex;align-items:center;justify-content:flex-end;
+  padding:6px 12px 10px;color:var(--text-light);}
+.v2-card-foot svg{width:16px;height:16px;}
+/* 2-3H CTAs */
+.v2-cta-row{display:none;border-top:.5px solid var(--border);padding:8px 12px;gap:6px;}
+.mode-2h .v2-cta-row{display:flex;animation:fsUp .2s ease;}
+.v2-cta-btn{flex:1;height:34px;border-radius:var(--r-sm);font-size:12px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;}
+.v2-cta-btn svg{width:13px;height:13px;}
+.v2-cta-btn.p{background:var(--teal-btn);color:white;border:none;}
+.v2-cta-btn.g{background:transparent;border:1.5px solid var(--border-light);color:var(--text);}
+/* Feedback */
+.v2-fb{padding:4px 0 12px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.v2-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v2-fb-btn{display:flex;align-items:center;gap:3px;padding:5px 12px;border-radius:100px;
+  font-size:12px;font-weight:700;border:1.5px solid var(--border-light);
+  background:white;color:var(--text-dark);cursor:pointer;}
+.v2-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V3 — 時間線  (Vertical Timeline)
+═══════════════════════════════════════════════ */
+.v3-wrap{background:white;padding:14px 16px 0;}
+.v3-hd{display:flex;align-items:center;gap:8px;padding-bottom:12px;border-bottom:.5px solid var(--border);}
+.v3-hd-ic{width:20px;height:20px;color:var(--teal-dark);}
+.v3-hd-ic svg{width:20px;height:20px;}
+.v3-hd-title{font-size:15px;font-weight:700;color:var(--text);flex:1;}
+.v3-hd-count{font-size:13px;font-weight:700;color:var(--text-dark);}
+.v3-hd-done{color:var(--teal-dark);}
+.v3-timeline{padding:12px 0 0;}
+.v3-item{display:flex;gap:0;}
+.v3-left{width:48px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
+.v3-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;z-index:1;transition:.3s;}
+.v3-dot.done{background:var(--teal);}
+.v3-dot.act{background:white;border:2px solid var(--teal);}
+.v3-dot.pend{background:white;border:2px solid var(--border-light);}
+.v3-dot svg{width:16px;height:16px;}
+.v3-dot.done svg{color:white;}
+.v3-dot.act svg{color:var(--teal);}
+.v3-dot.pend svg{color:var(--text-light);}
+.v3-line{width:2px;flex:1;background:var(--border-light);min-height:16px;}
+.v3-item:last-child .v3-line{background:transparent;}
+.v3-right{flex:1;padding-bottom:16px;padding-top:4px;cursor:pointer;}
+.v3-r-top{display:flex;align-items:flex-start;}
+.v3-r-main{flex:1;}
+.v3-r-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.v3-r-meta{font-size:12px;color:var(--text-dark);margin-bottom:3px;}
+.v3-r-preview{font-size:11px;color:var(--text-med);line-height:16px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.v3-r-arrow{width:28px;display:flex;align-items:center;justify-content:flex-end;
+  padding-top:2px;color:var(--text-light);}
+.v3-r-arrow svg{width:16px;height:16px;}
+/* 2-3H CTAs */
+.v3-cta{display:none;margin-top:8px;}
+.mode-2h .v3-cta{display:flex;flex-wrap:wrap;gap:6px;animation:fsUp .2s ease;}
+.v3-cta-btn{display:inline-flex;align-items:center;gap:4px;
+  padding:6px 12px;border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;}
+.v3-cta-btn svg{width:13px;height:13px;}
+.v3-cta-btn.p{background:var(--teal-btn);color:white;border:none;}
+.v3-cta-btn.g{background:white;border:1.5px solid var(--border-light);color:var(--text);}
+/* Feedback */
+.v3-fb{border-top:.5px solid var(--border);padding:10px 0 14px;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.v3-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v3-fb-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v3-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V4 — 步驟卡  (Numbered Steps + Ring Progress)
+═══════════════════════════════════════════════ */
+.v4-wrap{padding:12px 16px;}
+.v4-card{background:white;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-action);}
+.v4-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-bottom:.5px solid var(--border);}
+.v4-hd-left{display:flex;align-items:center;gap:8px;}
+.v4-hd-title{font-size:15px;font-weight:700;color:var(--text);}
+.v4-ring-wrap{position:relative;width:40px;height:40px;flex-shrink:0;}
+.v4-ring-svg{transform:rotate(-90deg);overflow:visible;}
+.v4-ring-track{fill:none;stroke:var(--bg-med);stroke-width:3.5;}
+.v4-ring-fill{fill:none;stroke:var(--teal);stroke-width:3.5;stroke-linecap:round;
+  transition:stroke-dashoffset .5s ease;}
+.v4-ring-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:10px;font-weight:800;color:var(--text);text-align:center;line-height:1.2;}
+.v4-steps{}
+.v4-step{display:flex;gap:12px;padding:12px 16px;border-bottom:.5px solid var(--border);
+  cursor:pointer;transition:background .12s;}
+.v4-step:last-child{border-bottom:none;}
+.v4-step:active{background:var(--bg-lighter);}
+.v4-step-num{width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;transition:.3s;}
+.v4-step-num.done{background:var(--teal);color:white;}
+.v4-step-num.act{background:var(--teal-bg);color:var(--teal-dark);border:2px solid var(--teal);}
+.v4-step-num.pend{background:var(--bg-light);color:var(--text-light);}
+.v4-step-num svg{width:18px;height:18px;}
+.v4-sc{flex:1;min-width:0;padding-top:4px;}
+.v4-s-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px;}
+.v4-s-meta{font-size:12px;color:var(--text-dark);margin-bottom:2px;}
+.v4-s-preview{font-size:11px;color:var(--text-med);line-height:16px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.v4-sa{display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-start;padding-top:6px;}
+.v4-sa svg{width:16px;height:16px;color:var(--text-light);}
+/* 2-3H CTAs */
+.v4-cta{display:none;margin-top:8px;}
+.mode-2h .v4-cta{display:flex;gap:6px;animation:fsUp .2s ease;}
+.v4-cta-btn{flex:1;height:34px;border-radius:var(--r-sm);
+  font-size:12px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:4px;}
+.v4-cta-btn svg{width:13px;height:13px;}
+.v4-cta-btn.p{background:var(--teal-btn);color:white;border:none;}
+.v4-cta-btn.g{background:transparent;border:1.5px solid var(--border-light);color:var(--text);}
+.v4-foot{padding:10px 16px 12px;border-top:.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.v4-foot-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v4-foot-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v4-foot-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V5 — 彩帶條列  (Accent Stripe Rows)
+═══════════════════════════════════════════════ */
+.v5-wrap{background:white;padding:14px 16px;}
+.v5-hd{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.v5-hd-title{font-size:15px;font-weight:700;color:var(--text);flex:1;}
+.v5-dots{display:flex;align-items:center;gap:4px;}
+.v5-dot{height:8px;border-radius:4px;transition:.3s;}
+.v5-dot.done{width:8px;background:var(--teal);}
+.v5-dot.act{width:20px;background:var(--teal-btn);}
+.v5-dot.pend{width:8px;background:var(--border-light);}
+.v5-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+.v5-row{border-radius:var(--r-md);overflow:hidden;cursor:pointer;transition:opacity .12s;}
+.v5-row:active{opacity:.9;}
+.v5-row-inner{display:flex;}
+.v5-accent{width:4px;flex-shrink:0;}
+.v5-accent.done{background:var(--teal);}
+.v5-accent.act{background:var(--teal-btn);}
+.v5-accent.pend{background:var(--border-light);}
+.v5-row-bg{
+  flex:1;padding:10px 12px;
+  display:flex;align-items:center;gap:10px;
+}
+.v5-row-bg.done{background:var(--teal-bg);border:.5px solid var(--teal-lighter);border-left:none;}
+.v5-row-bg.act{background:white;border:.5px solid var(--border-light);border-left:none;}
+.v5-row-bg.pend{background:var(--bg-lighter);border:.5px solid var(--border);border-left:none;}
+.v5-ric{width:28px;height:28px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.v5-ric svg{width:20px;height:20px;}
+.v5-ric.done{color:var(--teal-dark);}
+.v5-ric.act{color:var(--teal-btn);}
+.v5-ric.pend{color:var(--text-light);}
+.v5-rc{flex:1;min-width:0;}
+.v5-r-title{font-size:13px;font-weight:700;color:var(--text);}
+.v5-r-meta{font-size:11px;color:var(--text-dark);margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.v5-r-arr{color:var(--text-light);}
+.v5-r-arr svg{width:16px;height:16px;}
+/* 2-3H CTAs */
+.v5-cta-area{
+  display:none;padding:6px 10px 8px 42px;gap:6px;
+  background:inherit;border-top:.5px solid rgba(0,0,0,.05);
+}
+.v5-row-bg.done .v5-cta-area{background:var(--teal-bg);}
+.mode-2h .v5-cta-area{display:flex;flex-wrap:wrap;animation:fsUp .2s ease;}
+.v5-cta-chip{display:inline-flex;align-items:center;gap:4px;
+  padding:5px 10px;border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;}
+.v5-cta-chip svg{width:12px;height:12px;}
+.v5-cta-chip.p{background:var(--teal-btn);color:white;border:none;}
+.v5-cta-chip.g{background:white;border:1.5px solid var(--border-light);color:var(--text);}
+/* Feedback */
+.v5-fb{border-top:.5px solid var(--border);padding:10px 0 2px;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.v5-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v5-fb-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v5-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V6 — 手風琴  (Accordion expand / collapse)
+═══════════════════════════════════════════════ */
+.v6-wrap{background:white;}
+.v6-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-bottom:.5px solid var(--border);}
+.v6-hd-title{font-size:15px;font-weight:700;color:var(--text);}
+.v6-prog-dots{display:flex;gap:4px;align-items:center;}
+.v6-pdot{width:7px;height:7px;border-radius:50%;background:var(--border-light);}
+.v6-pdot.done{background:var(--teal);}
+.v6-item{border-bottom:.5px solid var(--border);}
+.v6-item:last-child{border-bottom:none;}
+.v6-item-head{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;
+  transition:background .12s;}
+.v6-item-head:active{background:var(--bg-lighter);}
+.v6-item-ic{width:32px;height:32px;border-radius:var(--r-sm);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;background:var(--teal-bg);}
+.v6-item-ic svg{width:17px;height:17px;color:var(--teal-dark);}
+.v6-item-info{flex:1;min-width:0;}
+.v6-item-row1{display:flex;align-items:center;gap:5px;}
+.v6-item-title{font-size:13px;font-weight:700;color:var(--text);}
+.v6-chip{padding:1px 7px;border-radius:100px;font-size:10px;font-weight:700;}
+.v6-chip.done{background:var(--teal-bg);color:var(--teal-dark);}
+.v6-chip.pend{background:var(--bg-light);color:var(--text-med);}
+.v6-chip.act{background:var(--amber-light);color:var(--amber-dark);}
+.v6-item-meta{font-size:11px;color:var(--text-dark);margin-top:1px;}
+.v6-arrow{width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-light);flex-shrink:0;transition:transform .22s;}
+.v6-arrow svg{width:16px;height:16px;}
+.v6-item.open .v6-arrow{transform:rotate(90deg);}
+.v6-body{display:none;padding:0 16px 12px 58px;}
+.v6-item.open .v6-body{display:block;animation:fsUp .15s ease;}
+.v6-body-text{font-size:12px;color:var(--text-dark);line-height:18px;margin-bottom:8px;}
+.v6-cta-row{display:flex;gap:6px;}
+.v6-cta-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:100px;
+  font-size:11px;font-weight:700;cursor:pointer;}
+.v6-cta-btn svg{width:12px;height:12px;}
+.v6-cta-btn.p{background:var(--teal-btn);color:white;border:none;}
+.v6-cta-btn.g{background:white;border:1.5px solid var(--border-light);color:var(--text);}
+.v6-inline-cta{display:none;margin-top:5px;flex-wrap:wrap;gap:5px;}
+.mode-2h .v6-inline-cta{display:flex;animation:fsUp .2s ease;}
+.v6-ibtn{display:inline-flex;align-items:center;gap:3px;padding:4px 9px;border-radius:100px;
+  font-size:10px;font-weight:700;cursor:pointer;}
+.v6-ibtn svg{width:11px;height:11px;}
+.v6-ibtn.p{background:var(--teal-btn);color:white;border:none;}
+.v6-ibtn.g{background:white;border:1px solid var(--border-light);color:var(--text);}
+.v6-fb{padding:10px 16px 14px;border-top:.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.v6-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v6-fb-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v6-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V7 — 三格磁磚  (3-column Grid Tiles)
+═══════════════════════════════════════════════ */
+.v7-wrap{padding:14px 16px;}
+.v7-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.v7-hd-title{font-size:15px;font-weight:700;color:var(--text);}
+.v7-hd-sub{font-size:12px;color:var(--text-dark);}
+.v7-hd-sub span{color:var(--teal-dark);font-weight:700;}
+.v7-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+.v7-tile{background:white;border-radius:var(--r-md);overflow:hidden;
+  box-shadow:var(--sh-action);cursor:pointer;transition:box-shadow .12s;}
+.v7-tile:active{box-shadow:none;}
+.v7-tile-icon{height:60px;display:flex;align-items:center;justify-content:center;position:relative;}
+.v7-tile-icon.done{background:var(--teal-bg);}
+.v7-tile-icon.act{background:var(--amber-light);}
+.v7-tile-icon.pend{background:var(--bg-light);}
+.v7-tile-icon svg{width:26px;height:26px;}
+.v7-tile-icon.done svg{color:var(--teal-dark);}
+.v7-tile-icon.act svg{color:var(--amber-dark);}
+.v7-tile-icon.pend svg{color:var(--text-light);}
+.v7-check{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;
+  background:var(--teal);display:flex;align-items:center;justify-content:center;}
+.v7-check svg{width:10px;height:10px;color:white;}
+.v7-tile-body{padding:7px 8px 9px;}
+.v7-tile-title{font-size:11px;font-weight:700;color:var(--text);text-align:center;
+  line-height:15px;margin-bottom:2px;}
+.v7-tile-meta{font-size:9px;color:var(--text-dark);text-align:center;line-height:12px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.v7-cta-grid{display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px;}
+.mode-2h .v7-cta-grid{display:grid;animation:fsUp .2s ease;}
+.v7-cta-cell{display:flex;flex-direction:column;gap:4px;}
+.v7-cchip{display:flex;align-items:center;justify-content:center;gap:3px;
+  padding:5px 4px;border-radius:var(--r-sm);font-size:10px;font-weight:700;cursor:pointer;}
+.v7-cchip svg{width:11px;height:11px;}
+.v7-cchip.p{background:var(--teal-btn);color:white;border:none;}
+.v7-cchip.g{background:transparent;border:1px solid var(--border-light);color:var(--text);}
+.v7-fb{display:flex;align-items:center;justify-content:center;gap:8px;padding:4px 0 2px;}
+.v7-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v7-fb-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v7-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V8 — 緊湊清單  (Ultra Compact Single-line)
+═══════════════════════════════════════════════ */
+.v8-wrap{background:white;}
+.v8-hd{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 10px;border-bottom:.5px solid var(--border);}
+.v8-hd-left{display:flex;align-items:center;gap:8px;}
+.v8-hd-title{font-size:14px;font-weight:700;color:var(--text);}
+.v8-urgent{background:#FFF2F2;color:#D14330;font-size:10px;font-weight:800;
+  padding:2px 8px;border-radius:100px;}
+.v8-prog{height:3px;background:var(--bg-med);}
+.v8-prog-fill{height:100%;background:var(--teal);width:33%;}
+.v8-row{display:flex;align-items:center;gap:8px;padding:10px 16px;
+  border-bottom:.5px solid var(--border);cursor:pointer;transition:background .12s;}
+.v8-row:last-child{border-bottom:none;}
+.v8-row:active{background:var(--bg-lighter);}
+.v8-ric{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.v8-ric svg{width:16px;height:16px;}
+.v8-ric.done{color:var(--teal);}
+.v8-ric.act{color:var(--amber);}
+.v8-ric.pend{color:var(--text-light);}
+.v8-title{font-size:13px;font-weight:600;color:var(--text);flex:1;}
+.v8-chip{padding:1px 7px;border-radius:100px;font-size:10px;font-weight:700;flex-shrink:0;}
+.v8-chip.done{background:var(--teal-bg);color:var(--teal-dark);}
+.v8-chip.pend{background:var(--bg-light);color:var(--text-med);}
+.v8-chip.act{background:var(--amber-light);color:var(--amber-dark);}
+.v8-meta{font-size:11px;color:var(--text-dark);flex-shrink:0;}
+.v8-arrow{color:var(--text-light);flex-shrink:0;}
+.v8-arrow svg{width:14px;height:14px;}
+.v8-cta{display:none;flex-shrink:0;gap:4px;}
+.mode-2h .v8-arrow{display:none;}
+.mode-2h .v8-cta{display:flex;}
+.v8-cbtn{display:inline-flex;align-items:center;gap:3px;padding:4px 8px;
+  border-radius:100px;font-size:10px;font-weight:700;cursor:pointer;}
+.v8-cbtn svg{width:11px;height:11px;}
+.v8-cbtn.p{background:var(--teal-btn);color:white;border:none;}
+.v8-cbtn.g{background:transparent;border:1px solid var(--border-light);color:var(--text);}
+.v8-fb{padding:10px 16px 14px;border-top:.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.v8-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v8-fb-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v8-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V9 — 彩色標題帶  (Color Band Headers)
+═══════════════════════════════════════════════ */
+.v9-wrap{padding:12px 16px;}
+.v9-outer{background:white;border-radius:var(--r-md);overflow:hidden;box-shadow:var(--sh-action);}
+.v9-top{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:.5px solid var(--border);}
+.v9-top-title{font-size:15px;font-weight:700;color:var(--text);}
+.v9-top-sub{font-size:12px;color:var(--text-dark);}
+.v9-top-sub span{color:var(--teal-dark);font-weight:700;}
+.v9-item{border-bottom:.5px solid var(--border);cursor:pointer;transition:opacity .12s;}
+.v9-item:last-child{border-bottom:none;}
+.v9-item:active{opacity:.9;}
+.v9-band{display:flex;align-items:center;gap:8px;padding:7px 14px;}
+.v9-band.done{background:var(--teal-bg);}
+.v9-band.act{background:var(--amber-light);}
+.v9-band.pend{background:var(--bg-light);}
+.v9-band-ic{width:16px;height:16px;flex-shrink:0;}
+.v9-band-ic svg{width:16px;height:16px;}
+.v9-band-ic.done{color:var(--teal-dark);}
+.v9-band-ic.act{color:var(--amber-dark);}
+.v9-band-ic.pend{color:var(--text-med);}
+.v9-band-label{font-size:11px;font-weight:700;flex:1;}
+.v9-band-label.done{color:var(--teal-dark);}
+.v9-band-label.act{color:var(--amber-dark);}
+.v9-band-label.pend{color:var(--text-dark);}
+.v9-band-chip{padding:1px 7px;border-radius:100px;font-size:9px;font-weight:700;}
+.v9-band-chip.done{background:var(--teal);color:white;}
+.v9-band-chip.act{background:var(--amber);color:white;}
+.v9-band-chip.pend{background:var(--border-light);color:var(--text-med);}
+.v9-body{padding:10px 14px 12px;display:flex;align-items:flex-start;gap:0;}
+.v9-bc{flex:1;}
+.v9-bval{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.v9-bsub{font-size:11px;color:var(--text-dark);line-height:16px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.v9-barr{color:var(--text-light);flex-shrink:0;padding-top:2px;}
+.v9-barr svg{width:16px;height:16px;}
+.v9-bcta{display:none;margin-top:8px;}
+.mode-2h .v9-bcta{display:flex;gap:6px;flex-wrap:wrap;animation:fsUp .2s ease;}
+.v9-cbtn{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;
+  border-radius:100px;font-size:11px;font-weight:700;cursor:pointer;}
+.v9-cbtn svg{width:12px;height:12px;}
+.v9-cbtn.p{background:var(--teal-btn);color:white;border:none;}
+.v9-cbtn.g{background:white;border:1.5px solid var(--border-light);color:var(--text);}
+.v9-fb{padding:10px 16px 12px;border-top:.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.v9-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v9-fb-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v9-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+
+/* ═══════════════════════════════════════════════
+   V10 — 橫向步驟  (Horizontal Step Selector)
+═══════════════════════════════════════════════ */
+.v10-wrap{background:white;padding:14px 16px;}
+.v10-hd{font-size:15px;font-weight:700;color:var(--text);margin-bottom:14px;}
+.v10-step-nav{display:flex;align-items:flex-start;}
+.v10-col{flex:1;display:flex;flex-direction:column;align-items:center;cursor:pointer;}
+.v10-node{width:40px;height:40px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid var(--border-light);background:white;transition:.2s;}
+.v10-node.done{background:var(--teal);border-color:var(--teal);}
+.v10-node.act{background:var(--teal-bg);border-color:var(--teal);}
+.v10-node.pend{background:var(--bg-light);border-color:var(--border-light);}
+.v10-node.sel{box-shadow:0 0 0 4px var(--teal-lighter);}
+.v10-node svg{width:18px;height:18px;}
+.v10-node.done svg{color:white;}
+.v10-node.act svg{color:var(--teal-dark);}
+.v10-node.pend svg{color:var(--text-light);}
+.v10-label{font-size:10px;font-weight:600;margin-top:5px;text-align:center;line-height:14px;}
+.v10-label.done{color:var(--teal-dark);}
+.v10-label.act{color:var(--teal-dark);}
+.v10-label.pend{color:var(--text-med);}
+.v10-conn{flex:1;height:2px;margin-top:20px;}
+.v10-conn.done{background:var(--teal);}
+.v10-conn.pend{background:var(--border-light);}
+.v10-panel{background:var(--bg-lighter);border-radius:var(--r-md);padding:14px;margin-top:14px;}
+.v10-pc{animation:fsUp .18s ease;}
+.v10-pr{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;}
+.v10-pr:last-of-type{margin-bottom:0;}
+.v10-pric{width:18px;height:18px;flex-shrink:0;margin-top:1px;color:var(--teal-dark);}
+.v10-pric svg{width:18px;height:18px;}
+.v10-plabel{font-size:11px;color:var(--text-med);}
+.v10-pval{font-size:13px;font-weight:600;color:var(--text);line-height:20px;}
+.v10-pprev{font-size:12px;color:var(--text-dark);line-height:18px;margin-top:6px;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.v10-pnav{display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;padding-top:10px;border-top:.5px solid var(--border-light);}
+.v10-plink{font-size:12px;font-weight:600;color:var(--teal-dark);cursor:pointer;
+  display:flex;align-items:center;gap:3px;}
+.v10-plink svg{width:14px;height:14px;}
+.v10-pstatus{font-size:11px;color:var(--text-med);}
+.v10-pcta{display:none;margin-top:10px;padding-top:10px;
+  border-top:.5px solid var(--border-light);gap:6px;flex-wrap:wrap;}
+.mode-2h .v10-pcta{display:flex;animation:fsUp .2s ease;}
+.v10-cbtn{display:inline-flex;align-items:center;gap:5px;padding:8px 14px;
+  border-radius:var(--r-md);font-size:12px;font-weight:700;cursor:pointer;}
+.v10-cbtn svg{width:14px;height:14px;}
+.v10-cbtn.p{background:var(--teal-btn);color:white;border:none;}
+.v10-cbtn.g{background:white;border:1.5px solid var(--border-light);color:var(--text);}
+.v10-fb{border-top:.5px solid var(--border);margin-top:12px;padding-top:10px;
+  display:flex;align-items:center;justify-content:center;gap:8px;}
+.v10-fb-text{font-size:12px;font-weight:600;color:var(--text-dark);}
+.v10-fb-btn{padding:4px 10px;border-radius:100px;font-size:11px;font-weight:700;
+  border:1.5px solid var(--border-light);background:white;color:var(--text-dark);cursor:pointer;}
+.v10-fb-btn.voted{background:var(--teal-bg);border-color:var(--teal-light);color:var(--teal-dark);}
+</style>
+</head>
+<body>
+
+<!-- ════ SVG Sprite ════ -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="ic_arrowLeft" viewBox="0 0 24 24">
+    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_arrowRight" viewBox="0 0 24 24">
+    <path d="M8.59 16.58L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.42z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_check" viewBox="0 0 24 24">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_checkCircle" viewBox="0 0 24 24">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_bell" viewBox="0 0 24 24">
+    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_flag" viewBox="0 0 24 24">
+    <path d="M14.4 6L14 4H5v17h2v-7h5.6l.4 2h7V6z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_people" viewBox="0 0 24 24">
+    <path d="M16 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 3-1.34 3-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_location" viewBox="0 0 24 24">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_clock" viewBox="0 0 24 24">
+    <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_call" viewBox="0 0 24 24">
+    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.01l-2.2 2.21z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_message" viewBox="0 0 24 24">
+    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_navigate" viewBox="0 0 24 24">
+    <path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_map" viewBox="0 0 24 24">
+    <path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_listview" viewBox="0 0 24 24">
+    <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" fill="currentColor"/>
+  </symbol>
+  <symbol id="ic_image" viewBox="0 0 24 24">
+    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" fill="currentColor"/>
+  </symbol>
+</svg>
+
+<!-- ════ Carousel Nav ════ -->
+<div class="carousel-nav">
+  <div class="nav-tab active" id="tab-0" onclick="showPhone(0)"><span>基準清單</span><span class="tb">V1</span></div>
+  <div class="nav-tab" id="tab-1" onclick="showPhone(1)"><span>氣泡卡片</span><span class="tb">V2</span></div>
+  <div class="nav-tab" id="tab-2" onclick="showPhone(2)"><span>時間線</span><span class="tb">V3</span></div>
+  <div class="nav-tab" id="tab-3" onclick="showPhone(3)"><span>步驟卡</span><span class="tb">V4</span></div>
+  <div class="nav-tab" id="tab-4" onclick="showPhone(4)"><span>彩帶條列</span><span class="tb">V5</span></div>
+  <div class="nav-tab" id="tab-5" onclick="showPhone(5)"><span>手風琴</span><span class="tb">V6</span></div>
+  <div class="nav-tab" id="tab-6" onclick="showPhone(6)"><span>三格磁磚</span><span class="tb">V7</span></div>
+  <div class="nav-tab" id="tab-7" onclick="showPhone(7)"><span>緊湊清單</span><span class="tb">V8</span></div>
+  <div class="nav-tab" id="tab-8" onclick="showPhone(8)"><span>彩色標題帶</span><span class="tb">V9</span></div>
+  <div class="nav-tab" id="tab-9" onclick="showPhone(9)"><span>橫向步驟</span><span class="tb">V10</span></div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 0 — V1 基準清單
+═══════════════════════════════════════ -->
+<div class="phone visible" id="phone-0">
+  <div class="phone-label">
+    <div class="badge">V1</div>
+    <div class="pname">基準清單</div>
+    <div class="pdesc">最接近 Figma 原稿<br>灰底卡片 + 進度條 + 行內 chip</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <!-- Mode Toggle -->
+      <div class="mode-banner" id="mode-0">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(0,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(0,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <!-- V1 Pre-departure card -->
+      <div class="v1-wrap pre-wrap-0">
+        <div class="v1-card">
+          <div class="v1-hd">
+            <div class="v1-hd-ic"><svg viewBox="0 0 24 24"><use href="#ic_checkCircle"/></svg></div>
+            <div class="v1-hd-title">出發前待確認</div>
+            <div class="v1-hd-count">1/3</div>
+          </div>
+          <div class="v1-prog"><div class="v1-prog-fill"></div></div>
+          <div class="v1-rows">
+            <!-- Row 1 行前提醒 -->
+            <div class="v1-row" onclick="openDetail(0,'remind')">
+              <div class="v1-ri"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+              <div class="v1-rc">
+                <div class="v1-rt">
+                  <span class="v1-title">行前提醒</span>
+                  <span class="v1-chip done">已閱讀</span>
+                </div>
+                <div class="v1-sub">＊請務必攜帶護照正本；前往酒店請告知門房「行中關懷旅遊」，司機會在大廳等候</div>
+                <div class="v1-cta">
+                  <div class="v1-cta-pills">
+                    <button class="v1-cta-pill g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+                  </div>
+                </div>
+              </div>
+              <div class="v1-ra"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+            <!-- Row 2 集合資訊 -->
+            <div class="v1-row" onclick="openDetail(0,'gather')">
+              <div class="v1-ri"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+              <div class="v1-rc">
+                <div class="v1-rt">
+                  <span class="v1-title">集合資訊・2 站</span>
+                  <span class="v1-chip act">06:30～07:20</span>
+                </div>
+                <div class="v1-sub">蟹道樂道頓堀東店＊請至日本橋側集合</div>
+                <div class="v1-cta">
+                  <div class="v1-cta-pills">
+                    <button class="v1-cta-pill p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+                  </div>
+                </div>
+              </div>
+              <div class="v1-ra"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+            <!-- Row 3 聯絡方式 -->
+            <div class="v1-row" onclick="openDetail(0,'contact')">
+              <div class="v1-ri"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+              <div class="v1-rc">
+                <div class="v1-rt">
+                  <span class="v1-title">聯絡方式</span>
+                  <span class="v1-chip pend">待確認</span>
+                </div>
+                <div class="v1-sub">司機/導遊：王大明</div>
+                <div class="v1-cta">
+                  <div class="v1-cta-pills">
+                    <button class="v1-cta-pill p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+                    <button class="v1-cta-pill g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+                  </div>
+                </div>
+              </div>
+              <div class="v1-ra"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+          </div>
+          <div class="v1-fb">
+            <span class="v1-fb-q">以上資訊清楚嗎？</span>
+            <div class="v1-fb-btns">
+              <button class="v1-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+              <button class="v1-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-0">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(0)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-0">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-0"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-0"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 1 — V2 氣泡卡片
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-1">
+  <div class="phone-label">
+    <div class="badge">V2</div>
+    <div class="pname">氣泡卡片</div>
+    <div class="pdesc">每個項目是獨立陰影卡片<br>彩色圖標底 + 右上角狀態 badge</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-1">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(1,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(1,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="v2-wrap pre-wrap-1">
+        <div class="v2-hd">
+          <div class="v2-hd-left">
+            <div class="v2-hd-title">出發前待確認</div>
+          </div>
+          <div class="v2-badge">1 / 3</div>
+        </div>
+        <div class="v2-cards">
+          <!-- Card 1 -->
+          <div class="v2-card" onclick="openDetail(1,'remind')">
+            <div class="v2-card-top">
+              <div class="v2-ico teal"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+              <div class="v2-card-info">
+                <div class="v2-card-title">行前提醒</div>
+                <div class="v2-card-sub">供應商個人化備註 · 已閱讀</div>
+              </div>
+              <div class="v2-status done">已閱讀</div>
+            </div>
+            <div class="v2-preview">＊請務必攜帶護照正本；前往酒店請告知門房「行中關懷旅遊」</div>
+            <div class="v2-cta-row">
+              <button class="v2-cta-btn g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+            </div>
+            <div class="v2-card-foot"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+          </div>
+          <!-- Card 2 -->
+          <div class="v2-card" onclick="openDetail(1,'gather')">
+            <div class="v2-card-top">
+              <div class="v2-ico amber"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+              <div class="v2-card-info">
+                <div class="v2-card-title">集合資訊 · 2 站</div>
+                <div class="v2-card-sub">06:30 蟹道樂道頓堀東店</div>
+              </div>
+              <div class="v2-status act">待查看</div>
+            </div>
+            <div class="v2-preview">07:20 大阪城公園入口 · 接送行程共 2 個集合站</div>
+            <div class="v2-cta-row">
+              <button class="v2-cta-btn p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+            </div>
+            <div class="v2-card-foot"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+          </div>
+          <!-- Card 3 -->
+          <div class="v2-card" onclick="openDetail(1,'contact')">
+            <div class="v2-card-top">
+              <div class="v2-ico purple"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+              <div class="v2-card-info">
+                <div class="v2-card-title">聯絡方式</div>
+                <div class="v2-card-sub">司機/導遊：王大明</div>
+              </div>
+              <div class="v2-status pend">待確認</div>
+            </div>
+            <div class="v2-cta-row">
+              <button class="v2-cta-btn p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+              <button class="v2-cta-btn g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+            </div>
+            <div class="v2-card-foot"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+          </div>
+        </div>
+        <div class="v2-fb">
+          <span class="v2-fb-text">以上資訊清楚嗎？</span>
+          <button class="v2-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+          <button class="v2-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-1">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(1)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-1">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-1"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-1"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 2 — V3 時間線
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-2">
+  <div class="phone-label">
+    <div class="badge">V3</div>
+    <div class="pname">時間線</div>
+    <div class="pdesc">垂直時間線 + 連接線<br>完成/進行中/待辦 三態視覺</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-2">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(2,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(2,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="v3-wrap pre-wrap-2">
+        <div class="v3-hd">
+          <div class="v3-hd-ic"><svg viewBox="0 0 24 24"><use href="#ic_checkCircle"/></svg></div>
+          <div class="v3-hd-title">出發前待確認</div>
+          <div class="v3-hd-count">已完成 <span class="v3-hd-done">1</span> / 3</div>
+        </div>
+        <div class="v3-timeline">
+          <!-- Item 1 -->
+          <div class="v3-item">
+            <div class="v3-left">
+              <div class="v3-dot done"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg></div>
+              <div class="v3-line"></div>
+            </div>
+            <div class="v3-right" onclick="openDetail(2,'remind')">
+              <div class="v3-r-top">
+                <div class="v3-r-main">
+                  <div class="v3-r-title">行前提醒</div>
+                  <div class="v3-r-meta">供應商備註 · 已閱讀</div>
+                  <div class="v3-r-preview">＊請務必攜帶護照正本；前往酒店請告知門房「行中關懷旅遊」</div>
+                  <div class="v3-cta">
+                    <button class="v3-cta-btn g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+                  </div>
+                </div>
+                <div class="v3-r-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="v3-item">
+            <div class="v3-left">
+              <div class="v3-dot act"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+              <div class="v3-line"></div>
+            </div>
+            <div class="v3-right" onclick="openDetail(2,'gather')">
+              <div class="v3-r-top">
+                <div class="v3-r-main">
+                  <div class="v3-r-title">集合資訊 · 2 站</div>
+                  <div class="v3-r-meta">06:30 蟹道樂道頓堀東店</div>
+                  <div class="v3-r-preview">07:20 大阪城公園入口 · 接送行程共 2 個集合站</div>
+                  <div class="v3-cta">
+                    <button class="v3-cta-btn p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+                  </div>
+                </div>
+                <div class="v3-r-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+              </div>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="v3-item">
+            <div class="v3-left">
+              <div class="v3-dot pend"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+              <div class="v3-line"></div>
+            </div>
+            <div class="v3-right" onclick="openDetail(2,'contact')">
+              <div class="v3-r-top">
+                <div class="v3-r-main">
+                  <div class="v3-r-title">聯絡方式</div>
+                  <div class="v3-r-meta">司機/導遊：王大明</div>
+                  <div class="v3-cta">
+                    <button class="v3-cta-btn p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+                    <button class="v3-cta-btn g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+                  </div>
+                </div>
+                <div class="v3-r-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="v3-fb">
+          <span class="v3-fb-text">以上資訊清楚嗎？</span>
+          <button class="v3-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+          <button class="v3-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-2">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(2)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-2">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-2"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-2"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 3 — V4 步驟卡
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-3">
+  <div class="phone-label">
+    <div class="badge">V4</div>
+    <div class="pname">步驟卡</div>
+    <div class="pdesc">環形進度 + 編號步驟<br>三態：完成 / 進行中 / 待辦</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-3">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(3,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(3,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="v4-wrap pre-wrap-3">
+        <div class="v4-card">
+          <div class="v4-hd">
+            <div class="v4-hd-left">
+              <div class="v4-hd-title">出發前待確認</div>
+            </div>
+            <div class="v4-ring-wrap">
+              <svg class="v4-ring-svg" width="40" height="40" viewBox="0 0 40 40">
+                <circle class="v4-ring-track" cx="20" cy="20" r="16"/>
+                <!-- circumference = 2π×16 ≈ 100.5; 1/3 filled = 33.5, dashoffset = 100.5-33.5 = 67 -->
+                <circle class="v4-ring-fill" cx="20" cy="20" r="16"
+                  stroke-dasharray="100.5" stroke-dashoffset="67"/>
+              </svg>
+              <div class="v4-ring-label">1<br><span style="color:var(--text-med);font-weight:500">/3</span></div>
+            </div>
+          </div>
+          <div class="v4-steps">
+            <!-- Step 1 -->
+            <div class="v4-step" onclick="openDetail(3,'remind')">
+              <div class="v4-step-num done"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg></div>
+              <div class="v4-sc">
+                <div class="v4-s-title">行前提醒</div>
+                <div class="v4-s-meta">供應商備註 · 已閱讀</div>
+                <div class="v4-s-preview">＊請務必攜帶護照正本；前往酒店請告知門房「行中關懷旅遊」</div>
+                <div class="v4-cta">
+                  <div class="v4-cta-row">
+                    <button class="v4-cta-btn g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+                  </div>
+                </div>
+              </div>
+              <div class="v4-sa"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+            <!-- Step 2 -->
+            <div class="v4-step" onclick="openDetail(3,'gather')">
+              <div class="v4-step-num act"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+              <div class="v4-sc">
+                <div class="v4-s-title">集合資訊 · 2 站</div>
+                <div class="v4-s-meta">06:30 蟹道樂道頓堀東店</div>
+                <div class="v4-s-preview">07:20 大阪城公園入口 · 接送行程共 2 個集合站</div>
+                <div class="v4-cta">
+                  <div class="v4-cta-row">
+                    <button class="v4-cta-btn p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+                  </div>
+                </div>
+              </div>
+              <div class="v4-sa"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+            <!-- Step 3 -->
+            <div class="v4-step" onclick="openDetail(3,'contact')">
+              <div class="v4-step-num pend" style="font-size:14px">3</div>
+              <div class="v4-sc">
+                <div class="v4-s-title">聯絡方式</div>
+                <div class="v4-s-meta">司機/導遊：王大明</div>
+                <div class="v4-cta">
+                  <div class="v4-cta-row">
+                    <button class="v4-cta-btn p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+                    <button class="v4-cta-btn g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+                  </div>
+                </div>
+              </div>
+              <div class="v4-sa"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+          </div>
+          <div class="v4-foot">
+            <span class="v4-foot-text">以上資訊清楚嗎？</span>
+            <button class="v4-foot-btn" onclick="voteFb(this)">👍 清楚</button>
+            <button class="v4-foot-btn" onclick="voteFb(this)">👎 不清楚</button>
+          </div>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-3">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(3)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-3">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-3"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-3"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 4 — V5 彩帶條列
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-4">
+  <div class="phone-label">
+    <div class="badge">V5</div>
+    <div class="pname">彩帶條列</div>
+    <div class="pdesc">左側彩色 accent bar + 底色區分狀態<br>點狀進度指示器</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-4">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(4,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(4,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="v5-wrap pre-wrap-4">
+        <div class="v5-hd">
+          <div class="v5-hd-title">出發前待確認</div>
+          <div class="v5-dots">
+            <div class="v5-dot done"></div>
+            <div class="v5-dot act"></div>
+            <div class="v5-dot pend"></div>
+          </div>
+        </div>
+        <div class="v5-rows">
+          <!-- Row 1 -->
+          <div class="v5-row" onclick="openDetail(4,'remind')">
+            <div class="v5-row-inner">
+              <div class="v5-accent done"></div>
+              <div class="v5-row-bg done">
+                <div class="v5-ric done"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+                <div class="v5-rc">
+                  <div class="v5-r-title">行前提醒 <span style="font-size:10px;color:var(--teal-dark);margin-left:4px;font-weight:500">✓ 已閱讀</span></div>
+                  <div class="v5-r-meta">＊請務必攜帶護照正本；前往酒店請告知門房</div>
+                </div>
+                <div class="v5-r-arr"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+              </div>
+            </div>
+            <div class="v5-cta-area">
+              <button class="v5-cta-chip g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+            </div>
+          </div>
+          <!-- Row 2 -->
+          <div class="v5-row" onclick="openDetail(4,'gather')">
+            <div class="v5-row-inner">
+              <div class="v5-accent act"></div>
+              <div class="v5-row-bg act">
+                <div class="v5-ric act"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+                <div class="v5-rc">
+                  <div class="v5-r-title">集合資訊 · 2 站</div>
+                  <div class="v5-r-meta">06:30 蟹道樂道頓堀東店</div>
+                </div>
+                <div class="v5-r-arr"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+              </div>
+            </div>
+            <div class="v5-cta-area">
+              <button class="v5-cta-chip p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+            </div>
+          </div>
+          <!-- Row 3 -->
+          <div class="v5-row" onclick="openDetail(4,'contact')">
+            <div class="v5-row-inner">
+              <div class="v5-accent pend"></div>
+              <div class="v5-row-bg pend">
+                <div class="v5-ric pend"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+                <div class="v5-rc">
+                  <div class="v5-r-title">聯絡方式</div>
+                  <div class="v5-r-meta">司機/導遊：王大明</div>
+                </div>
+                <div class="v5-r-arr"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+              </div>
+            </div>
+            <div class="v5-cta-area">
+              <button class="v5-cta-chip p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+              <button class="v5-cta-chip g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+            </div>
+          </div>
+        </div>
+        <div class="v5-fb">
+          <span class="v5-fb-text">以上資訊清楚嗎？</span>
+          <button class="v5-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+          <button class="v5-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-4">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(4)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-4">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-4"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-4"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 5 — V6 手風琴
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-5">
+  <div class="phone-label">
+    <div class="badge">V6</div>
+    <div class="pname">手風琴</div>
+    <div class="pdesc">每列可展開 / 收起查看摘要<br>2-3H 模式：CTA 在收合狀態也可見</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-5">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(5,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(5,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="pre-wrap-5 v6-wrap">
+        <div class="v6-hd">
+          <div class="v6-hd-title">出發前待確認</div>
+          <div class="v6-prog-dots">
+            <div class="v6-pdot done"></div>
+            <div class="v6-pdot"></div>
+            <div class="v6-pdot"></div>
+          </div>
+        </div>
+        <!-- Row 1 open by default -->
+        <div class="v6-item open" id="v6i-5-0">
+          <div class="v6-item-head" onclick="toggleV6(5,0)">
+            <div class="v6-item-ic"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+            <div class="v6-item-info">
+              <div class="v6-item-row1"><span class="v6-item-title">行前提醒</span><span class="v6-chip done">已閱讀</span></div>
+              <div class="v6-item-meta">供應商個人化備註</div>
+              <div class="v6-inline-cta">
+                <button class="v6-ibtn g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+              </div>
+            </div>
+            <div class="v6-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+          </div>
+          <div class="v6-body">
+            <div class="v6-body-text">＊請務必攜帶護照正本；前往酒店請告知門房「行中關懷旅遊」，司機會在大廳等候</div>
+            <div class="v6-cta-row">
+              <button class="v6-cta-btn g" onclick="openDetail(5,'remind')"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg>查看全部提醒</button>
+            </div>
+          </div>
+        </div>
+        <!-- Row 2 -->
+        <div class="v6-item" id="v6i-5-1">
+          <div class="v6-item-head" onclick="toggleV6(5,1)">
+            <div class="v6-item-ic"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+            <div class="v6-item-info">
+              <div class="v6-item-row1"><span class="v6-item-title">集合資訊 · 2 站</span><span class="v6-chip act">06:30~07:20</span></div>
+              <div class="v6-item-meta">蟹道樂道頓堀東店</div>
+              <div class="v6-inline-cta">
+                <button class="v6-ibtn p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+              </div>
+            </div>
+            <div class="v6-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+          </div>
+          <div class="v6-body">
+            <div class="v6-body-text">第 1 站 06:30 蟹道樂道頓堀東店＊請至日本橋側集合<br>第 2 站 07:20 大阪城公園入口</div>
+            <div class="v6-cta-row">
+              <button class="v6-cta-btn p" onclick="openDetail(5,'gather')"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+              <button class="v6-cta-btn g" onclick="openDetail(5,'gather')"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg>查看詳情</button>
+            </div>
+          </div>
+        </div>
+        <!-- Row 3 -->
+        <div class="v6-item" id="v6i-5-2">
+          <div class="v6-item-head" onclick="toggleV6(5,2)">
+            <div class="v6-item-ic"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+            <div class="v6-item-info">
+              <div class="v6-item-row1"><span class="v6-item-title">聯絡方式</span><span class="v6-chip pend">待確認</span></div>
+              <div class="v6-item-meta">司機/導遊：王大明</div>
+              <div class="v6-inline-cta">
+                <button class="v6-ibtn p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+                <button class="v6-ibtn g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>訊息</button>
+              </div>
+            </div>
+            <div class="v6-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+          </div>
+          <div class="v6-body">
+            <div class="v6-body-text">王大明 · 司機/導遊<br>出發前 24H 內可使用 APP 網路電話</div>
+            <div class="v6-cta-row">
+              <button class="v6-cta-btn p" onclick="openDetail(5,'contact')"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+              <button class="v6-cta-btn g" onclick="openDetail(5,'contact')"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+            </div>
+          </div>
+        </div>
+        <div class="v6-fb">
+          <span class="v6-fb-text">以上資訊清楚嗎？</span>
+          <button class="v6-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+          <button class="v6-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-5">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(5)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-5">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-5"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-5"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 6 — V7 三格磁磚
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-6">
+  <div class="phone-label">
+    <div class="badge">V7</div>
+    <div class="pname">三格磁磚</div>
+    <div class="pdesc">橫排三格等寬磁磚<br>彩色圖標區 + 狀態圓點 + 文字</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-6">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(6,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(6,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="pre-wrap-6 v7-wrap">
+        <div class="v7-hd">
+          <div class="v7-hd-title">出發前待確認</div>
+          <div class="v7-hd-sub">已完成 <span>1</span> / 3</div>
+        </div>
+        <div class="v7-grid">
+          <!-- Tile 1 -->
+          <div class="v7-tile" onclick="openDetail(6,'remind')">
+            <div class="v7-tile-icon done">
+              <svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg>
+              <div class="v7-check"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg></div>
+            </div>
+            <div class="v7-tile-body">
+              <div class="v7-tile-title">行前提醒</div>
+              <div class="v7-tile-meta">已閱讀</div>
+            </div>
+          </div>
+          <!-- Tile 2 -->
+          <div class="v7-tile" onclick="openDetail(6,'gather')">
+            <div class="v7-tile-icon act">
+              <svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg>
+            </div>
+            <div class="v7-tile-body">
+              <div class="v7-tile-title">集合資訊</div>
+              <div class="v7-tile-meta">06:30 頓堀東店</div>
+            </div>
+          </div>
+          <!-- Tile 3 -->
+          <div class="v7-tile" onclick="openDetail(6,'contact')">
+            <div class="v7-tile-icon pend">
+              <svg viewBox="0 0 24 24"><use href="#ic_people"/></svg>
+            </div>
+            <div class="v7-tile-body">
+              <div class="v7-tile-title">聯絡方式</div>
+              <div class="v7-tile-meta">王大明</div>
+            </div>
+          </div>
+        </div>
+        <!-- 2-3H CTA grid -->
+        <div class="v7-cta-grid">
+          <div class="v7-cta-cell">
+            <button class="v7-cchip g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>確認</button>
+          </div>
+          <div class="v7-cta-cell">
+            <button class="v7-cchip p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>導航</button>
+          </div>
+          <div class="v7-cta-cell">
+            <button class="v7-cchip p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>電話</button>
+            <button class="v7-cchip g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>訊息</button>
+          </div>
+        </div>
+        <div class="v7-fb">
+          <span class="v7-fb-text">以上資訊清楚嗎？</span>
+          <button class="v7-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+          <button class="v7-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-6">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(6)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-6">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-6"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-6"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 7 — V8 緊湊清單
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-7">
+  <div class="phone-label">
+    <div class="badge">V8</div>
+    <div class="pname">緊湊清單</div>
+    <div class="pdesc">單行極簡版本，不顯示預覽文字<br>強調快速掃描，所有資訊一眼看清</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-7">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(7,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(7,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="pre-wrap-7 v8-wrap">
+        <div class="v8-hd">
+          <div class="v8-hd-left">
+            <div class="v8-hd-title">出發前待確認</div>
+            <div class="v8-urgent">2 待確認</div>
+          </div>
+        </div>
+        <div class="v8-prog"><div class="v8-prog-fill"></div></div>
+        <!-- Row 1 -->
+        <div class="v8-row" onclick="openDetail(7,'remind')">
+          <div class="v8-ric done"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+          <div class="v8-title">行前提醒</div>
+          <div class="v8-chip done">已閱讀</div>
+          <div class="v8-cta">
+            <button class="v8-cbtn g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>確認</button>
+          </div>
+          <div class="v8-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+        </div>
+        <!-- Row 2 -->
+        <div class="v8-row" onclick="openDetail(7,'gather')">
+          <div class="v8-ric act"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+          <div class="v8-title">集合資訊 · 2 站</div>
+          <div class="v8-meta">06:30</div>
+          <div class="v8-chip act">待查看</div>
+          <div class="v8-cta">
+            <button class="v8-cbtn p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>導航</button>
+          </div>
+          <div class="v8-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+        </div>
+        <!-- Row 3 -->
+        <div class="v8-row" onclick="openDetail(7,'contact')">
+          <div class="v8-ric pend"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+          <div class="v8-title">聯絡方式</div>
+          <div class="v8-meta">王大明</div>
+          <div class="v8-chip pend">待確認</div>
+          <div class="v8-cta">
+            <button class="v8-cbtn p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>電話</button>
+            <button class="v8-cbtn g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>訊</button>
+          </div>
+          <div class="v8-arrow"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+        </div>
+        <div class="v8-fb">
+          <span class="v8-fb-text">以上資訊清楚嗎？</span>
+          <button class="v8-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+          <button class="v8-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-7">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(7)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-7">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-7"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-7"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 8 — V9 彩色標題帶
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-8">
+  <div class="phone-label">
+    <div class="badge">V9</div>
+    <div class="pname">彩色標題帶</div>
+    <div class="pdesc">每個項目有專屬顏色 header 帶<br>像 iOS grouped table，有分類感</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-8">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(8,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(8,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="pre-wrap-8 v9-wrap">
+        <div class="v9-outer">
+          <div class="v9-top">
+            <div class="v9-top-title">出發前待確認</div>
+            <div class="v9-top-sub">已完成 <span>1</span> / 3</div>
+          </div>
+          <!-- Item 1 -->
+          <div class="v9-item" onclick="openDetail(8,'remind')">
+            <div class="v9-band done">
+              <div class="v9-band-ic done"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+              <div class="v9-band-label done">行前提醒</div>
+              <div class="v9-band-chip done">已閱讀</div>
+            </div>
+            <div class="v9-body">
+              <div class="v9-bc">
+                <div class="v9-bval">供應商個人化備註</div>
+                <div class="v9-bsub">＊請務必攜帶護照正本；前往酒店請告知門房「行中關懷旅遊」</div>
+                <div class="v9-bcta">
+                  <button class="v9-cbtn g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+                </div>
+              </div>
+              <div class="v9-barr"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+          </div>
+          <!-- Item 2 -->
+          <div class="v9-item" onclick="openDetail(8,'gather')">
+            <div class="v9-band act">
+              <div class="v9-band-ic act"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+              <div class="v9-band-label act">集合資訊 · 2 站</div>
+              <div class="v9-band-chip act">06:30~07:20</div>
+            </div>
+            <div class="v9-body">
+              <div class="v9-bc">
+                <div class="v9-bval">蟹道樂道頓堀東店</div>
+                <div class="v9-bsub">＊請至日本橋側集合 · 07:20 大阪城公園入口</div>
+                <div class="v9-bcta">
+                  <button class="v9-cbtn p"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+                </div>
+              </div>
+              <div class="v9-barr"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+          </div>
+          <!-- Item 3 -->
+          <div class="v9-item" onclick="openDetail(8,'contact')">
+            <div class="v9-band pend">
+              <div class="v9-band-ic pend"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+              <div class="v9-band-label pend">聯絡方式</div>
+              <div class="v9-band-chip pend">待確認</div>
+            </div>
+            <div class="v9-body">
+              <div class="v9-bc">
+                <div class="v9-bval">司機/導遊：王大明</div>
+                <div class="v9-bcta">
+                  <button class="v9-cbtn p"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+                  <button class="v9-cbtn g"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+                </div>
+              </div>
+              <div class="v9-barr"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div>
+            </div>
+          </div>
+          <div class="v9-fb">
+            <span class="v9-fb-text">以上資訊清楚嗎？</span>
+            <button class="v9-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+            <button class="v9-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+          </div>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-8">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(8)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-8">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-8"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-8"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PHONE 9 — V10 橫向步驟
+═══════════════════════════════════════ -->
+<div class="phone" id="phone-9">
+  <div class="phone-label">
+    <div class="badge">V10</div>
+    <div class="pname">橫向步驟</div>
+    <div class="pdesc">點擊上方步驟節點切換內容<br>選中的步驟在下方展開詳細資訊</div>
+  </div>
+  <div class="screen">
+    <div class="scroll-area">
+      <div class="navbar">
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="nb-title">訂單明細</div>
+        <div class="nb-icon"><svg viewBox="0 0 24 24"><use href="#ic_map"/></svg></div>
+      </div>
+      <div class="product-img-ph"><svg viewBox="0 0 24 24"><use href="#ic_image"/></svg></div>
+      <div class="product-header">
+        <div class="product-title">大阪市區一日遊 含接送服務</div>
+        <div class="product-meta">
+          <span class="meta-tag">📅 2026/04/23</span>
+          <span class="meta-tag">⏰ 08:20</span>
+          <span class="meta-tag">👥 2大人</span>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="mode-banner" id="mode-9">
+        <span class="mb-label">預覽模式</span>
+        <div class="mb-toggle">
+          <span class="mb-btn active" onclick="setMode(9,false)">出發前 24H</span>
+          <span class="mb-btn" onclick="setMode(9,true)">出發前 2-3H</span>
+        </div>
+      </div>
+      <div class="pre-wrap-9 v10-wrap">
+        <div class="v10-hd">出發前待確認</div>
+        <!-- Step nav -->
+        <div class="v10-step-nav">
+          <div class="v10-col" onclick="selectStep(9,0)">
+            <div class="v10-node done sel" id="v10n-9-0"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+            <div class="v10-label done">行前提醒</div>
+          </div>
+          <div class="v10-conn done"></div>
+          <div class="v10-col" onclick="selectStep(9,1)">
+            <div class="v10-node act" id="v10n-9-1"><svg viewBox="0 0 24 24"><use href="#ic_flag"/></svg></div>
+            <div class="v10-label act">集合資訊</div>
+          </div>
+          <div class="v10-conn pend"></div>
+          <div class="v10-col" onclick="selectStep(9,2)">
+            <div class="v10-node pend" id="v10n-9-2"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+            <div class="v10-label pend">聯絡方式</div>
+          </div>
+        </div>
+        <!-- Content panel (filled by JS) -->
+        <div class="v10-panel" id="v10panel-9"></div>
+        <div class="v10-fb">
+          <span class="v10-fb-text">以上資訊清楚嗎？</span>
+          <button class="v10-fb-btn" onclick="voteFb(this)">👍 清楚</button>
+          <button class="v10-fb-btn" onclick="voteFb(this)">👎 不清楚</button>
+        </div>
+      </div>
+      <div class="gap8"></div>
+      <div class="tool-card">
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div><div class="tr-lb">體驗地點</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+        <div class="tool-row"><div class="tr-ic"><svg viewBox="0 0 24 24"><use href="#ic_listview"/></svg></div><div class="tr-lb">如何使用</div><div class="tr-ar"><svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></div></div>
+      </div>
+    </div>
+    <div class="detail-overlay" id="detail-9">
+      <div class="detail-nav">
+        <div class="detail-back" onclick="closeDetail(9)"><svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg></div>
+        <div class="detail-title-text" id="detail-title-9">詳情</div>
+        <div class="detail-spacer"></div>
+      </div>
+      <div class="detail-scroll"><div class="detail-body" id="detail-body-9"></div></div>
+      <div class="detail-bottom-cta" id="detail-cta-9"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ Arrow Buttons ════ -->
+<button class="carr-arrow L" onclick="shiftPhone(-1)" aria-label="上一個">
+  <svg viewBox="0 0 24 24"><use href="#ic_arrowLeft"/></svg>
+</button>
+<button class="carr-arrow R" onclick="shiftPhone(1)" aria-label="下一個">
+  <svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg>
+</button>
+
+<script>
+/* ── Carousel ── */
+let cur = 0;
+const total = 10;
+
+function showPhone(i) {
+  document.getElementById('phone-' + cur).classList.remove('visible');
+  document.getElementById('tab-' + cur).classList.remove('active');
+  cur = i;
+  document.getElementById('phone-' + cur).classList.add('visible');
+  document.getElementById('tab-' + cur).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function shiftPhone(d) { showPhone((cur + d + total) % total); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') shiftPhone(-1);
+  if (e.key === 'ArrowRight') shiftPhone(1);
+});
+
+/* ── Mode toggle (24H ↔ 2-3H) ── */
+function setMode(idx, is2h) {
+  const wrap = document.querySelector('.pre-wrap-' + idx);
+  if (is2h) wrap.classList.add('mode-2h');
+  else wrap.classList.remove('mode-2h');
+  const toggle = document.getElementById('mode-' + idx);
+  toggle.querySelectorAll('.mb-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', (i === 0 && !is2h) || (i === 1 && is2h));
+  });
+}
+
+/* ── Detail overlay ── */
+function openDetail(phoneIdx, type) {
+  const titleEl = document.getElementById('detail-title-' + phoneIdx);
+  const bodyEl  = document.getElementById('detail-body-' + phoneIdx);
+  const ctaEl   = document.getElementById('detail-cta-' + phoneIdx);
+
+  if (type === 'remind') {
+    titleEl.textContent = '行前提醒';
+    bodyEl.innerHTML = `
+      <div class="d-card">
+        <div class="d-rows">
+          <div class="d-remind-item">
+            <div class="d-remind-ic"><svg viewBox="0 0 24 24"><use href="#ic_checkCircle"/></svg></div>
+            <div class="d-remind-text">請務必攜帶護照正本，沒有護照將無法上車</div>
+          </div>
+          <div class="d-remind-item">
+            <div class="d-remind-ic"><svg viewBox="0 0 24 24"><use href="#ic_checkCircle"/></svg></div>
+            <div class="d-remind-text">前往酒店請告知門房「行中關懷旅遊」，司機會在大廳等候</div>
+          </div>
+          <div class="d-remind-item">
+            <div class="d-remind-ic"><svg viewBox="0 0 24 24"><use href="#ic_checkCircle"/></svg></div>
+            <div class="d-remind-text">如有任何問題，請在出發前 2 小時通知我們，以便安排</div>
+          </div>
+        </div>
+      </div>`;
+    ctaEl.innerHTML = `
+      <button class="cta-primary" style="flex:1">
+        <svg width="16" height="16" viewBox="0 0 24 24"><use href="#ic_check"/></svg>確認我已閱讀
+      </button>`;
+  }
+
+  else if (type === 'gather') {
+    titleEl.textContent = '集合資訊';
+    bodyEl.innerHTML = `
+      <div class="d-card d-map">🗺️</div>
+      <div class="d-card">
+        <div class="d-rows">
+          <div class="d-row">
+            <div class="d-row-ic"><svg viewBox="0 0 24 24"><use href="#ic_clock"/></svg></div>
+            <div class="d-row-content">
+              <div class="d-row-label">第 1 站 集合時間</div>
+              <div class="d-row-value">2026/04/23 &nbsp; 06:30</div>
+            </div>
+          </div>
+          <div class="d-row">
+            <div class="d-row-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div>
+            <div class="d-row-content">
+              <div class="d-row-label">第 1 站 集合地點</div>
+              <div class="d-row-value">蟹道樂道頓堀東店<br><span style="font-size:12px;color:var(--text-dark)">＊請至日本橋側集合</span></div>
+            </div>
+          </div>
+          <div class="d-row">
+            <div class="d-row-ic"><svg viewBox="0 0 24 24"><use href="#ic_clock"/></svg></div>
+            <div class="d-row-content">
+              <div class="d-row-label">第 2 站 抵達時間</div>
+              <div class="d-row-value">2026/04/23 &nbsp; 07:20</div>
+            </div>
+          </div>
+          <div class="d-row">
+            <div class="d-row-ic"><svg viewBox="0 0 24 24"><use href="#ic_location"/></svg></div>
+            <div class="d-row-content">
+              <div class="d-row-label">第 2 站 目的地</div>
+              <div class="d-row-value">大阪城公園入口</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    ctaEl.innerHTML = `
+      <button class="cta-primary" style="flex:1">
+        <svg width="16" height="16" viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航
+      </button>`;
+  }
+
+  else if (type === 'contact') {
+    titleEl.textContent = '聯絡方式';
+    bodyEl.innerHTML = `
+      <div class="d-card">
+        <div class="d-person-row">
+          <div class="d-avatar">王</div>
+          <div>
+            <div class="d-person-name">王大明</div>
+            <div class="d-person-role">司機 / 導遊</div>
+          </div>
+        </div>
+        <div class="d-rows">
+          <div class="d-row">
+            <div class="d-row-ic"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg></div>
+            <div class="d-row-content">
+              <div class="d-row-label">網路電話（出發前 24H 內可用）</div>
+              <div class="d-row-value">APP 內直撥</div>
+            </div>
+          </div>
+          <div class="d-row">
+            <div class="d-row-ic"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg></div>
+            <div class="d-row-content">
+              <div class="d-row-label">訊息</div>
+              <div class="d-row-value">透過 KKday 平台傳送</div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    ctaEl.innerHTML = `
+      <button class="cta-primary" style="flex:1">
+        <svg width="16" height="16" viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話
+      </button>
+      <button class="cta-secondary" style="flex:1">
+        <svg width="16" height="16" viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息
+      </button>`;
+  }
+
+  document.getElementById('detail-' + phoneIdx).classList.add('open');
+}
+
+function closeDetail(phoneIdx) {
+  document.getElementById('detail-' + phoneIdx).classList.remove('open');
+}
+
+/* ── V6 Accordion toggle ── */
+function toggleV6(phoneIdx, itemIdx) {
+  const item = document.getElementById('v6i-' + phoneIdx + '-' + itemIdx);
+  item.classList.toggle('open');
+}
+
+/* ── V10 Step selector ── */
+const v10State = { 9: 0 }; // phoneIdx → active step
+
+const v10Content = [
+  { // step 0 — 行前提醒
+    type: 'remind',
+    status: '已閱讀',
+    body: `<div class="v10-pc">
+      <div class="v10-pr"><div class="v10-pric"><svg viewBox="0 0 24 24"><use href="#ic_bell"/></svg></div>
+        <div><div class="v10-plabel">行前提醒狀態</div><div class="v10-pval">已閱讀 ✓</div></div></div>
+      <div class="v10-pprev">＊請務必攜帶護照正本；前往酒店請告知門房「行中關懷旅遊」，司機會在大廳等候；如有問題請在出發前 2 小時通知我們</div>
+      <div class="v10-pcta">
+        <button class="v10-cbtn g"><svg viewBox="0 0 24 24"><use href="#ic_check"/></svg>重新確認</button>
+      </div>
+      <div class="v10-pnav">
+        <span class="v10-pstatus">供應商個人化備註</span>
+        <span class="v10-plink" onclick="openDetail(9,'remind')">查看全部 <svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></span>
+      </div></div>`
+  },
+  { // step 1 — 集合資訊
+    type: 'gather',
+    status: '待查看',
+    body: `<div class="v10-pc">
+      <div class="v10-pr"><div class="v10-pric"><svg viewBox="0 0 24 24"><use href="#ic_clock"/></svg></div>
+        <div><div class="v10-plabel">第 1 站 集合時間</div><div class="v10-pval">06:30 → 蟹道樂道頓堀東店</div></div></div>
+      <div class="v10-pr"><div class="v10-pric"><svg viewBox="0 0 24 24"><use href="#ic_clock"/></svg></div>
+        <div><div class="v10-plabel">第 2 站 抵達時間</div><div class="v10-pval">07:20 → 大阪城公園入口</div></div></div>
+      <div class="v10-pcta">
+        <button class="v10-cbtn p" onclick="openDetail(9,'gather')"><svg viewBox="0 0 24 24"><use href="#ic_navigate"/></svg>開啟導航</button>
+      </div>
+      <div class="v10-pnav">
+        <span class="v10-pstatus">共 2 個集合站</span>
+        <span class="v10-plink" onclick="openDetail(9,'gather')">查看地圖 <svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></span>
+      </div></div>`
+  },
+  { // step 2 — 聯絡方式
+    type: 'contact',
+    status: '待確認',
+    body: `<div class="v10-pc">
+      <div class="v10-pr"><div class="v10-pric"><svg viewBox="0 0 24 24"><use href="#ic_people"/></svg></div>
+        <div><div class="v10-plabel">司機/導遊</div><div class="v10-pval">王大明</div></div></div>
+      <div class="v10-pr"><div class="v10-pric"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg></div>
+        <div><div class="v10-plabel">聯絡方式</div><div class="v10-pval">APP 網路電話（出發前 24H 內）</div></div></div>
+      <div class="v10-pcta">
+        <button class="v10-cbtn p" onclick="openDetail(9,'contact')"><svg viewBox="0 0 24 24"><use href="#ic_call"/></svg>立即電話</button>
+        <button class="v10-cbtn g" onclick="openDetail(9,'contact')"><svg viewBox="0 0 24 24"><use href="#ic_message"/></svg>傳送訊息</button>
+      </div>
+      <div class="v10-pnav">
+        <span class="v10-pstatus">待確認</span>
+        <span class="v10-plink" onclick="openDetail(9,'contact')">查看詳情 <svg viewBox="0 0 24 24"><use href="#ic_arrowRight"/></svg></span>
+      </div></div>`
+  }
+];
+
+function selectStep(phoneIdx, stepIdx) {
+  v10State[phoneIdx] = stepIdx;
+  // Update node selection highlight
+  for (let i = 0; i < 3; i++) {
+    const node = document.getElementById('v10n-' + phoneIdx + '-' + i);
+    if (node) node.classList.toggle('sel', i === stepIdx);
+  }
+  // Update panel content
+  const panel = document.getElementById('v10panel-' + phoneIdx);
+  if (panel) panel.innerHTML = v10Content[stepIdx].body;
+}
+
+// Init V10 panel on page load
+window.addEventListener('DOMContentLoaded', () => {
+  selectStep(9, 0);
+});
+
+/* ── Feedback vote ── */
+function voteFb(btn) {
+  const container = btn.parentElement;
+  container.querySelectorAll('button').forEach(b => b.classList.remove('voted'));
+  btn.classList.add('voted');
+}
+</script>
+</body>
+</html>

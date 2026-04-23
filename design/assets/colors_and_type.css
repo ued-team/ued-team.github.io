@@ -1,0 +1,315 @@
+/**
+ * KKday Design System — Colors & Type
+ *
+ * Distilled from kkday-style-dictionary (tokens/color.js, tokens/typography.js,
+ * tokens/spacing.js, tokens/radius.js, tokens/elevation.js, tokens.css).
+ *
+ * Conventions:
+ *  --kk-*  → original tokens from Style Dictionary (canonical)
+ *  --fg*, --bg*, --border*, --h1..h6, --p, etc. → short semantic aliases
+ *
+ * Primary brand color: Cyan (#1AB6C1 / #13A3B6). This is the "KKday teal".
+ * Type: Noto Sans TC + Noto Sans (multilingual travel platform — CJK + Latin).
+ */
+
+/* ------------------------------------------------------------------
+   Fonts — Noto Sans family, imported from Google Fonts
+   KKday is a multilingual platform (TC/JA/KO/EN). Noto Sans covers all.
+   ------------------------------------------------------------------ */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ============================================================
+     BASE PALETTE — 10-step ramps (private in SD; aliased for preview)
+     ============================================================ */
+  --kk-color-white: #FFFFFF;
+
+  /* Cyan — PRIMARY brand ramp */
+  --kk-color-cyan-1:  #F0FAFB;
+  --kk-color-cyan-2:  #CEF0F3;
+  --kk-color-cyan-3:  #ADE6EB;
+  --kk-color-cyan-4:  #77D6DD;
+  --kk-color-cyan-5:  #4ECAD3;
+  --kk-color-cyan-6:  #26BEC9;
+  --kk-color-cyan-7:  #1AB6C1;
+  --kk-color-cyan-8:  #13A3B6;
+  --kk-color-cyan-9:  #068B9F;
+  --kk-color-cyan-10: #03748A;
+
+  /* Neutral */
+  --kk-color-neutral-1:  #F7FAFC;
+  --kk-color-neutral-2:  #F1F4F8;
+  --kk-color-neutral-3:  #E6E9ED;
+  --kk-color-neutral-4:  #D5D6DB;
+  --kk-color-neutral-5:  #BABBBE;
+  --kk-color-neutral-6:  #9C9DA0;
+  --kk-color-neutral-7:  #727272;
+  --kk-color-neutral-8:  #666666;
+  --kk-color-neutral-9:  #404040;
+  --kk-color-neutral-10: #212121;
+
+  /* Red — critical */
+  --kk-color-red-1:  #FFF7F7;
+  --kk-color-red-2:  #FFF2F2;
+  --kk-color-red-5:  #F5A8A4;
+  --kk-color-red-7:  #EF7A70;
+  --kk-color-red-8:  #E65F50;
+  --kk-color-red-9:  #D14330;
+  --kk-color-red-10: #B71C1C;
+
+  /* Blue — info */
+  --kk-color-blue-1:  #F2FAFF;
+  --kk-color-blue-6:  #64b3f4;
+  --kk-color-blue-8:  #2d84d6;
+  --kk-color-blue-9:  #1565C0;
+
+  /* Yellow — warning */
+  --kk-color-yellow-1: #FFFEE0;
+  --kk-color-yellow-5: #FEE269;
+  --kk-color-yellow-7: #F5B53D;
+  --kk-color-yellow-8: #E78F37;
+
+  /* Amber — highlight */
+  --kk-color-amber-1: #FFF8E1;
+  --kk-color-amber-5: #FFCA28;
+  --kk-color-amber-7: #FFB400;
+  --kk-color-amber-8: #FFA000;
+  --kk-color-amber-9: #FF8F00;
+
+  /* Green */
+  --kk-color-green-1: #F0FDF7;
+  --kk-color-green-6: #10B981;
+  --kk-color-green-8: #048C66;
+
+  /* Purple (no semantic aliases; used sparingly) */
+  --kk-color-purple-1: #F7F2F8;
+  --kk-color-purple-5: #6C56A1;
+  --kk-color-purple-6: #5A4787;
+
+  /* ============================================================
+     SEMANTIC — TEXT
+     ============================================================ */
+  --kk-color-text-lighter:          #D5D6DB;
+  --kk-color-text-light:            #BABBBE;
+  --kk-color-text-medium:           #9C9DA0;
+  --kk-color-text-dark:             #727272;
+  --kk-color-text-darker:           #212121;
+
+  --kk-color-text-primary-lighter: #CEF0F3;
+  --kk-color-text-primary-light:   #ADE6EB;
+  --kk-color-text-primary-medium:  #26BEC9;
+  --kk-color-text-primary-dark:    #13A3B6;
+  --kk-color-text-primary-darker:  #068B9F;
+
+  --kk-color-text-critical-medium: #EF7A70;
+  --kk-color-text-critical-dark:   #E65F50;
+  --kk-color-text-critical-darker: #D14330;
+
+  --kk-color-text-info-dark:       #2d84d6;
+  --kk-color-text-info-darker:     #1565C0;
+
+  --kk-color-text-warning-dark:    #E78F37;
+  --kk-color-text-highlight-medium:#FFB400;
+
+  /* ============================================================
+     SEMANTIC — BACKGROUND
+     ============================================================ */
+  --kk-color-background-surface-lighter: #F7FAFC;
+  --kk-color-background-surface-light:   #F1F4F8;
+  --kk-color-background-surface-medium:  #E6E9ED;
+  --kk-color-background-surface-dark:    #D5D6DB;
+
+  --kk-color-background-primary-lighter: #F0FAFB;
+  --kk-color-background-primary-light:   #CEF0F3;
+  --kk-color-background-primary-medium:  #26BEC9;
+  --kk-color-background-primary-button:  #1AB6C1;  /* canonical KKday button */
+  --kk-color-background-primary-dark:    #13A3B6;
+  --kk-color-background-primary-darker:  #03748A;
+
+  --kk-color-background-critical-lighter:#FFF2F2;
+  --kk-color-background-critical-medium: #EF7A70;
+  --kk-color-background-warning-lighter: #FFFEE0;
+  --kk-color-background-highlight-lighter:#FFF8E1;
+  --kk-color-background-info-lighter:    #F2FAFF;
+
+  /* ============================================================
+     SEMANTIC — BORDER
+     ============================================================ */
+  --kk-color-border-lighter: #E6E9ED;
+  --kk-color-border-light:   #D5D6DB;
+  --kk-color-border-medium:  #BABBBE;
+  --kk-color-border-dark:    #727272;
+  --kk-color-border-darker:  #212121;
+
+  --kk-color-border-primary-light:  #ADE6EB;
+  --kk-color-border-primary-medium: #26BEC9;
+
+  /* ============================================================
+     SOCIAL
+     ============================================================ */
+  --kk-color-line-default:     #06C755;
+  --kk-color-kakao-default:    #FEE500;
+  --kk-color-facebook-default: #1877F2;
+  --kk-color-apple-default:    #000000;
+  --kk-color-naver-default:    #19CE60;
+  --kk-color-google-default:   #FFFFFF;
+  --kk-color-wechat-default:   #18D271;
+  --kk-color-yahoo-jp-default: #FF0033;
+
+  /* ============================================================
+     SHORT ALIASES
+     ============================================================ */
+  --fg1: var(--kk-color-text-darker);     /* primary text */
+  --fg2: var(--kk-color-text-dark);       /* secondary text */
+  --fg3: var(--kk-color-text-medium);     /* tertiary / muted */
+  --fg4: var(--kk-color-text-light);      /* disabled */
+  --fg-on-brand: #FFFFFF;                 /* text on cyan-7/8 */
+  --fg-brand:    var(--kk-color-text-primary-darker);
+  --fg-critical: var(--kk-color-text-critical-darker);
+  --fg-warning:  var(--kk-color-text-warning-dark);
+  --fg-info:     var(--kk-color-text-info-darker);
+
+  --bg1: #FFFFFF;                                 /* primary surface */
+  --bg2: var(--kk-color-background-surface-lighter); /* page bg */
+  --bg3: var(--kk-color-background-surface-light);   /* subtle alt */
+  --bg4: var(--kk-color-background-surface-medium);  /* divider fill */
+  --bg-brand: var(--kk-color-background-primary-button); /* #1AB6C1 */
+  --bg-brand-hover: var(--kk-color-background-primary-dark);
+  --bg-brand-soft:  var(--kk-color-background-primary-lighter);
+
+  --border1: var(--kk-color-border-lighter);  /* default */
+  --border2: var(--kk-color-border-light);    /* stronger */
+  --border3: var(--kk-color-border-medium);   /* inputs */
+  --border-brand: var(--kk-color-border-primary-medium);
+
+  /* ============================================================
+     TYPOGRAPHY — scale
+     ============================================================ */
+  --font-sans: "Noto Sans TC", "Noto Sans", -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans-jp: "Noto Sans JP", "Noto Sans", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* font-size scale */
+  --font-size-1: 12px;
+  --font-size-2: 14px;
+  --font-size-3: 16px;
+  --font-size-4: 18px;
+  --font-size-5: 22px;
+  --font-size-6: 24px;
+  --font-size-7: 26px;
+  --font-size-8: 28px;
+  --font-size-9: 32px;
+
+  --line-height-1: 14px;
+  --line-height-2: 16px;
+  --line-height-3: 18px;
+  --line-height-4: 20px;
+  --line-height-5: 24px;
+  --line-height-6: 26px;
+  --line-height-7: 28px;
+  --line-height-8: 30px;
+  --line-height-9: 32px;
+
+  --fw-light: 300;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  /* Semantic text slots (mapped from $kk-text-*) */
+  --text-h4-size: 24px;  --text-h4-lh: 30px;  --text-h4-weight: 700;
+  --text-h5-size: 22px;  --text-h5-lh: 28px;  --text-h5-weight: 700;
+  --text-h6-size: 18px;  --text-h6-lh: 26px;  --text-h6-weight: 700;
+  --text-subtitle-lg-size: 16px; --text-subtitle-lg-lh: 24px; --text-subtitle-lg-weight: 700;
+  --text-subtitle-md-size: 14px; --text-subtitle-md-lh: 20px; --text-subtitle-md-weight: 500;
+  --text-subtitle-sm-size: 12px; --text-subtitle-sm-lh: 16px; --text-subtitle-sm-weight: 500;
+  --text-body-lg-size: 16px; --text-body-lg-lh: 24px; --text-body-lg-weight: 400;
+  --text-body-md-size: 14px; --text-body-md-lh: 20px; --text-body-md-weight: 400;
+  --text-body-sm-size: 12px; --text-body-sm-lh: 16px; --text-body-sm-weight: 400;
+  --text-category-size: 12px; --text-category-lh: 16px; --text-category-weight: 400;
+
+  /* ============================================================
+     SPACING (SD canonical)
+     ============================================================ */
+  --space-025: 2px;
+  --space-050: 4px;
+  --space-075: 6px;
+  --space-100: 8px;
+  --space-150: 12px;
+  --space-200: 16px;
+  --space-250: 20px;
+  --space-300: 24px;
+  --space-400: 32px;
+  --space-500: 40px;
+  --space-600: 48px;
+
+  /* Dimension — icon sizes */
+  --icon-2xs: 14px;
+  --icon-xs:  16px;
+  --icon-sm:  20px;
+  --icon-md:  24px;
+  --icon-lg:  32px;
+  --icon-xl:  48px;
+
+  /* ============================================================
+     RADIUS
+     ============================================================ */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  /* ============================================================
+     ELEVATION — three-layer system
+     action = interactive elements (buttons, chips)
+     fixed  = fixed UI (headers, navs, sticky)
+     raised = modals / popovers / floating
+     ============================================================ */
+  --shadow-action: 0 1px 4px 0 rgba(38, 50, 56, 0.12);
+  --shadow-fixed:  0 2px 24px 0 rgba(38, 50, 56, 0.12);
+  --shadow-raised: 0 8px 24px 0 rgba(37, 42, 49, 0.24);
+  --shadow-overlay:0 8px 60px 0 rgba(37, 42, 49, 0.32);
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES
+   ============================================================ */
+html, body {
+  font-family: var(--font-sans);
+  color: var(--fg1);
+  background: var(--bg2);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 { font-size: 32px; line-height: 40px; font-weight: 700; letter-spacing: -0.01em; color: var(--fg1); margin: 0; }
+h2 { font-size: var(--text-h4-size); line-height: var(--text-h4-lh); font-weight: 700; color: var(--fg1); margin: 0; }
+h3 { font-size: var(--text-h5-size); line-height: var(--text-h5-lh); font-weight: 700; color: var(--fg1); margin: 0; }
+h4 { font-size: var(--text-h6-size); line-height: var(--text-h6-lh); font-weight: 700; color: var(--fg1); margin: 0; }
+h5 { font-size: var(--text-subtitle-lg-size); line-height: var(--text-subtitle-lg-lh); font-weight: 700; color: var(--fg1); margin: 0; }
+h6 { font-size: var(--text-subtitle-md-size); line-height: var(--text-subtitle-md-lh); font-weight: 500; color: var(--fg1); margin: 0; }
+p  { font-size: var(--text-body-md-size); line-height: var(--text-body-md-lh); font-weight: 400; color: var(--fg1); margin: 0; }
+
+small, .text-caption {
+  font-size: var(--text-body-sm-size); line-height: var(--text-body-sm-lh); color: var(--fg2);
+}
+code, pre, .mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.category-label {
+  font-size: var(--text-category-size);
+  line-height: var(--text-category-lh);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg2);
+}
+
+/* Utility focus ring — KKday teal */
+:focus-visible {
+  outline: 2px solid var(--bg-brand);
+  outline-offset: 2px;
+}
