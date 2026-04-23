@@ -1683,7 +1683,19 @@
 <!-- ── Contact Bottom Sheet ── -->
 <div class="cbs-overlay" id="cbs-overlay" onclick="handleCBSClick(event)">
   <div class="cbs" id="cbs">
-    <div class="cbs-grabber-wrap"><div class="cbs-grabber"></div></div>
+    <div class="bs-header">
+      <div class="bs-grabber-row"><div class="bs-grabber"></div></div>
+      <div class="bs-title-row">
+        <button class="bs-close" onclick="closeContactBS()" aria-label="關閉">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.4571 4.54289C19.8476 4.93342 19.8476 5.56658 19.4571 5.95711L5.95711 19.4571C5.56658 19.8476 4.93342 19.8476 4.54289 19.4571C4.15237 19.0666 4.15237 18.4334 4.54289 18.0429L18.0429 4.54289C18.4334 4.15237 19.0666 4.15237 19.4571 4.54289Z" fill="#212121"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.54289 4.54289C4.93342 4.15237 5.56658 4.15237 5.95711 4.54289L19.4571 18.0429C19.8476 18.4334 19.8476 19.0666 19.4571 19.4571C19.0666 19.8476 18.4334 19.8476 18.0429 19.4571L4.54289 5.95711C4.15237 5.56658 4.15237 4.93342 4.54289 4.54289Z" fill="#212121"/>
+          </svg>
+        </button>
+        <p class="bs-title">聯絡方式</p>
+        <div class="bs-title-right"></div>
+      </div>
+    </div>
     <div class="cbs-body">
 
       <!-- 聯絡導遊或司機 -->
@@ -1926,15 +1938,18 @@
   <!-- Location selector BS (for 未預訂且1個以上 version) -->
   <div class="mp-select-overlay" id="mp-select-overlay">
     <div class="mp-select-bs" id="mp-select-bs">
-      <div class="mp-select-grabber-wrap" id="mp-select-grabber-wrap"><div class="mp-select-grabber"></div></div>
-      <div class="mp-select-title-row">
-        <p class="mp-select-title">你的集合地點是？</p>
-        <button class="mp-select-close-btn" onclick="closeSelectBS()" aria-label="關閉">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.4571 4.54289C19.8476 4.93342 19.8476 5.56658 19.4571 5.95711L5.95711 19.4571C5.56658 19.8476 4.93342 19.8476 4.54289 19.4571C4.15237 19.0666 4.15237 18.4334 4.54289 18.0429L18.0429 4.54289C18.4334 4.15237 19.0666 4.15237 19.4571 4.54289Z" fill="#727272"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.54289 4.54289C4.93342 4.15237 5.56658 4.15237 5.95711 4.54289L19.4571 18.0429C19.8476 18.4334 19.8476 19.0666 19.4571 19.4571C19.0666 19.8476 18.4334 19.8476 18.0429 19.4571L4.54289 5.95711C4.15237 5.56658 4.15237 4.93342 4.54289 4.54289Z" fill="#727272"/>
-          </svg>
-        </button>
+      <div class="bs-header">
+        <div class="bs-grabber-row"><div class="bs-grabber"></div></div>
+        <div class="bs-title-row">
+          <button class="bs-close" onclick="closeSelectBS()" aria-label="關閉">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M19.4571 4.54289C19.8476 4.93342 19.8476 5.56658 19.4571 5.95711L5.95711 19.4571C5.56658 19.8476 4.93342 19.8476 4.54289 19.4571C4.15237 19.0666 4.15237 18.4334 4.54289 18.0429L18.0429 4.54289C18.4334 4.15237 19.0666 4.15237 19.4571 4.54289Z" fill="#212121"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M4.54289 4.54289C4.93342 4.15237 5.56658 4.15237 5.95711 4.54289L19.4571 18.0429C19.8476 18.4334 19.8476 19.0666 19.4571 19.4571C19.0666 19.8476 18.4334 19.8476 18.0429 19.4571L4.54289 5.95711C4.15237 5.56658 4.15237 4.93342 4.54289 4.54289Z" fill="#212121"/>
+            </svg>
+          </button>
+          <p class="bs-title">你的集合地點是？</p>
+          <div class="bs-title-right"></div>
+        </div>
       </div>
       <div class="mp-select-chips">
         <div class="mp-select-chip selected" id="mp-chip-0" onclick="selectMeetingChip(0)">
@@ -2147,14 +2162,14 @@
     }, { passive: true });
   }
 
-  // 綁定兩個 sheet 的 grabber
+  // 綁定所有 sheet 的 header
   makeSwipeable(
-    document.querySelector('.bs-header'),
+    document.querySelector('.bs .bs-header'),
     document.querySelector('.bs'),
     closeBS
   );
   makeSwipeable(
-    document.querySelector('.cbs-grabber-wrap'),
+    document.querySelector('.cbs .bs-header'),
     document.querySelector('.cbs'),
     closeContactBS
   );
@@ -2317,11 +2332,12 @@
     updateMpStops(_meetingVer);
     // reset select-bs sheet position (in case previous swipe left transform)
     document.getElementById('mp-select-bs').style.transform = '';
-    // show selector BS for multi version, reset to first chip
+    // show selector BS for multi version — 只有第一次進入顯示
     const selOverlay = document.getElementById('mp-select-overlay');
-    if (_meetingVer === 'unbooked-multi') {
+    if (_meetingVer === 'unbooked-multi' && !_selectBSShown) {
       _setChipVisual(0);
       selOverlay.classList.add('open');
+      _selectBSShown = true;
     } else {
       selOverlay.classList.remove('open');
     }
@@ -2369,6 +2385,7 @@
   // ── Dev: Version Switcher ──
   let _contactVer = 'guide';
   let _meetingVer = 'booked';
+  let _selectBSShown = false;   // 集合地點選擇器只有第一次進入時顯示
   let _devTapCount = 0, _devTapTimer = null;
 
   document.querySelector('.navbar__title').addEventListener('click', () => {
@@ -2436,7 +2453,9 @@
     }
 
     // — Meeting version —
+    const prevMeetingVer = _meetingVer;
     _meetingVer = document.querySelector('input[name="meeting-ver"]:checked').value;
+    if (_meetingVer !== prevMeetingVer) _selectBSShown = false;
     const pm = PREDEP_MEETING_DEFAULT[_meetingVer];
     document.getElementById('predep-meeting-label').textContent = pm.label;
     document.getElementById('predep-meeting-time').textContent  = pm.time;
@@ -2446,12 +2465,12 @@
   }
 
   makeSwipeable(
-    document.querySelector('.devbs-grabber-row'),
+    document.querySelector('.devbs .bs-header'),
     document.querySelector('.devbs'),
     closeDevBS
   );
   makeSwipeable(
-    document.getElementById('mp-select-grabber-wrap'),
+    document.querySelector('.mp-select-bs .bs-header'),
     document.getElementById('mp-select-bs'),
     closeSelectBS
   );
@@ -2460,7 +2479,19 @@
 <!-- ── Dev: Contact Version Switcher (hidden, double-tap "訂單明細") ── -->
 <div class="devbs-overlay" id="devbs-overlay" onclick="handleDevBSClick(event)">
   <div class="devbs" id="devbs">
-    <div class="devbs-grabber-row"><div class="devbs-grabber"></div></div>
+    <div class="bs-header">
+      <div class="bs-grabber-row"><div class="bs-grabber"></div></div>
+      <div class="bs-title-row">
+        <button class="bs-close" onclick="closeDevBS()" aria-label="關閉">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.4571 4.54289C19.8476 4.93342 19.8476 5.56658 19.4571 5.95711L5.95711 19.4571C5.56658 19.8476 4.93342 19.8476 4.54289 19.4571C4.15237 19.0666 4.15237 18.4334 4.54289 18.0429L18.0429 4.54289C18.4334 4.15237 19.0666 4.15237 19.4571 4.54289Z" fill="#212121"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.54289 4.54289C4.93342 4.15237 5.56658 4.15237 5.95711 4.54289L19.4571 18.0429C19.8476 18.4334 19.8476 19.0666 19.4571 19.4571C19.0666 19.8476 18.4334 19.8476 18.0429 19.4571L4.54289 5.95711C4.15237 5.56658 4.15237 4.93342 4.54289 4.54289Z" fill="#212121"/>
+          </svg>
+        </button>
+        <p class="bs-title">版本設定</p>
+        <div class="bs-title-right"></div>
+      </div>
+    </div>
     <div class="devbs-scroll-area">
       <div class="devbs-title-row">聯絡資訊</div>
       <div class="devbs-radio-list">
