@@ -1213,9 +1213,18 @@
     display: flex; justify-content: center; padding: 8px 0;
   }
   .mp-select-grabber { width: 40px; height: 4px; background: #D5D6DB; border-radius: 2px; }
+  .mp-select-title-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 4px 12px 16px 24px;
+  }
   .mp-select-title {
-    padding: 4px 24px 16px;
     font-size: 16px; font-weight: 600; line-height: 24px; color: #212121;
+  }
+  .mp-select-close-btn {
+    width: 32px; height: 32px;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; flex-shrink: 0;
   }
   .mp-select-chips {
     padding: 0 16px;
@@ -1357,11 +1366,11 @@
                 </div>
                 <div class="predep-row-text">
                   <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
-                    <span class="predep-row-label">集合資訊・2站</span>
+                    <span class="predep-row-label" id="predep-meeting-label">集合資訊・2站</span>
                     <svg class="row-check" id="check-meeting" width="16" height="16" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.0001 2.25C14.585 2.25302 17.063 3.28157 18.8908 5.10938C20.7185 6.9372 21.7471 9.41508 21.7501 12C21.7501 13.9284 21.1779 15.8136 20.1066 17.417C19.0353 19.0201 17.5129 20.2699 15.7316 21.0078C13.95 21.7458 11.9891 21.9387 10.0978 21.5625C8.20654 21.1863 6.46912 20.258 5.1056 18.8945C3.7421 17.531 2.81387 15.7936 2.43763 13.9023C2.06142 12.011 2.25436 10.0501 2.99232 8.26855C3.73025 6.48718 4.97995 4.96483 6.58314 3.89355C8.18652 2.82221 10.0718 2.25 12.0001 2.25ZM16.1417 9C15.943 8.99539 15.7505 9.06994 15.6066 9.20703L10.6242 13.9629L8.39368 11.832C8.24979 11.6949 8.05723 11.6205 7.85853 11.625C7.65967 11.6297 7.47055 11.7136 7.33314 11.8574C7.19578 12.0012 7.12073 12.1938 7.12513 12.3926C7.12962 12.5913 7.21301 12.7804 7.35657 12.918L10.1056 15.543C10.2454 15.6759 10.4312 15.7499 10.6242 15.75C10.817 15.75 11.0029 15.6758 11.1427 15.543L16.6437 10.293C16.7873 10.1554 16.8706 9.96633 16.8751 9.76758C16.8795 9.56881 16.8044 9.37622 16.6671 9.23242C16.5297 9.0886 16.3406 9.00466 16.1417 9Z" fill="#26BEC9"/><path d="M16.6437 10.293L11.1427 15.543C11.0029 15.6758 10.817 15.75 10.6242 15.75C10.4312 15.7499 10.2454 15.6759 10.1056 15.543L7.35657 12.918C7.21301 12.7804 7.12962 12.5913 7.12513 12.3926C7.12073 12.1938 7.19578 12.0012 7.33314 11.8574C7.47055 11.7136 7.65967 11.6297 7.85853 11.625C8.05723 11.6205 8.24979 11.6949 8.39368 11.832L10.6242 13.9629L15.6066 9.20703C15.7505 9.06994 15.943 8.99539 16.1417 9C16.3406 9.00466 16.5297 9.0886 16.6671 9.23242C16.8044 9.37622 16.8795 9.56881 16.8751 9.76758C16.8706 9.96633 16.7873 10.1554 16.6437 10.293Z" fill="white"/></svg>
                   </div>
-                  <span class="tag-blue" style="width:fit-content; margin-top:2px;">06:30~07:20</span>
-                  <span class="predep-row-sub" style="margin-top:2px;">新宿西口 i-Land Tower 前（LOVE 雕塑前）</span>
+                  <span class="tag-blue" id="predep-meeting-time" style="width:fit-content; margin-top:2px;">06:30~07:20</span>
+                  <span class="predep-row-sub" id="predep-meeting-place" style="margin-top:2px;">新宿西口 i-Land Tower 前（LOVE 雕塑前）</span>
                 </div>
               </div>
               <div class="predep-row-arrow">
@@ -1828,11 +1837,11 @@
     <div class="mp-loc-content">
 
       <!-- Stop 1 -->
-      <div class="mp-stop">
+      <div class="mp-stop" id="mp-stop-0">
         <div class="mp-stop-header">
-          <p class="mp-stop-name">新宿西口 i-Land Tower 前（LOVE 雕塑前）</p>
+          <p class="mp-stop-name" id="mp-stop-0-name">新宿西口 i-Land Tower 前（LOVE 雕塑前）</p>
           <div class="mp-address-row">
-            <p class="mp-address-text">東京都新宿区西新宿 1 丁目 8 番 1 号</p>
+            <p class="mp-address-text" id="mp-stop-0-addr">東京都新宿区西新宿 1 丁目 8 番 1 号</p>
             <div class="mp-nav-link">
               <span>導航</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1857,25 +1866,25 @@
         </div>
         <div class="mp-subsection">
           <p class="mp-sublabel">時間</p>
-          <ul class="mp-time-list">
+          <ul class="mp-time-list" id="mp-stop-0-times">
             <li>集合：06:30</li>
             <li>出發：07:00</li>
           </ul>
         </div>
         <div class="mp-subsection">
           <p class="mp-sublabel">如何抵達</p>
-          <p class="mp-howto-text">從新宿站西口出來後直行約 5 分鐘，至 i-Land Tower 大樓前「LOVE」雕塑旁集合，車輛會在廣場上車處等候。</p>
+          <p class="mp-howto-text" id="mp-stop-0-howto">從新宿站西口出來後直行約 5 分鐘，至 i-Land Tower 大樓前「LOVE」雕塑旁集合，車輛會在廣場上車處等候。</p>
         </div>
       </div>
 
-      <div class="mp-divider"></div>
+      <div class="mp-divider" id="mp-divider-stops"></div>
 
       <!-- Stop 2 -->
-      <div class="mp-stop">
+      <div class="mp-stop" id="mp-stop-1">
         <div class="mp-stop-header">
-          <p class="mp-stop-name">東京站丸之內北口</p>
+          <p class="mp-stop-name" id="mp-stop-1-name">東京站丸之內北口</p>
           <div class="mp-address-row">
-            <p class="mp-address-text">東京都千代田区丸之内 1 丁目 9 番地</p>
+            <p class="mp-address-text" id="mp-stop-1-addr">東京都千代田区丸之内 1 丁目 9 番地</p>
             <div class="mp-nav-link">
               <span>導航</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -1900,14 +1909,14 @@
         </div>
         <div class="mp-subsection">
           <p class="mp-sublabel">時間</p>
-          <ul class="mp-time-list">
+          <ul class="mp-time-list" id="mp-stop-1-times">
             <li>集合：07:00</li>
             <li>出發：07:20</li>
           </ul>
         </div>
         <div class="mp-subsection">
           <p class="mp-sublabel">如何抵達</p>
-          <p class="mp-howto-text">從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。</p>
+          <p class="mp-howto-text" id="mp-stop-1-howto">從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。</p>
         </div>
       </div>
 
@@ -1916,9 +1925,17 @@
 
   <!-- Location selector BS (for 未預訂且1個以上 version) -->
   <div class="mp-select-overlay" id="mp-select-overlay">
-    <div class="mp-select-bs">
-      <div class="mp-select-grabber-wrap"><div class="mp-select-grabber"></div></div>
-      <p class="mp-select-title">你明早集合地點是？</p>
+    <div class="mp-select-bs" id="mp-select-bs">
+      <div class="mp-select-grabber-wrap" id="mp-select-grabber-wrap"><div class="mp-select-grabber"></div></div>
+      <div class="mp-select-title-row">
+        <p class="mp-select-title">你的集合地點是？</p>
+        <button class="mp-select-close-btn" onclick="closeSelectBS()" aria-label="關閉">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M19.4571 4.54289C19.8476 4.93342 19.8476 5.56658 19.4571 5.95711L5.95711 19.4571C5.56658 19.8476 4.93342 19.8476 4.54289 19.4571C4.15237 19.0666 4.15237 18.4334 4.54289 18.0429L18.0429 4.54289C18.4334 4.15237 19.0666 4.15237 19.4571 4.54289Z" fill="#727272"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.54289 4.54289C4.93342 4.15237 5.56658 4.15237 5.95711 4.54289L19.4571 18.0429C19.8476 18.4334 19.8476 19.0666 19.4571 19.4571C19.0666 19.8476 18.4334 19.8476 18.0429 19.4571L4.54289 5.95711C4.15237 5.56658 4.15237 4.93342 4.54289 4.54289Z" fill="#727272"/>
+          </svg>
+        </button>
+      </div>
       <div class="mp-select-chips">
         <div class="mp-select-chip selected" id="mp-chip-0" onclick="selectMeetingChip(0)">
           <input type="radio" name="mp-chip" checked>
@@ -2235,15 +2252,75 @@
     });
   }
 
+  // ── Meeting point stop data by version ──
+  const MP_STOP_DATA = {
+    booked: [
+      { name: '新宿西口 i-Land Tower 前（LOVE 雕塑前）', addr: '東京都新宿区西新宿 1 丁目 8 番 1 号',
+        gather: '06:30', depart: '07:00',
+        howto: '從新宿站西口出來後直行約 5 分鐘，至 i-Land Tower 大樓前「LOVE」雕塑旁集合，車輛會在廣場上車處等候。' },
+      { name: '東京站丸之內北口', addr: '東京都千代田区丸之内 1 丁目 9 番地',
+        gather: '07:00', depart: '07:20',
+        howto: '從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。' }
+    ],
+    'unbooked-single': [
+      { name: '東京站丸之內北口', addr: '東京都千代田区丸之内 1 丁目 9 番地',
+        gather: '07:00', depart: '07:15',
+        howto: '從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。' }
+    ],
+    'unbooked-multi': [
+      { name: '東京站丸之內北口', addr: '東京都千代田区丸之内 1 丁目 9 番地',
+        gather: '07:00', depart: '07:15',
+        howto: '從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。' },
+      { name: '新宿西口三井住友銀行', addr: '東京都新宿区西新宿 1 丁目 3 番 3 号',
+        gather: '07:50', depart: '08:00',
+        howto: '搭乘東京地下鐵至新宿西口，出站後至三井住友銀行前廣場等候，車輛會在建築正門停靠。' }
+    ]
+  };
+  const PREDEP_MEETING_DEFAULT = {
+    booked:           { label: '集合資訊・2站', time: '06:30~07:20', place: '新宿西口 i-Land Tower 前（LOVE 雕塑前）' },
+    'unbooked-single': { label: '集合資訊・1站', time: '07:00~07:15', place: '東京站丸之內北口' },
+    'unbooked-multi':  { label: '集合資訊・2站', time: '07:00~08:00', place: '點擊選擇你的集合地點 ›' }
+  };
+
+  function updateMpStops(ver) {
+    const stops = MP_STOP_DATA[ver];
+    const s0 = stops[0];
+    document.getElementById('mp-stop-0-name').textContent = s0.name;
+    document.getElementById('mp-stop-0-addr').textContent = s0.addr;
+    document.getElementById('mp-stop-0-times').innerHTML =
+      `<li>集合：${s0.gather}</li><li>出發：${s0.depart}</li>`;
+    document.getElementById('mp-stop-0-howto').textContent = s0.howto;
+    const stop1El   = document.getElementById('mp-stop-1');
+    const dividerEl = document.getElementById('mp-divider-stops');
+    if (stops.length > 1) {
+      const s1 = stops[1];
+      stop1El.style.display   = '';
+      dividerEl.style.display = '';
+      document.getElementById('mp-stop-1-name').textContent = s1.name;
+      document.getElementById('mp-stop-1-addr').textContent = s1.addr;
+      document.getElementById('mp-stop-1-times').innerHTML =
+        `<li>集合：${s1.gather}</li><li>出發：${s1.depart}</li>`;
+      document.getElementById('mp-stop-1-howto').textContent = s1.howto;
+    } else {
+      stop1El.style.display   = 'none';
+      dividerEl.style.display = 'none';
+    }
+  }
+
   function openMeetingPoint() {
     document.getElementById('mp-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
     // show/hide booked info section
     document.getElementById('mp-booked-section').style.display =
       (_meetingVer === 'booked') ? '' : 'none';
-    // show selector BS for multi-stop version
+    // update stop content for current version
+    updateMpStops(_meetingVer);
+    // reset select-bs sheet position (in case previous swipe left transform)
+    document.getElementById('mp-select-bs').style.transform = '';
+    // show selector BS for multi version, reset to first chip
     const selOverlay = document.getElementById('mp-select-overlay');
     if (_meetingVer === 'unbooked-multi') {
+      _setChipVisual(0);
       selOverlay.classList.add('open');
     } else {
       selOverlay.classList.remove('open');
@@ -2257,15 +2334,35 @@
     markViewed('meeting');
   }
 
-  function selectMeetingChip(idx) {
+  function closeSelectBS() {
+    document.getElementById('mp-select-overlay').classList.remove('open');
+  }
+
+  function _setChipVisual(idx) {
     document.querySelectorAll('.mp-select-chip').forEach((el, i) => {
       el.classList.toggle('selected', i === idx);
       el.querySelector('input[type="radio"]').checked = (i === idx);
     });
+  }
+
+  function selectMeetingChip(idx) {
+    _setChipVisual(idx);
     setTimeout(() => {
-      document.getElementById('mp-select-overlay').classList.remove('open');
-      const stops = document.querySelectorAll('.mp-stop');
-      if (stops[idx]) stops[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      closeSelectBS();
+      // scroll to selected stop inside mp-body
+      const mpBody = document.querySelector('.mp-body');
+      const stops  = mpBody ? mpBody.querySelectorAll('.mp-stop') : [];
+      if (stops[idx] && mpBody) {
+        const targetTop = stops[idx].getBoundingClientRect().top
+          - mpBody.getBoundingClientRect().top
+          + mpBody.scrollTop;
+        mpBody.scrollTo({ top: targetTop, behavior: 'smooth' });
+      }
+      // update predep row
+      const stopData = MP_STOP_DATA['unbooked-multi'][idx];
+      document.getElementById('predep-meeting-time').textContent =
+        `${stopData.gather}~${stopData.depart}`;
+      document.getElementById('predep-meeting-place').textContent = stopData.name;
     }, 180);
   }
 
@@ -2340,6 +2437,10 @@
 
     // — Meeting version —
     _meetingVer = document.querySelector('input[name="meeting-ver"]:checked').value;
+    const pm = PREDEP_MEETING_DEFAULT[_meetingVer];
+    document.getElementById('predep-meeting-label').textContent = pm.label;
+    document.getElementById('predep-meeting-time').textContent  = pm.time;
+    document.getElementById('predep-meeting-place').textContent = pm.place;
 
     closeDevBS();
   }
@@ -2348,6 +2449,11 @@
     document.querySelector('.devbs-grabber-row'),
     document.querySelector('.devbs'),
     closeDevBS
+  );
+  makeSwipeable(
+    document.getElementById('mp-select-grabber-wrap'),
+    document.getElementById('mp-select-bs'),
+    closeSelectBS
   );
 </script>
 
