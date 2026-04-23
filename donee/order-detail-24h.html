@@ -1186,6 +1186,64 @@
     color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
     font-family: inherit;
   }
+  /* devbs scrollable body */
+  .devbs { max-height: 82svh; }
+  .devbs-scroll-area { overflow-y: auto; flex: 1; }
+  .devbs-section-sep {
+    height: 8px; background: var(--color-bg-surface-light); flex-shrink: 0;
+  }
+
+  /* Meeting point selector BS (inside mp-overlay) */
+  .mp-select-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 10;
+  }
+  .mp-select-overlay.open { opacity: 1; pointer-events: all; }
+  .mp-select-bs {
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+    padding-bottom: 40px;
+  }
+  .mp-select-grabber-wrap {
+    display: flex; justify-content: center; padding: 8px 0;
+  }
+  .mp-select-grabber { width: 40px; height: 4px; background: #D5D6DB; border-radius: 2px; }
+  .mp-select-title {
+    padding: 4px 24px 16px;
+    font-size: 16px; font-weight: 600; line-height: 24px; color: #212121;
+  }
+  .mp-select-chips {
+    padding: 0 16px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .mp-select-chip {
+    border: 1.5px solid #E6E9ED;
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex; align-items: center; gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .mp-select-chip.selected {
+    border-color: #26BEC9;
+    background: #F0FAFB;
+  }
+  .mp-select-chip input[type="radio"] {
+    width: 20px; height: 20px; accent-color: #26BEC9;
+    cursor: pointer; flex-shrink: 0; margin: 0;
+  }
+  .mp-select-chip-time {
+    font-size: 12px; font-weight: 500; line-height: 16px; color: #727272;
+    margin-bottom: 2px;
+  }
+  .mp-select-chip-loc {
+    font-size: 14px; font-weight: 500; line-height: 20px; color: #212121;
+  }
 </style>
 </head>
 <body>
@@ -1726,7 +1784,7 @@
   <div class="mp-body">
 
     <!-- 已預訂的接送資訊 -->
-    <div class="mp-section-wrap">
+    <div class="mp-section-wrap" id="mp-booked-section">
       <p class="mp-h5">已預訂的接送資訊</p>
       <div class="mp-info-card">
         <div class="mp-info-row">
@@ -1855,6 +1913,30 @@
 
     </div><!-- /mp-loc-content -->
   </div><!-- /mp-body -->
+
+  <!-- Location selector BS (for 未預訂且1個以上 version) -->
+  <div class="mp-select-overlay" id="mp-select-overlay">
+    <div class="mp-select-bs">
+      <div class="mp-select-grabber-wrap"><div class="mp-select-grabber"></div></div>
+      <p class="mp-select-title">你明早集合地點是？</p>
+      <div class="mp-select-chips">
+        <div class="mp-select-chip selected" id="mp-chip-0" onclick="selectMeetingChip(0)">
+          <input type="radio" name="mp-chip" checked>
+          <div>
+            <p class="mp-select-chip-time">07:00 / 07:15 出發</p>
+            <p class="mp-select-chip-loc">東京站丸之內北口</p>
+          </div>
+        </div>
+        <div class="mp-select-chip" id="mp-chip-1" onclick="selectMeetingChip(1)">
+          <input type="radio" name="mp-chip">
+          <div>
+            <p class="mp-select-chip-time">07:50 / 08:00 出發</p>
+            <p class="mp-select-chip-loc">新宿西口三井住友銀行</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div><!-- /mp-overlay -->
 
 <script>
@@ -2156,16 +2238,40 @@
   function openMeetingPoint() {
     document.getElementById('mp-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+    // show/hide booked info section
+    document.getElementById('mp-booked-section').style.display =
+      (_meetingVer === 'booked') ? '' : 'none';
+    // show selector BS for multi-stop version
+    const selOverlay = document.getElementById('mp-select-overlay');
+    if (_meetingVer === 'unbooked-multi') {
+      selOverlay.classList.add('open');
+    } else {
+      selOverlay.classList.remove('open');
+    }
   }
 
   function closeMeetingPoint() {
     document.getElementById('mp-overlay').classList.remove('open');
+    document.getElementById('mp-select-overlay').classList.remove('open');
     document.body.style.overflow = '';
     markViewed('meeting');
   }
 
-  // ── Dev: Contact Version Switcher ──
+  function selectMeetingChip(idx) {
+    document.querySelectorAll('.mp-select-chip').forEach((el, i) => {
+      el.classList.toggle('selected', i === idx);
+      el.querySelector('input[type="radio"]').checked = (i === idx);
+    });
+    setTimeout(() => {
+      document.getElementById('mp-select-overlay').classList.remove('open');
+      const stops = document.querySelectorAll('.mp-stop');
+      if (stops[idx]) stops[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 180);
+  }
+
+  // ── Dev: Version Switcher ──
   let _contactVer = 'guide';
+  let _meetingVer = 'booked';
   let _devTapCount = 0, _devTapTimer = null;
 
   document.querySelector('.navbar__title').addEventListener('click', () => {
@@ -2180,6 +2286,7 @@
 
   function openDevBS() {
     document.querySelector(`input[name="contact-ver"][value="${_contactVer}"]`).checked = true;
+    document.querySelector(`input[name="meeting-ver"][value="${_meetingVer}"]`).checked = true;
     document.getElementById('devbs-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -2190,22 +2297,18 @@
   function handleDevBSClick(e) {
     if (e.target === document.getElementById('devbs-overlay')) closeDevBS();
   }
-  function applyContactVersion() {
+  function applyDevSettings() {
+    // — Contact version —
     const ver = document.querySelector('input[name="contact-ver"]:checked').value;
     _contactVer = ver;
-
-    // — predep row —
     const nameEl = document.getElementById('contact-version-text');
     const tagsEl = document.getElementById('contact-version-tags');
     const carEl  = document.getElementById('contact-version-car');
-
-    // — CBS sections —
     const guideSection    = document.getElementById('cbs-guide-section');
     const sectionGap      = document.getElementById('cbs-section-gap');
     const supplierSection = document.getElementById('cbs-supplier-section');
     const supplierTitle   = document.getElementById('cbs-supplier-title');
     const supplierName    = document.getElementById('cbs-supplier-name');
-
     if (ver === 'guide') {
       nameEl.textContent       = '司機/導遊：王大明';
       tagsEl.style.display     = '';
@@ -2234,6 +2337,10 @@
       supplierTitle.textContent     = '聯絡 KKday';
       supplierName.textContent      = 'KKday 線上客服';
     }
+
+    // — Meeting version —
+    _meetingVer = document.querySelector('input[name="meeting-ver"]:checked').value;
+
     closeDevBS();
   }
 
@@ -2248,23 +2355,41 @@
 <div class="devbs-overlay" id="devbs-overlay" onclick="handleDevBSClick(event)">
   <div class="devbs" id="devbs">
     <div class="devbs-grabber-row"><div class="devbs-grabber"></div></div>
-    <div class="devbs-title-row">聯絡資訊</div>
-    <div class="devbs-radio-list">
-      <label class="devbs-radio-item">
-        <input type="radio" name="contact-ver" value="guide" checked>
-        <span>聯絡司機導遊</span>
-      </label>
-      <label class="devbs-radio-item">
-        <input type="radio" name="contact-ver" value="supplier">
-        <span>聯絡商家</span>
-      </label>
-      <label class="devbs-radio-item">
-        <input type="radio" name="contact-ver" value="kkday">
-        <span>聯絡KKday</span>
-      </label>
+    <div class="devbs-scroll-area">
+      <div class="devbs-title-row">聯絡資訊</div>
+      <div class="devbs-radio-list">
+        <label class="devbs-radio-item">
+          <input type="radio" name="contact-ver" value="guide" checked>
+          <span>聯絡司機導遊</span>
+        </label>
+        <label class="devbs-radio-item">
+          <input type="radio" name="contact-ver" value="supplier">
+          <span>聯絡商家</span>
+        </label>
+        <label class="devbs-radio-item">
+          <input type="radio" name="contact-ver" value="kkday">
+          <span>聯絡KKday</span>
+        </label>
+      </div>
+      <div class="devbs-section-sep"></div>
+      <div class="devbs-title-row">集合資訊</div>
+      <div class="devbs-radio-list">
+        <label class="devbs-radio-item">
+          <input type="radio" name="meeting-ver" value="booked" checked>
+          <span>已預訂 集合時間/地點</span>
+        </label>
+        <label class="devbs-radio-item">
+          <input type="radio" name="meeting-ver" value="unbooked-single">
+          <span>未預訂且1個 集合時間/地點</span>
+        </label>
+        <label class="devbs-radio-item">
+          <input type="radio" name="meeting-ver" value="unbooked-multi">
+          <span>未預訂且1個以上 集合時間/地點</span>
+        </label>
+      </div>
     </div>
     <div class="devbs-confirm-bar">
-      <button class="devbs-confirm-btn" onclick="applyContactVersion()">確認</button>
+      <button class="devbs-confirm-btn" onclick="applyDevSettings()">確認</button>
     </div>
   </div>
 </div>
