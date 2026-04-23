@@ -1620,6 +1620,7 @@
     <div class="cbs-body">
 
       <!-- 聯絡導遊或司機 -->
+      <div id="cbs-guide-section">
       <p class="cbs-section-title">聯絡導遊或司機</p>
       <div class="cbs-contact-card">
         <div class="cbs-card-header">
@@ -1683,23 +1684,26 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.7071 15.7083C12.3166 16.0989 11.6834 16.0989 11.2929 15.7083L5.29289 9.70833C4.90237 9.3178 4.90237 8.68464 5.29289 8.29411C5.68342 7.90359 6.31658 7.90359 6.70711 8.29411L12 13.587L17.2929 8.29411C17.6834 7.90359 18.3166 7.90359 18.7071 8.29411C19.0976 8.68464 19.0976 9.3178 18.7071 9.70833L12.7071 15.7083Z" fill="#212121"/></svg>
           </span>
         </div>
+      </div><!-- /cbs-guide-section -->
       </div>
 
-      <div class="cbs-section-gap"></div>
+      <div id="cbs-section-gap" class="cbs-section-gap"></div>
 
-      <!-- 聯絡商家 -->
-      <p class="cbs-section-title">聯絡商家</p>
+      <!-- 聯絡商家 / KKday -->
+      <div id="cbs-supplier-section">
+      <p id="cbs-supplier-title" class="cbs-section-title">聯絡商家</p>
       <div class="cbs-contact-card">
         <div class="cbs-contact-row">
           <div class="cbs-contact-info">
             <span class="cbs-row-label">線上客服</span>
-            <span class="cbs-row-value">依山嵐旅行社</span>
+            <span id="cbs-supplier-name" class="cbs-row-value">依山嵐旅行社</span>
           </div>
           <div class="cbs-row-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M16.5 20.9943C14.7268 20.9957 12.9707 20.6474 11.3322 19.9694C9.69373 19.2914 8.20498 18.2971 6.95113 17.0432C5.69728 15.7894 4.70292 14.3006 4.02495 12.6621C3.34698 11.0236 2.99869 9.26756 3 7.49435C2.9996 6.21598 3.46564 4.98139 4.3107 4.02218C5.15577 3.06297 6.32178 2.44505 7.59 2.28434C7.91241 2.24526 8.2388 2.31187 8.52011 2.47416C8.80142 2.63646 9.02245 2.88568 9.15 3.18435L11.03 7.57435C11.1295 7.80409 11.1707 8.05484 11.15 8.30435C11.1246 8.54986 11.0425 8.78609 10.91 8.99435L9.35001 11.3744C10.053 12.8113 11.2188 13.97 12.66 14.6643L15 13.0944C15.2084 12.959 15.4465 12.8765 15.6939 12.8538C15.9413 12.8312 16.1905 12.8691 16.42 12.9643L20.81 14.8444C21.1067 14.9749 21.355 15.1953 21.52 15.4743C21.6817 15.7559 21.7483 16.082 21.71 16.4044C21.5493 17.6726 20.9314 18.8386 19.9722 19.6836C19.013 20.5287 17.7784 20.9948 16.5 20.9943Z" fill="#212121"/></svg>
           </div>
         </div>
       </div>
+      </div><!-- /cbs-supplier-section -->
 
     </div><!-- /cbs-body -->
   </div><!-- /cbs -->
@@ -2189,21 +2193,46 @@
   function applyContactVersion() {
     const ver = document.querySelector('input[name="contact-ver"]:checked').value;
     _contactVer = ver;
+
+    // — predep row —
     const nameEl = document.getElementById('contact-version-text');
     const tagsEl = document.getElementById('contact-version-tags');
     const carEl  = document.getElementById('contact-version-car');
+
+    // — CBS sections —
+    const guideSection    = document.getElementById('cbs-guide-section');
+    const sectionGap      = document.getElementById('cbs-section-gap');
+    const supplierSection = document.getElementById('cbs-supplier-section');
+    const supplierTitle   = document.getElementById('cbs-supplier-title');
+    const supplierName    = document.getElementById('cbs-supplier-name');
+
     if (ver === 'guide') {
-      nameEl.textContent  = '司機/導遊：王大明';
-      tagsEl.style.display = '';
-      carEl.style.display  = '';
+      nameEl.textContent       = '司機/導遊：王大明';
+      tagsEl.style.display     = '';
+      carEl.style.display      = '';
+      guideSection.style.display    = '';
+      sectionGap.style.display      = '';
+      supplierSection.style.display = '';
+      supplierTitle.textContent     = '聯絡商家';
+      supplierName.textContent      = '依山嵐旅行社';
     } else if (ver === 'supplier') {
-      nameEl.textContent  = '依山嵐旅行社';
-      tagsEl.style.display = 'none';
-      carEl.style.display  = 'none';
+      nameEl.textContent       = '依山嵐旅行社';
+      tagsEl.style.display     = 'none';
+      carEl.style.display      = 'none';
+      guideSection.style.display    = 'none';
+      sectionGap.style.display      = 'none';
+      supplierSection.style.display = '';
+      supplierTitle.textContent     = '聯絡商家';
+      supplierName.textContent      = '依山嵐旅行社';
     } else {
-      nameEl.textContent  = 'KKday 線上客服';
-      tagsEl.style.display = 'none';
-      carEl.style.display  = 'none';
+      nameEl.textContent       = 'KKday 線上客服';
+      tagsEl.style.display     = 'none';
+      carEl.style.display      = 'none';
+      guideSection.style.display    = 'none';
+      sectionGap.style.display      = 'none';
+      supplierSection.style.display = '';
+      supplierTitle.textContent     = '聯絡 KKday';
+      supplierName.textContent      = 'KKday 線上客服';
     }
     closeDevBS();
   }
