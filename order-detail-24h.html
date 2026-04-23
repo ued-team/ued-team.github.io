@@ -71,7 +71,6 @@
       display: block;
       border-radius: var(--radius-md);
     }
-    .home-indicator { display: none; }
   }
 
   /* ── Desktop 1024px+：兩欄 layout ── */
@@ -694,17 +693,6 @@
     cursor: pointer;
     display: block;
   }
-  .home-indicator {
-    height: 34px;
-    background: #fff;
-    display: flex; align-items: flex-end; justify-content: center;
-    padding-bottom: 8px;
-  }
-  .home-indicator-bar {
-    width: 134px; height: 5px;
-    background: var(--color-text-darker);
-    border-radius: 100px;
-  }
 
   /* icon helpers */
   svg.icon { display: block; }
@@ -728,21 +716,23 @@
   .bs {
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(100%);
-    width: 100%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     max-width: 375px;
+    transform: translateY(100%);
     background: #fff;
     border-radius: 16px 16px 0 0;
     z-index: 301;
     display: flex;
     flex-direction: column;
-    max-height: 90vh;
+    max-height: calc(100vh - 44px);
+    max-height: calc(100svh - 44px);
     transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
     box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
   }
   .bs-overlay.open .bs {
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 
   /* On tablet/desktop, widen the sheet */
@@ -831,21 +821,23 @@
   .cbs {
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) translateY(100%);
-    width: 100%;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     max-width: 375px;
+    transform: translateY(100%);
     background: #fff;
     border-radius: 16px 16px 0 0;
     z-index: 301;
     display: flex;
     flex-direction: column;
-    max-height: 90vh;
+    max-height: calc(100vh - 44px);
+    max-height: calc(100svh - 44px);
     transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
     box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
   }
   .cbs-overlay.open .cbs {
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
   @media (min-width: 640px) { .cbs { max-width: 500px; } }
   @media (min-width: 1024px) { .cbs { max-width: 480px; } }
@@ -1564,9 +1556,6 @@
   <!-- Mobile bottom bar -->
   <div class="bottom-bar">
     <button class="bottom-btn">查看憑證</button>
-    <div class="home-indicator">
-      <div class="home-indicator-bar"></div>
-    </div>
   </div>
 
 </div><!-- /phone -->
