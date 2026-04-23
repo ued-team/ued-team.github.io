@@ -1138,6 +1138,54 @@
     height: 1px;
     background: var(--color-border-lighter);
   }
+
+  /* ── Dev: Contact Version Switcher ── */
+  .devbs-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 500; opacity: 0; pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+  .devbs-overlay.open { opacity: 1; pointer-events: all; }
+  .devbs {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    transform: translateY(100%);
+    background: #fff; border-radius: 16px 16px 0 0;
+    z-index: 501; display: flex; flex-direction: column;
+    transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.12);
+  }
+  .devbs-overlay.open .devbs { transform: translateY(0); }
+  .devbs-grabber-row {
+    display: flex; justify-content: center; align-items: center;
+    padding: 8px 24px; height: 20px; flex-shrink: 0;
+  }
+  .devbs-grabber { width: 40px; height: 4px; background: #D5D6DB; border-radius: 2px; }
+  .devbs-title-row {
+    padding: 12px 24px 0;
+    font-size: 16px; font-weight: 600; line-height: 24px; color: #212121;
+  }
+  .devbs-radio-list { padding: 4px 24px 0; display: flex; flex-direction: column; }
+  .devbs-radio-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 0; border-bottom: 1px solid #E6E9ED;
+    cursor: pointer; font-size: 16px; font-weight: 400;
+    line-height: 24px; color: #212121;
+  }
+  .devbs-radio-item:last-child { border-bottom: none; }
+  .devbs-radio-item input[type="radio"] {
+    width: 20px; height: 20px;
+    accent-color: #26BEC9; cursor: pointer; flex-shrink: 0;
+  }
+  .devbs-confirm-bar {
+    padding: 12px 24px 40px; border-top: 1px solid #E6E9ED; flex-shrink: 0;
+  }
+  .devbs-confirm-btn {
+    width: 100%; height: 48px;
+    background: #1AB6C1; border: none; border-radius: 8px;
+    color: #fff; font-size: 16px; font-weight: 600; cursor: pointer;
+    font-family: inherit;
+  }
 </style>
 </head>
 <body>
@@ -1280,13 +1328,13 @@
                     <span class="predep-row-label">聯絡方式</span>
                     <svg class="row-check" id="check-contact" width="16" height="16" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.0001 2.25C14.585 2.25302 17.063 3.28157 18.8908 5.10938C20.7185 6.9372 21.7471 9.41508 21.7501 12C21.7501 13.9284 21.1779 15.8136 20.1066 17.417C19.0353 19.0201 17.5129 20.2699 15.7316 21.0078C13.95 21.7458 11.9891 21.9387 10.0978 21.5625C8.20654 21.1863 6.46912 20.258 5.1056 18.8945C3.7421 17.531 2.81387 15.7936 2.43763 13.9023C2.06142 12.011 2.25436 10.0501 2.99232 8.26855C3.73025 6.48718 4.97995 4.96483 6.58314 3.89355C8.18652 2.82221 10.0718 2.25 12.0001 2.25ZM16.1417 9C15.943 8.99539 15.7505 9.06994 15.6066 9.20703L10.6242 13.9629L8.39368 11.832C8.24979 11.6949 8.05723 11.6205 7.85853 11.625C7.65967 11.6297 7.47055 11.7136 7.33314 11.8574C7.19578 12.0012 7.12073 12.1938 7.12513 12.3926C7.12962 12.5913 7.21301 12.7804 7.35657 12.918L10.1056 15.543C10.2454 15.6759 10.4312 15.7499 10.6242 15.75C10.817 15.75 11.0029 15.6758 11.1427 15.543L16.6437 10.293C16.7873 10.1554 16.8706 9.96633 16.8751 9.76758C16.8795 9.56881 16.8044 9.37622 16.6671 9.23242C16.5297 9.0886 16.3406 9.00466 16.1417 9Z" fill="#26BEC9"/><path d="M16.6437 10.293L11.1427 15.543C11.0029 15.6758 10.817 15.75 10.6242 15.75C10.4312 15.7499 10.2454 15.6759 10.1056 15.543L7.35657 12.918C7.21301 12.7804 7.12962 12.5913 7.12513 12.3926C7.12073 12.1938 7.19578 12.0012 7.33314 11.8574C7.47055 11.7136 7.65967 11.6297 7.85853 11.625C8.05723 11.6205 8.24979 11.6949 8.39368 11.832L10.6242 13.9629L15.6066 9.20703C15.7505 9.06994 15.943 8.99539 16.1417 9C16.3406 9.00466 16.5297 9.0886 16.6671 9.23242C16.8044 9.37622 16.8795 9.56881 16.8751 9.76758C16.8706 9.96633 16.7873 10.1554 16.6437 10.293Z" fill="white"/></svg>
                   </div>
-                  <span class="predep-row-sub" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">司機/導遊：王大明</span>
-                  <div class="tag-row" style="margin-top:4px;">
+                  <span id="contact-version-text" class="predep-row-sub" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">司機/導遊：王大明</span>
+                  <div id="contact-version-tags" class="tag-row" style="margin-top:4px;">
                     <span class="tag-gray">中文</span>
                     <span class="tag-gray">英文</span>
                     <span class="tag-gray">日文</span>
                   </div>
-                  <span class="predep-row-sub" style="margin-top:2px;">EAP-2923 (Toyota Atlatis / 黑色)</span>
+                  <span id="contact-version-car" class="predep-row-sub" style="margin-top:2px;">EAP-2923 (Toyota Atlatis / 黑色)</span>
                 </div>
               </div>
               <div class="predep-row-arrow">
@@ -2111,6 +2159,85 @@
     document.body.style.overflow = '';
     markViewed('meeting');
   }
+
+  // ── Dev: Contact Version Switcher ──
+  let _contactVer = 'guide';
+  let _devTapCount = 0, _devTapTimer = null;
+
+  document.querySelector('.navbar__title').addEventListener('click', () => {
+    _devTapCount++;
+    clearTimeout(_devTapTimer);
+    _devTapTimer = setTimeout(() => { _devTapCount = 0; }, 400);
+    if (_devTapCount >= 2) {
+      _devTapCount = 0;
+      openDevBS();
+    }
+  });
+
+  function openDevBS() {
+    document.querySelector(`input[name="contact-ver"][value="${_contactVer}"]`).checked = true;
+    document.getElementById('devbs-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDevBS() {
+    document.getElementById('devbs-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function handleDevBSClick(e) {
+    if (e.target === document.getElementById('devbs-overlay')) closeDevBS();
+  }
+  function applyContactVersion() {
+    const ver = document.querySelector('input[name="contact-ver"]:checked').value;
+    _contactVer = ver;
+    const nameEl = document.getElementById('contact-version-text');
+    const tagsEl = document.getElementById('contact-version-tags');
+    const carEl  = document.getElementById('contact-version-car');
+    if (ver === 'guide') {
+      nameEl.textContent  = '司機/導遊：王大明';
+      tagsEl.style.display = '';
+      carEl.style.display  = '';
+    } else if (ver === 'supplier') {
+      nameEl.textContent  = '依山嵐旅行社';
+      tagsEl.style.display = 'none';
+      carEl.style.display  = 'none';
+    } else {
+      nameEl.textContent  = 'KKday 線上客服';
+      tagsEl.style.display = 'none';
+      carEl.style.display  = 'none';
+    }
+    closeDevBS();
+  }
+
+  makeSwipeable(
+    document.querySelector('.devbs-grabber-row'),
+    document.querySelector('.devbs'),
+    closeDevBS
+  );
 </script>
+
+<!-- ── Dev: Contact Version Switcher (hidden, double-tap "訂單明細") ── -->
+<div class="devbs-overlay" id="devbs-overlay" onclick="handleDevBSClick(event)">
+  <div class="devbs" id="devbs">
+    <div class="devbs-grabber-row"><div class="devbs-grabber"></div></div>
+    <div class="devbs-title-row">聯絡資訊</div>
+    <div class="devbs-radio-list">
+      <label class="devbs-radio-item">
+        <input type="radio" name="contact-ver" value="guide" checked>
+        <span>聯絡司機導遊</span>
+      </label>
+      <label class="devbs-radio-item">
+        <input type="radio" name="contact-ver" value="supplier">
+        <span>聯絡商家</span>
+      </label>
+      <label class="devbs-radio-item">
+        <input type="radio" name="contact-ver" value="kkday">
+        <span>聯絡KKday</span>
+      </label>
+    </div>
+    <div class="devbs-confirm-bar">
+      <button class="devbs-confirm-btn" onclick="applyContactVersion()">確認</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
