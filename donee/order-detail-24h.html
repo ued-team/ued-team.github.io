@@ -2290,33 +2290,51 @@
         gather: '07:50', depart: '08:00',
         howto: '搭乘東京地下鐵至新宿西口，出站後至三井住友銀行前廣場等候，車輛會在建築正門停靠。' }
     ],
-    'depart-only': [
-      { name: '東京站丸之內北口', addr: '東京都千代田区丸之内 1 丁目 9 番地',
-        gather: null, depart: '07:20',
-        howto: '從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。' }
-    ],
-    'gather-only': [
-      { name: '東京站丸之內北口', addr: '東京都千代田区丸之内 1 丁目 9 番地',
-        gather: '07:00', depart: null,
-        howto: '從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。' }
-    ]
   };
   const PREDEP_MEETING_DEFAULT = {
     booked:           { label: '集合資訊・2站', time: '06:30~07:20', place: '新宿西口 i-Land Tower 前（LOVE 雕塑前）' },
     'unbooked-single': { label: '集合資訊・1站', time: '07:00~07:15', place: '東京站丸之內北口' },
-    'unbooked-multi':  { label: '集合資訊・2站', time: '07:00~08:00', place: '點擊選擇你的集合地點 ›' },
-    'depart-only':     { label: '集合資訊・1站', time: '07:20 出發',  place: '東京站丸之內北口' },
-    'gather-only':     { label: '集合資訊・1站', time: '07:00 集合',  place: '東京站丸之內北口' }
+    'unbooked-multi':  { label: '集合資訊・2站', time: '07:00~08:00', place: '點擊選擇你的集合地點 ›' }
   };
+
+  // 根據 _meetingVer + _timeFormat 計算 predep 時間文字
+  // （unbooked-multi 的 'both' 仍用 PREDEP_MEETING_DEFAULT 的 07:00~08:00 總覽）
+  function computePredepTime() {
+    const s0 = MP_STOP_DATA[_meetingVer][0];
+    if (_meetingVer === 'unbooked-multi' && _timeFormat === 'both') {
+      return PREDEP_MEETING_DEFAULT['unbooked-multi'].time; // '07:00~08:00' 總覽
+    }
+    return stopPredepTime(s0);
+  }
+
+  // 根據 _timeFormat 產生單一站點的時間 HTML（li 清單）
+  function stopTimesHtml(stop) {
+    const showGather = _timeFormat !== 'depart-only';
+    const showDepart = _timeFormat !== 'gather-only';
+    return (stop.gather && showGather ? `<li>集合：${stop.gather}</li>` : '') +
+           (stop.depart && showDepart ? `<li>出發：${stop.depart}</li>` : '');
+  }
+
+  // 根據 _timeFormat 產生 chip 時間標籤文字
+  function chipTimeLabel(stop) {
+    if (_timeFormat === 'depart-only') return stop.depart + ' 出發';
+    if (_timeFormat === 'gather-only') return stop.gather + ' 集合';
+    return `${stop.gather} 集合 / ${stop.depart} 出發`;
+  }
+
+  // 根據 _timeFormat 產生 predep 時間文字（for a specific stop）
+  function stopPredepTime(stop) {
+    if (_timeFormat === 'depart-only') return stop.depart + ' 出發';
+    if (_timeFormat === 'gather-only') return stop.gather + ' 集合';
+    return `${stop.gather}~${stop.depart}`;
+  }
 
   function updateMpStops(ver) {
     const stops = MP_STOP_DATA[ver];
     const s0 = stops[0];
     document.getElementById('mp-stop-0-name').textContent = s0.name;
     document.getElementById('mp-stop-0-addr').textContent = s0.addr;
-    document.getElementById('mp-stop-0-times').innerHTML =
-      (s0.gather ? `<li>集合：${s0.gather}</li>` : '') +
-      (s0.depart ? `<li>出發：${s0.depart}</li>` : '');
+    document.getElementById('mp-stop-0-times').innerHTML  = stopTimesHtml(s0);
     document.getElementById('mp-stop-0-howto').textContent = s0.howto;
     const stop1El   = document.getElementById('mp-stop-1');
     const dividerEl = document.getElementById('mp-divider-stops');
@@ -2326,14 +2344,21 @@
       dividerEl.style.display = '';
       document.getElementById('mp-stop-1-name').textContent = s1.name;
       document.getElementById('mp-stop-1-addr').textContent = s1.addr;
-      document.getElementById('mp-stop-1-times').innerHTML =
-        (s1.gather ? `<li>集合：${s1.gather}</li>` : '') +
-        (s1.depart ? `<li>出發：${s1.depart}</li>` : '');
+      document.getElementById('mp-stop-1-times').innerHTML  = stopTimesHtml(s1);
       document.getElementById('mp-stop-1-howto').textContent = s1.howto;
     } else {
       stop1El.style.display   = 'none';
       dividerEl.style.display = 'none';
     }
+  }
+
+  // 更新 unbooked-multi chip 的時間標籤
+  function updateChipTexts() {
+    const stops = MP_STOP_DATA['unbooked-multi'];
+    stops.forEach((stop, i) => {
+      const timeEl = document.querySelector(`#mp-chip-${i} .mp-select-chip-time`);
+      if (timeEl) timeEl.textContent = chipTimeLabel(stop);
+    });
   }
 
   function openMeetingPoint() {
@@ -2346,6 +2371,8 @@
     updateMpStops(_meetingVer);
     // reset select-bs sheet position (in case previous swipe left transform)
     document.getElementById('mp-select-bs').style.transform = '';
+    // 更新 unbooked-multi chip 時間標籤（反映 _timeFormat）
+    updateChipTexts();
     // show selector BS for multi version — 只有第一次進入顯示
     const selOverlay = document.getElementById('mp-select-overlay');
     if (_meetingVer === 'unbooked-multi' && !_selectBSShown) {
@@ -2388,10 +2415,9 @@
           + mpBody.scrollTop;
         mpBody.scrollTo({ top: targetTop, behavior: 'smooth' });
       }
-      // update predep row
+      // update predep row（時間格式依 _timeFormat）
       const stopData = MP_STOP_DATA['unbooked-multi'][idx];
-      document.getElementById('predep-meeting-time').textContent =
-        `${stopData.gather}~${stopData.depart}`;
+      document.getElementById('predep-meeting-time').textContent  = stopPredepTime(stopData);
       document.getElementById('predep-meeting-place').textContent = stopData.name;
     }, 180);
   }
@@ -2399,6 +2425,7 @@
   // ── Dev: Version Switcher ──
   let _contactVer = 'guide';
   let _meetingVer = 'booked';
+  let _timeFormat  = 'both';    // 'both' | 'depart-only' | 'gather-only'
   let _selectBSShown = false;   // 集合地點選擇器只有第一次進入時顯示
   let _devTapCount = 0, _devTapTimer = null;
 
@@ -2415,6 +2442,7 @@
   function openDevBS() {
     document.querySelector(`input[name="contact-ver"][value="${_contactVer}"]`).checked = true;
     document.querySelector(`input[name="meeting-ver"][value="${_meetingVer}"]`).checked = true;
+    document.querySelector(`input[name="time-fmt"][value="${_timeFormat}"]`).checked = true;
     document.getElementById('devbs-overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -2466,13 +2494,14 @@
       supplierName.textContent      = 'KKday 線上客服';
     }
 
-    // — Meeting version —
+    // — Meeting version + 時間格式 —
     const prevMeetingVer = _meetingVer;
-    _meetingVer = document.querySelector('input[name="meeting-ver"]:checked').value;
+    _meetingVer  = document.querySelector('input[name="meeting-ver"]:checked').value;
+    _timeFormat  = document.querySelector('input[name="time-fmt"]:checked').value;
     if (_meetingVer !== prevMeetingVer) _selectBSShown = false;
     const pm = PREDEP_MEETING_DEFAULT[_meetingVer];
     document.getElementById('predep-meeting-label').textContent = pm.label;
-    document.getElementById('predep-meeting-time').textContent  = pm.time;
+    document.getElementById('predep-meeting-time').textContent  = computePredepTime();
     document.getElementById('predep-meeting-place').textContent = pm.place;
 
     closeDevBS();
@@ -2537,12 +2566,20 @@
           <input type="radio" name="meeting-ver" value="unbooked-multi">
           <span>未預訂且1個以上 集合時間/地點</span>
         </label>
+      </div>
+      <div class="devbs-section-sep"></div>
+      <div class="devbs-title-row">時間格式</div>
+      <div class="devbs-radio-list">
         <label class="devbs-radio-item">
-          <input type="radio" name="meeting-ver" value="depart-only">
+          <input type="radio" name="time-fmt" value="both" checked>
+          <span>集合 + 出發（預設）</span>
+        </label>
+        <label class="devbs-radio-item">
+          <input type="radio" name="time-fmt" value="depart-only">
           <span>僅有出發時間</span>
         </label>
         <label class="devbs-radio-item">
-          <input type="radio" name="meeting-ver" value="gather-only">
+          <input type="radio" name="time-fmt" value="gather-only">
           <span>僅有集合時間</span>
         </label>
       </div>
