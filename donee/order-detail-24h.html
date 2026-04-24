@@ -2289,12 +2289,24 @@
       { name: '新宿西口三井住友銀行', addr: '東京都新宿区西新宿 1 丁目 3 番 3 号',
         gather: '07:50', depart: '08:00',
         howto: '搭乘東京地下鐵至新宿西口，出站後至三井住友銀行前廣場等候，車輛會在建築正門停靠。' }
+    ],
+    'depart-only': [
+      { name: '東京站丸之內北口', addr: '東京都千代田区丸之内 1 丁目 9 番地',
+        gather: null, depart: '07:20',
+        howto: '從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。' }
+    ],
+    'gather-only': [
+      { name: '東京站丸之內北口', addr: '東京都千代田区丸之内 1 丁目 9 番地',
+        gather: '07:00', depart: null,
+        howto: '從東京站丸之內北口出站後，在站前廣場的噴水池旁等候，車輛會在上車處停靠。' }
     ]
   };
   const PREDEP_MEETING_DEFAULT = {
     booked:           { label: '集合資訊・2站', time: '06:30~07:20', place: '新宿西口 i-Land Tower 前（LOVE 雕塑前）' },
     'unbooked-single': { label: '集合資訊・1站', time: '07:00~07:15', place: '東京站丸之內北口' },
-    'unbooked-multi':  { label: '集合資訊・2站', time: '07:00~08:00', place: '點擊選擇你的集合地點 ›' }
+    'unbooked-multi':  { label: '集合資訊・2站', time: '07:00~08:00', place: '點擊選擇你的集合地點 ›' },
+    'depart-only':     { label: '集合資訊・1站', time: '07:20 出發',  place: '東京站丸之內北口' },
+    'gather-only':     { label: '集合資訊・1站', time: '07:00 集合',  place: '東京站丸之內北口' }
   };
 
   function updateMpStops(ver) {
@@ -2303,7 +2315,8 @@
     document.getElementById('mp-stop-0-name').textContent = s0.name;
     document.getElementById('mp-stop-0-addr').textContent = s0.addr;
     document.getElementById('mp-stop-0-times').innerHTML =
-      `<li>集合：${s0.gather}</li><li>出發：${s0.depart}</li>`;
+      (s0.gather ? `<li>集合：${s0.gather}</li>` : '') +
+      (s0.depart ? `<li>出發：${s0.depart}</li>` : '');
     document.getElementById('mp-stop-0-howto').textContent = s0.howto;
     const stop1El   = document.getElementById('mp-stop-1');
     const dividerEl = document.getElementById('mp-divider-stops');
@@ -2314,7 +2327,8 @@
       document.getElementById('mp-stop-1-name').textContent = s1.name;
       document.getElementById('mp-stop-1-addr').textContent = s1.addr;
       document.getElementById('mp-stop-1-times').innerHTML =
-        `<li>集合：${s1.gather}</li><li>出發：${s1.depart}</li>`;
+        (s1.gather ? `<li>集合：${s1.gather}</li>` : '') +
+        (s1.depart ? `<li>出發：${s1.depart}</li>` : '');
       document.getElementById('mp-stop-1-howto').textContent = s1.howto;
     } else {
       stop1El.style.display   = 'none';
@@ -2522,6 +2536,14 @@
         <label class="devbs-radio-item">
           <input type="radio" name="meeting-ver" value="unbooked-multi">
           <span>未預訂且1個以上 集合時間/地點</span>
+        </label>
+        <label class="devbs-radio-item">
+          <input type="radio" name="meeting-ver" value="depart-only">
+          <span>僅有出發時間</span>
+        </label>
+        <label class="devbs-radio-item">
+          <input type="radio" name="meeting-ver" value="gather-only">
+          <span>僅有集合時間</span>
         </label>
       </div>
     </div>
