@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>門票/體驗 — KKday</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css" />
+<style>
+  :root {
+    --container: 1170px;
+    --page-pad: 135px;
+    /* Footer dark surface (not in design system colour scale — kept local) */
+    --c-footer-bg: #2d3034;
+    --c-footer-bg-alt: #25282b;
+    --c-footer-divider: #4a4e54;
+    --c-footer-icon-bg: #3a3d42;
+    --c-footer-text: #b3b6ba;
+    --c-footer-text-muted: #8a8d92;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--kk-font-family-base);
+    color: var(--kk-color-text-darker);
+    background: var(--kk-color-white);
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+  ul { list-style: none; margin: 0; padding: 0; }
+
+  /* ============ Top function bar ============ */
+  .top-bar {
+    height: 60px;
+    background: var(--kk-color-white);
+    border-bottom: 1px solid var(--kk-color-border-lighter);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .top-bar__inner {
+    width: var(--container);
+    margin: 0 auto; height: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .top-bar__left { display: flex; align-items: center; gap: var(--kk-spacing-300); }
+  .logo {
+    font-family: "Noto Sans TC",sans-serif;
+    font-weight: 700; font-size: 28px; letter-spacing: -1px;
+    color: var(--kk-color-background-primary-button);
+    line-height: 40px; width: 100px;
+  }
+  .header-search {
+    width: 400px; height: 42px;
+    background: var(--kk-color-background-surface-light);
+    border-radius: var(--kk-radius-circle);
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-100);
+    padding: var(--kk-spacing-100) var(--kk-spacing-200);
+    color: var(--kk-color-text-medium);
+    font-size: var(--kk-font-body-lg-size);
+    line-height: var(--kk-font-body-lg-line);
+  }
+  .top-bar__right { display: flex; align-items: stretch; }
+  .top-bar__right > * {
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-050);
+    padding: 19px 15px;
+  }
+  .download-app { color: var(--kk-color-text-primary-darker); }
+  .download-app, .lang, .currency { font-size: var(--kk-font-body-md-size); }
+  .lang, .currency { color: var(--kk-color-text-dark); }
+  .icon-arrow-down { width: 18px; height: 18px; }
+
+  .points { padding: 0 var(--kk-spacing-200); }
+  .points__chip {
+    display: inline-flex; align-items: center;
+    gap: var(--kk-spacing-075);
+    height: var(--kk-spacing-400);
+    border-radius: var(--kk-radius-circle);
+  }
+  .points__num {
+    font-weight: var(--kk-font-subtitle-md-weight);
+    font-size: var(--kk-font-subtitle-md-size);
+    line-height: var(--kk-font-subtitle-md-line);
+  }
+
+  .avatar-wrap { position: relative; padding: 9px; }
+  .avatar {
+    width: var(--kk-spacing-500); height: var(--kk-spacing-500);
+    border-radius: var(--kk-radius-circle);
+    background: var(--kk-color-background-surface-medium);
+    overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .badge {
+    position: absolute;
+    width: var(--kk-spacing-200); height: var(--kk-spacing-200);
+    right: 9px; bottom: 9px;
+  }
+  .badge img { width: 100%; height: 100%; }
+
+  /* ============ Category nav (tabs) ============ */
+  .cat-bar {
+    height: 60px; background: var(--kk-color-white);
+    padding: 0 var(--page-pad);
+    border-bottom: 1px solid var(--kk-color-border-lighter);
+  }
+  .cat-bar__list { display: flex; align-items: stretch; height: 100%; }
+  .cat-bar__item {
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-100);
+    padding: 0 var(--kk-spacing-200);
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    color: var(--kk-color-text-darker);
+    white-space: nowrap; position: relative; cursor: pointer;
+  }
+  .cat-bar__item:hover { color: var(--kk-color-text-primary-darker); }
+  .cat-bar__item--active {
+    color: var(--kk-color-text-primary-darker);
+    font-weight: var(--kk-font-subtitle-md-weight);
+  }
+  .cat-bar__item--active::after {
+    content: "";
+    position: absolute;
+    left: var(--kk-spacing-200); right: var(--kk-spacing-200); bottom: 0;
+    height: 2px;
+    background: var(--kk-color-background-primary-button);
+    border-radius: 1px;
+  }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative;
+    height: 206px;
+    padding: var(--kk-spacing-600) var(--page-pad);
+    display: flex; flex-direction: column;
+    gap: var(--kk-spacing-200);
+    color: var(--kk-color-white);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: url('https://www.figma.com/api/mcp/asset/2de58a7b-5434-4133-ae22-7957d8f90fee');
+    background-size: cover; background-position: center;
+  }
+  .hero::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.4); }
+  .hero > * { position: relative; }
+  .hero__title {
+    margin: 0;
+    font-size: var(--kk-font-h4-size);
+    line-height: var(--kk-font-h4-line);
+    font-weight: var(--kk-font-h4-weight);
+    text-shadow: 0 1px 2px rgba(38,50,56,.12);
+  }
+  .hero-search {
+    width: 640px; max-width: 100%;
+    height: 64px;
+    background: var(--kk-color-white);
+    border: 2px solid var(--kk-color-border-lighter);
+    border-radius: var(--kk-radius-circle);
+    display: flex; align-items: center;
+    padding: var(--kk-spacing-100) var(--kk-spacing-100) var(--kk-spacing-100) var(--kk-spacing-300);
+    box-shadow: var(--kk-elevation-action);
+  }
+  .hero-search input {
+    flex: 1; min-width: 0; border: 0; outline: 0;
+    font: inherit;
+    font-size: var(--kk-font-body-lg-size);
+    line-height: var(--kk-font-body-lg-line);
+    color: var(--kk-color-text-darker);
+    background: transparent;
+  }
+  .hero-search input::placeholder { color: var(--kk-color-text-medium); }
+  .hero-search__btn {
+    width: 56px; height: var(--kk-spacing-600);
+    background: var(--kk-color-background-primary-button);
+    border-radius: var(--kk-radius-circle);
+    display: grid; place-items: center;
+    color: var(--kk-color-white);
+    transition: background .15s;
+  }
+  .hero-search__btn:hover { background: var(--kk-color-background-primary-dark); }
+
+  /* ============ Icons (kkday-style-dictionary) ============ */
+  .ic { display: inline-block; vertical-align: middle; flex: none; }
+  .ic--12 { width: var(--kk-spacing-150); height: var(--kk-spacing-150); }
+  .ic--14 { width: 14px; height: 14px; }
+  .ic--16 { width: var(--kk-spacing-200); height: var(--kk-spacing-200); }
+  .ic--18 { width: 18px; height: 18px; }
+  .ic--20 { width: var(--kk-spacing-250); height: var(--kk-spacing-250); }
+  .ic--22 { width: 22px; height: 22px; }
+  .ic--24 { width: var(--kk-spacing-300); height: var(--kk-spacing-300); }
+  .ic--white { filter: brightness(0) invert(1); }
+  .ic--primary {
+    filter: invert(45%) sepia(99%) saturate(2031%) hue-rotate(157deg) brightness(91%) contrast(96%);
+  }
+
+  /* ============ Breadcrumbs ============ */
+  .breadcrumbs {
+    height: 44px;
+    padding: 0 var(--page-pad);
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-100);
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    color: var(--kk-color-text-dark);
+  }
+  .breadcrumbs a { color: var(--kk-color-text-dark); }
+  .breadcrumbs a:hover { color: var(--kk-color-text-primary-darker); }
+  .breadcrumbs__sep { color: var(--kk-color-text-lighter); }
+  .breadcrumbs__current { color: var(--kk-color-text-darker); }
+
+  /* ============ Generic Section ============ */
+  .section {
+    padding: var(--kk-spacing-300) var(--page-pad);
+    background: var(--kk-color-white);
+    position: relative;
+  }
+  .section__inner { width: var(--container); margin: 0 auto; }
+  .section__title {
+    margin: 0 0 28px;
+    font-size: var(--kk-font-h5-size);
+    line-height: var(--kk-font-h5-line);
+    font-weight: var(--kk-font-h5-weight);
+    color: var(--kk-color-text-darker);
+  }
+  .section--cate { padding-top: var(--kk-spacing-300); }
+  .section--banner { background: var(--kk-color-white); }
+  .section__more {
+    position: absolute; right: var(--page-pad); top: var(--kk-spacing-300);
+    color: var(--kk-color-text-primary-darker);
+    font-size: var(--kk-font-body-md-size);
+  }
+
+  /* ============ Cate items (熱門玩法) ============ */
+  .cate-list {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: var(--kk-spacing-300);
+  }
+  .cate-item {
+    border: 1px solid var(--kk-color-border-light);
+    border-radius: var(--kk-radius-lg);
+    padding: var(--kk-spacing-150) var(--kk-spacing-300);
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--kk-spacing-100);
+    background: var(--kk-color-white);
+    transition: border-color .15s, box-shadow .15s;
+    cursor: pointer;
+  }
+  .cate-item:hover {
+    border-color: var(--kk-color-background-primary-button);
+    box-shadow: var(--kk-elevation-card);
+  }
+  .cate-item__icon {
+    width: var(--kk-spacing-600); height: var(--kk-spacing-600);
+    display: block; object-fit: contain;
+  }
+  .cate-item__label {
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    color: var(--kk-color-text-darker);
+    text-align: center;
+  }
+
+  /* arrow buttons (carousel) */
+  .arrow-btn {
+    width: var(--kk-spacing-400); height: var(--kk-spacing-400);
+    border-radius: var(--kk-radius-circle);
+    background: var(--kk-color-white);
+    box-shadow: var(--kk-elevation-fixed);
+    display: grid; place-items: center;
+    cursor: pointer;
+    color: var(--kk-color-text-darker);
+  }
+  .arrow-btn--row { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; }
+  .arrow-btn--right { right: calc(var(--page-pad) - var(--kk-spacing-200)); }
+  .arrow-btn--left  { left:  calc(var(--page-pad) - var(--kk-spacing-200)); }
+
+  /* ============ Recently viewed (small horizontal cards) ============ */
+  .mini-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--kk-spacing-200); }
+  .mini-card {
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-150);
+    padding: var(--kk-spacing-150);
+    border-radius: var(--kk-radius-md);
+    background: var(--kk-color-white);
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .mini-card:hover { background: var(--kk-color-background-surface-light); }
+  .mini-card__img {
+    width: 114px; height: 76px; flex: none;
+    border-radius: var(--kk-radius-sm);
+    object-fit: cover;
+    background: var(--kk-color-background-surface-medium);
+  }
+  .mini-card__body { flex: 1; min-width: 0; }
+  .mini-card__title-row { display: flex; align-items: flex-start; gap: var(--kk-spacing-100); }
+  .mini-card__title {
+    flex: 1;
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    color: var(--kk-color-text-darker);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mini-card__meta {
+    margin-top: var(--kk-spacing-050);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: var(--kk-spacing-100);
+  }
+  .rating {
+    display: inline-flex; align-items: baseline;
+    gap: var(--kk-spacing-050);
+    font-size: var(--kk-font-body-sm-size);
+    line-height: var(--kk-font-body-sm-line);
+    color: var(--kk-color-text-dark);
+  }
+  .rating__star {
+    width: var(--kk-spacing-200); height: var(--kk-spacing-200);
+    flex: none; align-self: center;
+  }
+  .rating__num {
+    color: var(--kk-color-text-darker);
+    font-size: var(--kk-font-subtitle-md-size);
+    font-weight: var(--kk-font-subtitle-md-weight);
+    line-height: var(--kk-font-subtitle-md-line);
+  }
+  .price { display: inline-flex; align-items: baseline; gap: var(--kk-spacing-025); }
+  .price__cur, .price__num {
+    font-family: var(--kk-font-family-price);
+    font-weight: 700;
+    font-size: var(--kk-font-body-md-size);
+    color: var(--kk-color-text-darker);
+    line-height: var(--kk-font-body-sm-line);
+  }
+  .price__suffix {
+    font-family: var(--kk-font-family-price);
+    font-size: var(--kk-font-body-sm-size);
+    color: var(--kk-color-text-darker);
+  }
+  .heart {
+    width: var(--kk-spacing-300); height: var(--kk-spacing-300);
+    color: var(--kk-color-text-medium);
+    flex: none; cursor: pointer;
+  }
+  .heart:hover { color: var(--kk-color-background-critical-medium); }
+
+  /* ============ City cards (熱門目的地) ============ */
+  .cities { display: grid; grid-template-columns: repeat(8, 1fr); gap: var(--kk-spacing-300); }
+  .city {
+    position: relative;
+    width: 100%; aspect-ratio: 1 / 1;
+    border-radius: var(--kk-radius-md);
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .city img { width: 100%; height: 100%; object-fit: cover; }
+  .city__overlay {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: var(--kk-spacing-100);
+    color: var(--kk-color-white);
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.6) 40%, rgba(0,0,0,.9) 100%);
+  }
+  .city__name {
+    font-size: var(--kk-font-subtitle-md-size);
+    line-height: var(--kk-font-subtitle-md-line);
+    font-weight: var(--kk-font-subtitle-md-weight);
+  }
+  .city__count {
+    font-size: var(--kk-font-body-sm-size);
+    line-height: var(--kk-font-body-sm-line);
+  }
+
+  /* ============ Banner (最新優惠) ============ */
+  .section--banner {
+    padding-top: var(--kk-spacing-300);
+    padding-bottom: var(--kk-spacing-300);
+  }
+  .banner-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--kk-spacing-300); }
+  .banner-card {
+    height: 165px;
+    border-radius: var(--kk-radius-lg);
+    overflow: hidden;
+    background: var(--kk-color-background-surface-medium);
+    cursor: pointer;
+  }
+  .banner-card img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ============ Product cards (為您精選) ============ */
+  .prod-list { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--kk-spacing-300); }
+  .prod-card {
+    background: var(--kk-color-white);
+    display: flex; flex-direction: column;
+    gap: var(--kk-spacing-100);
+    cursor: pointer;
+  }
+  .prod-card__media {
+    position: relative;
+    width: 100%; aspect-ratio: 16 / 9;
+    border-radius: var(--kk-radius-lg);
+    overflow: hidden;
+    background: var(--kk-color-background-surface-medium);
+  }
+  .prod-card__media img { width: 100%; height: 100%; object-fit: cover; }
+  .prod-card__media::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,.3) 0%, rgba(0,0,0,0) 26%, rgba(0,0,0,0) 77%, rgba(0,0,0,.3) 100%);
+    pointer-events: none;
+  }
+  .prod-card__heart {
+    position: absolute;
+    top: var(--kk-spacing-150); right: var(--kk-spacing-150);
+    width: var(--kk-spacing-300); height: var(--kk-spacing-300);
+    color: var(--kk-color-white);
+    z-index: 1;
+  }
+  .prod-card__title {
+    margin: 0;
+    font-size: var(--kk-font-subtitle-lg-size);
+    line-height: var(--kk-font-subtitle-lg-line);
+    font-weight: var(--kk-font-subtitle-lg-weight);
+    color: var(--kk-color-text-darker);
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: var(--kk-spacing-600);
+  }
+  .prod-card__rating {
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-050);
+    font-size: var(--kk-font-body-sm-size);
+    color: var(--kk-color-text-dark);
+  }
+  .prod-card__rating .rating__num {
+    font-size: var(--kk-font-subtitle-md-size);
+    line-height: var(--kk-font-subtitle-md-line);
+  }
+  .prod-card__tags {
+    display: flex; flex-wrap: wrap;
+    gap: var(--kk-spacing-050);
+    padding-top: var(--kk-spacing-025);
+  }
+  .tag {
+    display: inline-flex; align-items: center;
+    gap: var(--kk-spacing-050);
+    padding: var(--kk-spacing-025) var(--kk-spacing-050);
+    background: var(--kk-color-background-surface-light);
+    border-radius: var(--kk-radius-sm);
+    font-size: var(--kk-font-body-sm-size);
+    line-height: var(--kk-font-body-sm-line);
+    color: var(--kk-color-text-darker);
+  }
+  .tag svg { color: var(--kk-color-text-primary-darker); }
+  .prod-card__price-row {
+    display: flex; align-items: baseline;
+    gap: var(--kk-spacing-100);
+    padding-top: var(--kk-spacing-050);
+  }
+  .prod-card__price-final {
+    font-family: var(--kk-font-family-price);
+    font-weight: 700;
+    font-size: var(--kk-font-body-lg-size);
+    color: var(--kk-color-text-darker);
+  }
+  .prod-card__price-final .small { font-size: var(--kk-font-body-md-size); font-weight: 400; }
+  .prod-card__price-orig {
+    font-family: var(--kk-font-family-price);
+    font-size: var(--kk-font-body-md-size);
+    color: var(--kk-color-text-medium);
+    text-decoration: line-through;
+  }
+  .discount-tag {
+    display: inline-flex;
+    padding: var(--kk-spacing-025) var(--kk-spacing-050);
+    border-radius: var(--kk-radius-sm);
+    background: var(--kk-color-background-critical-medium);
+    color: var(--kk-color-white);
+    font-size: var(--kk-font-body-sm-size);
+    line-height: var(--kk-font-body-sm-line);
+  }
+
+  /* ============ Link section (熱門推薦) ============ */
+  .link-section { padding: var(--kk-spacing-600) var(--page-pad); background: var(--kk-color-white); }
+  .link-group {
+    padding: var(--kk-spacing-200) 0;
+    border-bottom: 1px solid var(--kk-color-border-lighter);
+  }
+  .link-group:last-child { border-bottom: 0; }
+  .link-group__title {
+    font-size: var(--kk-font-subtitle-lg-size);
+    line-height: var(--kk-font-subtitle-lg-line);
+    font-weight: var(--kk-font-subtitle-lg-weight);
+    color: var(--kk-color-text-darker);
+    margin-bottom: var(--kk-spacing-150);
+  }
+  .link-group__items {
+    display: flex; flex-wrap: wrap;
+    gap: var(--kk-spacing-100) var(--kk-spacing-300);
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    color: var(--kk-color-text-dark);
+  }
+  .link-group__items a { color: var(--kk-color-text-dark); }
+  .link-group__items a:hover { color: var(--kk-color-text-primary-darker); }
+
+  /* ============ Subscribe + Footer ============ */
+  .footer-top { background: var(--c-footer-bg); color: var(--c-footer-text); padding: var(--kk-spacing-600) var(--page-pad); }
+  .footer-top__inner {
+    width: var(--container); margin: 0 auto;
+    display: grid; grid-template-columns: 196px 1fr 380px;
+    gap: 65px; align-items: start;
+  }
+  .socials { display: flex; gap: var(--kk-spacing-050); }
+  .socials a {
+    width: 36px; height: 36px;
+    border-radius: var(--kk-radius-circle);
+    background: var(--c-footer-icon-bg);
+    display: grid; place-items: center;
+    color: var(--c-footer-text);
+    transition: background .15s;
+  }
+  .socials a:hover { background: var(--c-footer-divider); color: var(--kk-color-white); }
+  .subscribe-text {
+    color: var(--kk-color-white);
+    font-size: var(--kk-font-body-lg-size);
+    line-height: 27px;
+  }
+  .subscribe-text small {
+    display: block;
+    color: var(--c-footer-text);
+    font-size: var(--kk-font-body-sm-size);
+    line-height: 18px;
+    margin-top: var(--kk-spacing-050);
+  }
+  .subscribe-form { position: relative; width: 380px; }
+  .subscribe-form input {
+    width: 100%; height: 42px;
+    padding: 0 100px 0 var(--kk-spacing-200);
+    border-radius: 21px;
+    border: 1px solid var(--c-footer-divider);
+    background: var(--kk-color-white);
+    color: var(--kk-color-text-darker);
+    font: inherit;
+    font-size: var(--kk-font-body-md-size);
+  }
+  .subscribe-form button {
+    position: absolute;
+    right: var(--kk-spacing-050); top: var(--kk-spacing-050);
+    height: 34px;
+    padding: 0 var(--kk-spacing-300);
+    border-radius: 17px;
+    background: var(--kk-color-background-primary-button);
+    color: var(--kk-color-white);
+    font-weight: var(--kk-font-subtitle-md-weight);
+  }
+  .footer-divider {
+    height: 1px;
+    background: var(--c-footer-divider);
+    margin: var(--kk-spacing-300) auto;
+    max-width: var(--container);
+  }
+  .footer-cols {
+    width: var(--container); margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: var(--kk-spacing-400);
+    padding-bottom: var(--kk-spacing-400);
+  }
+  .footer-col__title {
+    color: var(--kk-color-white);
+    font-size: var(--kk-font-subtitle-lg-size);
+    line-height: var(--kk-font-subtitle-lg-line);
+    font-weight: var(--kk-font-subtitle-lg-weight);
+    margin-bottom: var(--kk-spacing-200);
+  }
+  .footer-col__list {
+    display: flex; flex-direction: column;
+    gap: var(--kk-spacing-050);
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+  }
+  .footer-col__list a { color: var(--c-footer-text); }
+  .footer-col__list a:hover { color: var(--kk-color-white); }
+  .pay-icons { display: grid; grid-template-columns: repeat(5, 42px); gap: var(--kk-spacing-100); }
+  .pay-icon {
+    width: 42px; height: 26px;
+    background: var(--kk-color-white);
+    border-radius: var(--kk-radius-sm);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 700;
+    color: var(--kk-color-text-darker);
+  }
+
+  /* ============ Copyright ============ */
+  .copyright {
+    background: var(--c-footer-bg-alt);
+    color: var(--c-footer-text-muted);
+    padding: var(--kk-spacing-400) var(--page-pad);
+    font-size: var(--kk-font-body-sm-size);
+    line-height: var(--kk-font-body-md-line);
+  }
+  .copyright__inner {
+    width: var(--container); margin: 0 auto;
+    display: grid; grid-template-columns: 258px 1fr 262px;
+    gap: var(--kk-spacing-400);
+  }
+  .copyright__col p { margin: 0 0 var(--kk-spacing-050); }
+  .copyright__right { text-align: right; }
+
+  @media (max-width: 1280px) {
+    :root { --page-pad: var(--kk-spacing-400); --container: 100%; }
+    .top-bar__inner { width: auto; padding: 0 var(--kk-spacing-400); }
+    .header-search { width: 280px; }
+    .cate-list { grid-template-columns: repeat(4, 1fr); }
+    .cities { grid-template-columns: repeat(4, 1fr); }
+    .prod-list { grid-template-columns: repeat(2, 1fr); }
+    .banner-list, .mini-list { grid-template-columns: 1fr; }
+    .footer-top__inner { grid-template-columns: 1fr; gap: var(--kk-spacing-400); }
+    .footer-cols { grid-template-columns: repeat(2, 1fr); }
+    .copyright__inner { grid-template-columns: 1fr; }
+    .copyright__right { text-align: left; }
+  }
+  @media (max-width: 720px) {
+    .download-app, .lang, .currency, .points { display: none !important; }
+    .cate-list { grid-template-columns: repeat(2, 1fr); }
+    .cities { grid-template-columns: repeat(2, 1fr); }
+    .prod-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top function bar -->
+<header class="top-bar">
+  <div class="top-bar__inner">
+    <div class="top-bar__left">
+      <a href="index.html" class="logo">KKday</a>
+      <div class="header-search" role="search">
+        <img class="ic ic--18" src="assets/icons/ic_search_line.svg" alt="" />
+        <span>搜尋景點、地區或城市</span>
+      </div>
+    </div>
+    <nav class="top-bar__right" aria-label="user">
+      <a class="download-app" href="#">
+        <img class="ic ic--18 ic--primary" src="assets/icons/ic_phone_line.svg" alt="" />
+        下載 App 享優惠
+      </a>
+      <a class="lang" href="#">繁體中文
+        <img class="ic ic--18" src="assets/icons/ic_arrowDown_line.svg" alt="" />
+      </a>
+      <a class="currency" href="#">TWD
+        <img class="ic ic--18" src="assets/icons/ic_arrowDown_line.svg" alt="" />
+      </a>
+      <a class="cart" href="#" aria-label="購物車">
+        <img class="ic ic--22" src="assets/icons/ic_shoppingCart_line.svg" alt="" />
+      </a>
+      <div class="points">
+        <div class="points__chip">
+          <img class="ic ic--24" src="assets/icons/ic_kkdayPoints_color.svg" alt="" />
+          <div class="points__num">999</div>
+        </div>
+      </div>
+      <div class="avatar-wrap">
+        <div class="avatar"><img src="https://www.figma.com/api/mcp/asset/4a986638-c536-4bed-a05e-f2cbf0da6a16" alt="" onerror="this.style.display='none'" /></div>
+        <div class="badge" title="Silver"><img src="assets/icons/ic_loyaltySilver_colorwborder.svg" alt="Silver" /></div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Category nav (tabs) -->
+<nav class="cat-bar" aria-label="分類">
+  <ul class="cat-bar__list">
+    <li class="cat-bar__item">
+      <img class="ic ic--16" src="assets/icons/ic_location_line.svg" alt="" />
+      目的地
+    </li>
+    <li class="cat-bar__item">最新優惠</li>
+    <li class="cat-bar__item cat-bar__item--active">門票/體驗</li>
+    <li class="cat-bar__item">機票+</li>
+    <li class="cat-bar__item">eSIM/WiFi</li>
+    <li class="cat-bar__item">交通</li>
+    <li class="cat-bar__item">租車</li>
+    <li class="cat-bar__item">住宿</li>
+    <li class="cat-bar__item">美食</li>
+    <li class="cat-bar__item">台灣高鐵</li>
+    <li class="cat-bar__item">郵輪</li>
+    <li class="cat-bar__item">旅行服務</li>
+    <li class="cat-bar__item">購物</li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <h1 class="hero__title">門票/體驗</h1>
+  <form class="hero-search" onsubmit="event.preventDefault()">
+    <input type="text" placeholder="想體驗什麼活動？" aria-label="搜尋" />
+    <button class="hero-search__btn" type="submit" aria-label="搜尋">
+      <img class="ic ic--20 ic--white" src="assets/icons/ic_search_line.svg" alt="" />
+    </button>
+  </form>
+</section>
+
+<!-- Breadcrumbs -->
+<nav class="breadcrumbs" aria-label="麵包屑">
+  <a href="index.html">首頁</a>
+  <span class="breadcrumbs__sep">/</span>
+  <span class="breadcrumbs__current">門票/體驗</span>
+</nav>
+
+<!-- 熱門玩法 (cate section) -->
+<section class="section section--cate">
+  <div class="section__inner" style="position:relative;">
+    <h2 class="section__title">熱門玩法</h2>
+    <div class="cate-list">
+      <a class="cate-item" href="#"><img class="cate-item__icon" src="assets/pictograms/picto_cat_amusementParks.png" srcset="assets/pictograms/picto_cat_amusementParks.png 1x, assets/pictograms/picto_cat_amusementParks@2x.png 2x" alt="" /><div class="cate-item__label">親子好玩</div></a>
+      <a class="cate-item" href="#"><img class="cate-item__icon" src="assets/pictograms/picto_cat_tourSightseeing.png" srcset="assets/pictograms/picto_cat_tourSightseeing.png 1x, assets/pictograms/picto_cat_tourSightseeing@2x.png 2x" alt="" /><div class="cate-item__label">觀光行程</div></a>
+      <a class="cate-item" href="#"><img class="cate-item__icon" src="assets/pictograms/picto_cat_spaMassage.png" srcset="assets/pictograms/picto_cat_spaMassage.png 1x, assets/pictograms/picto_cat_spaMassage@2x.png 2x" alt="" /><div class="cate-item__label">舒壓 &amp; 美容</div></a>
+      <a class="cate-item" href="#"><img class="cate-item__icon" src="assets/pictograms/picto_cat_outdoorActivitiy.png" srcset="assets/pictograms/picto_cat_outdoorActivitiy.png 1x, assets/pictograms/picto_cat_outdoorActivitiy@2x.png 2x" alt="" /><div class="cate-item__label">戶外 &amp; 運動</div></a>
+      <a class="cate-item" href="#"><img class="cate-item__icon" src="assets/pictograms/picto_cat_culturalExperiences.png" srcset="assets/pictograms/picto_cat_culturalExperiences.png 1x, assets/pictograms/picto_cat_culturalExperiences@2x.png 2x" alt="" /><div class="cate-item__label">文化體驗</div></a>
+      <a class="cate-item" href="#"><img class="cate-item__icon" src="assets/pictograms/picto_cat_eventExhibition.png" srcset="assets/pictograms/picto_cat_eventExhibition.png 1x, assets/pictograms/picto_cat_eventExhibition@2x.png 2x" alt="" /><div class="cate-item__label">節慶假期</div></a>
+      <a class="cate-item" href="#"><img class="cate-item__icon" src="assets/pictograms/picto_cat_all.png" srcset="assets/pictograms/picto_cat_all.png 1x, assets/pictograms/picto_cat_all@2x.png 2x" alt="" /><div class="cate-item__label">全部</div></a>
+    </div>
+  </div>
+  <button class="arrow-btn arrow-btn--row arrow-btn--right" aria-label="下一頁">
+    <img class="ic ic--24" src="assets/icons/ic_arrowRight_line.svg" alt="" />
+  </button>
+</section>
+
+<!-- 最近瀏覽 -->
+<section class="section">
+  <div class="section__inner" style="position:relative;">
+    <h2 class="section__title">最近瀏覽</h2>
+    <div class="mini-list">
+      <a class="mini-card" href="#">
+        <img class="mini-card__img" src="https://www.figma.com/api/mcp/asset/98ed9070-3383-4408-a097-475104a89cf5" alt="" />
+        <div class="mini-card__body">
+          <div class="mini-card__title-row">
+            <p class="mini-card__title">日本富士山人氣景點一日遊 ｜ 東京銀座出發</p>
+            <img class="heart" src="assets/icons/ic_wishListHeart_default_color.svg" alt="" />
+          </div>
+          <div class="mini-card__meta">
+            <span class="rating"><img class="rating__star" src="assets/icons/ic_star_fill.svg" alt="" /><span class="rating__num">4.8</span><span>(5,284)</span></span>
+            <span class="price"><span class="price__cur">NT$</span><span class="price__num">1,800</span><span class="price__suffix">起</span></span>
+          </div>
+        </div>
+      </a>
+      <a class="mini-card" href="#">
+        <img class="mini-card__img" src="https://www.figma.com/api/mcp/asset/98ed9070-3383-4408-a097-475104a89cf5" alt="" />
+        <div class="mini-card__body">
+          <div class="mini-card__title-row">
+            <p class="mini-card__title">日本富士山人氣景點一日遊 ｜ 東京銀座出發</p>
+            <img class="heart" src="assets/icons/ic_wishListHeart_default_color.svg" alt="" />
+          </div>
+          <div class="mini-card__meta">
+            <span class="rating"><img class="rating__star" src="assets/icons/ic_star_fill.svg" alt="" /><span class="rating__num">4.8</span><span>(5,284)</span></span>
+            <span class="price"><span class="price__cur">NT$</span><span class="price__num">1,800</span><span class="price__suffix">起</span></span>
+          </div>
+        </div>
+      </a>
+      <a class="mini-card" href="#">
+        <img class="mini-card__img" src="https://www.figma.com/api/mcp/asset/98ed9070-3383-4408-a097-475104a89cf5" alt="" />
+        <div class="mini-card__body">
+          <div class="mini-card__title-row">
+            <p class="mini-card__title">日本富士山人氣景點一日遊 ｜ 東京銀座出發</p>
+            <img class="heart" src="assets/icons/ic_wishListHeart_default_color.svg" alt="" />
+          </div>
+          <div class="mini-card__meta">
+            <span class="rating"><img class="rating__star" src="assets/icons/ic_star_fill.svg" alt="" /><span class="rating__num">4.8</span><span>(5,284)</span></span>
+            <span class="price"><span class="price__cur">NT$</span><span class="price__num">1,800</span><span class="price__suffix">起</span></span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <button class="arrow-btn arrow-btn--row arrow-btn--right" aria-label="下一頁">
+    <img class="ic ic--24" src="assets/icons/ic_arrowRight_line.svg" alt="" />
+  </button>
+</section>
+
+<!-- 熱門目的地 -->
+<section class="section">
+  <div class="section__inner">
+    <h2 class="section__title">熱門目的地</h2>
+    <div class="cities">
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="東京" /><div class="city__overlay"><div class="city__name">東京</div><div class="city__count">300+ 個活動</div></div></div>
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="大阪" /><div class="city__overlay"><div class="city__name">大阪</div><div class="city__count">200+ 個活動</div></div></div>
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="京都" /><div class="city__overlay"><div class="city__name">京都</div><div class="city__count">180+ 個活動</div></div></div>
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="名古屋" /><div class="city__overlay"><div class="city__name">名古屋</div><div class="city__count">90+ 個活動</div></div></div>
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="北海道" /><div class="city__overlay"><div class="city__name">北海道</div><div class="city__count">150+ 個活動</div></div></div>
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="首爾" /><div class="city__overlay"><div class="city__name">首爾</div><div class="city__count">220+ 個活動</div></div></div>
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="沖繩" /><div class="city__overlay"><div class="city__name">沖繩</div><div class="city__count">100+ 個活動</div></div></div>
+      <div class="city"><img src="https://www.figma.com/api/mcp/asset/44d4c451-b51d-4893-8d78-05e882aa8260" alt="釜山" /><div class="city__overlay"><div class="city__name">釜山</div><div class="city__count">80+ 個活動</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 最新優惠 banners -->
+<section class="section section--banner">
+  <div class="section__inner" style="position:relative;">
+    <div class="banner-list">
+      <div class="banner-card"><img src="https://www.figma.com/api/mcp/asset/a05e0e9c-fd35-4727-afc1-e9ff19ce4eaa" alt="" /></div>
+      <div class="banner-card"><img src="https://www.figma.com/api/mcp/asset/02d21f7a-8015-40d6-b308-303deb4922f6" alt="" /></div>
+      <div class="banner-card"><img src="https://www.figma.com/api/mcp/asset/a05e0e9c-fd35-4727-afc1-e9ff19ce4eaa" alt="" /></div>
+    </div>
+  </div>
+  <button class="arrow-btn arrow-btn--row arrow-btn--left" aria-label="上一頁">
+    <img class="ic ic--24" src="assets/icons/ic_arrowLeft_line.svg" alt="" />
+  </button>
+  <button class="arrow-btn arrow-btn--row arrow-btn--right" aria-label="下一頁">
+    <img class="ic ic--24" src="assets/icons/ic_arrowRight_line.svg" alt="" />
+  </button>
+</section>
+
+<!-- 為您精選 product cards -->
+<section class="section">
+  <div class="section__inner" style="position:relative;">
+    <h2 class="section__title">為您精選</h2>
+    <div class="prod-list">
+      <a class="prod-card" href="#">
+        <div class="prod-card__media">
+          <img src="https://www.figma.com/api/mcp/asset/98ed9070-3383-4408-a097-475104a89cf5" alt="" />
+          <img class="prod-card__heart ic--white" src="assets/icons/ic_wishListHeart_default_color.svg" alt="" />
+        </div>
+        <h3 class="prod-card__title">日本富士山人氣景點一日遊 ｜ 東京銀座出發</h3>
+        <div class="prod-card__rating">
+          <img class="rating__star" src="assets/icons/ic_star_fill.svg" alt="" /><span class="rating__num">4.8</span>
+          <span>(5,284)・20K+ 個已訂購</span>
+        </div>
+        <div class="prod-card__tags">
+          <span class="tag">
+            <img class="ic ic--16" src="assets/icons/ic_trustedPartner_color.svg" alt="" />
+            信賴商家
+          </span>
+          <span class="tag">免費取消</span>
+          <span class="tag">立即確認</span>
+        </div>
+        <div class="prod-card__price-row">
+          <span class="prod-card__price-final">NT$ 1,800<span class="small"> 起</span></span>
+          <span class="prod-card__price-orig">NT$ 3,050</span>
+        </div>
+        <div><span class="discount-tag">41% OFF</span></div>
+      </a>
+
+      <a class="prod-card" href="#">
+        <div class="prod-card__media">
+          <img src="https://www.figma.com/api/mcp/asset/98ed9070-3383-4408-a097-475104a89cf5" alt="" />
+          <img class="prod-card__heart ic--white" src="assets/icons/ic_wishListHeart_default_color.svg" alt="" />
+        </div>
+        <h3 class="prod-card__title">【人氣首選】富士山一日遊 ｜ 富士山五合目 &amp; 忍野八海 &amp; 富士天上山公園</h3>
+        <div class="prod-card__rating">
+          <img class="rating__star" src="assets/icons/ic_star_fill.svg" alt="" /><span class="rating__num">4.8</span>
+          <span>(5,284)・20K+ 個已訂購</span>
+        </div>
+        <div class="prod-card__tags">
+          <span class="tag"><img class="ic ic--16" src="assets/icons/ic_trustedPartner_color.svg" alt="" />信賴商家</span>
+          <span class="tag">免費取消</span>
+          <span class="tag">立即確認</span>
+        </div>
+        <div class="prod-card__price-row">
+          <span class="prod-card__price-final">NT$ 1,800<span class="small"> 起</span></span>
+          <span class="prod-card__price-orig">NT$ 3,050</span>
+        </div>
+        <div><span class="discount-tag">41% OFF</span></div>
+      </a>
+
+      <a class="prod-card" href="#">
+        <div class="prod-card__media">
+          <img src="https://www.figma.com/api/mcp/asset/98ed9070-3383-4408-a097-475104a89cf5" alt="" />
+          <img class="prod-card__heart ic--white" src="assets/icons/ic_wishListHeart_default_color.svg" alt="" />
+        </div>
+        <h3 class="prod-card__title">富士山六景熱門行程 ｜ 平和公園 &amp; 忍野八海 &amp; 河口湖</h3>
+        <div class="prod-card__rating">
+          <img class="rating__star" src="assets/icons/ic_star_fill.svg" alt="" /><span class="rating__num">4.8</span>
+          <span>(5,284)・20K+ 個已訂購</span>
+        </div>
+        <div class="prod-card__tags">
+          <span class="tag"><img class="ic ic--16" src="assets/icons/ic_trustedPartner_color.svg" alt="" />信賴商家</span>
+          <span class="tag">免費取消</span>
+          <span class="tag">立即確認</span>
+        </div>
+        <div class="prod-card__price-row">
+          <span class="prod-card__price-final">NT$ 1,800<span class="small"> 起</span></span>
+          <span class="prod-card__price-orig">NT$ 3,050</span>
+        </div>
+        <div><span class="discount-tag">41% OFF</span></div>
+      </a>
+
+      <a class="prod-card" href="#">
+        <div class="prod-card__media">
+          <img src="https://www.figma.com/api/mcp/asset/98ed9070-3383-4408-a097-475104a89cf5" alt="" />
+          <img class="prod-card__heart ic--white" src="assets/icons/ic_wishListHeart_default_color.svg" alt="" />
+        </div>
+        <h3 class="prod-card__title">北海道熱門景點 ｜ 富良野朝霧公園 &amp; 美瑛青池 &amp; 白鬚瀑布一日遊 ｜ 札幌出發</h3>
+        <div class="prod-card__rating">
+          <img class="rating__star" src="assets/icons/ic_star_fill.svg" alt="" /><span class="rating__num">4.8</span>
+          <span>(5,284)・20K+ 個已訂購</span>
+        </div>
+        <div class="prod-card__tags">
+          <span class="tag"><img class="ic ic--16" src="assets/icons/ic_trustedPartner_color.svg" alt="" />信賴商家</span>
+          <span class="tag">免費取消</span>
+          <span class="tag">立即確認</span>
+        </div>
+        <div class="prod-card__price-row">
+          <span class="prod-card__price-final">NT$ 1,800<span class="small"> 起</span></span>
+          <span class="prod-card__price-orig">NT$ 3,050</span>
+        </div>
+        <div><span class="discount-tag">41% OFF</span></div>
+      </a>
+    </div>
+  </div>
+  <button class="arrow-btn arrow-btn--row arrow-btn--left" aria-label="上一頁">
+    <img class="ic ic--24" src="assets/icons/ic_arrowLeft_line.svg" alt="" />
+  </button>
+  <button class="arrow-btn arrow-btn--row arrow-btn--right" aria-label="下一頁">
+    <img class="ic ic--24" src="assets/icons/ic_arrowRight_line.svg" alt="" />
+  </button>
+</section>
+
+<!-- 熱門推薦 link section -->
+<section class="link-section">
+  <div class="section__inner">
+    <h2 class="section__title">熱門推薦</h2>
+    <div class="link-group">
+      <div class="link-group__title">周邊旅遊攻略</div>
+      <div class="link-group__items">
+        <a href="#">大阪集點攻略</a><a href="#">京都奈良攻略</a><a href="#">福岡溫泉攻略</a><a href="#">鳴海樂園攻略</a><a href="#">千葉迪士尼包套</a><a href="#">日光世界遺產攻略</a><a href="#">沖繩水族館</a>
+      </div>
+    </div>
+    <div class="link-group">
+      <div class="link-group__title">探索更多服裝租借體驗地點</div>
+      <div class="link-group__items">
+        <a href="#">東京・服裝租借</a><a href="#">京都・服裝租借</a><a href="#">大阪・服裝租借</a><a href="#">沖繩・服裝租借</a><a href="#">首爾・服裝租借</a><a href="#">清水寺・服裝租借</a><a href="#">釜山・服裝租借</a>
+      </div>
+    </div>
+    <div class="link-group">
+      <div class="link-group__title">東京周邊的水上活動推薦</div>
+      <div class="link-group__items">
+        <a href="#">橫濱港未來・水上活動</a><a href="#">逗子・水上活動</a><a href="#">湘南・水上活動</a><a href="#">江ノ島・水上活動</a><a href="#">館山海岸・水上活動</a><a href="#">多摩川・水上活動</a><a href="#">三浦半島・水上活動</a>
+      </div>
+    </div>
+    <div class="link-group">
+      <div class="link-group__title">KKday 熱門活動</div>
+      <div class="link-group__items">
+        <a href="#">東京 拉麵體驗</a><a href="#">東京 巴士夜景包車型聖之三 2 名</a><a href="#">東京 機場接送</a><a href="#">東京 觀光導覽</a><a href="#">東京 一日聖地</a><a href="#">東京 美式和食體驗</a><a href="#">東京 大阪自由</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Subscribe + Footer top -->
+<section class="footer-top">
+  <div class="footer-top__inner">
+    <div class="socials">
+      <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9V6a1 1 0 0 1 1-1h2V2h-3a4 4 0 0 0-4 4v3H7v3h3v9h4v-9h3l1-3h-4Z"/></svg></a>
+      <a href="#" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 7.5a3 3 0 0 0-2-2C18.2 5 12 5 12 5s-6.2 0-8 .5a3 3 0 0 0-2 2C1.5 9.4 1.5 12 1.5 12s0 2.6.5 4.5a3 3 0 0 0 2 2C5.8 19 12 19 12 19s6.2 0 8-.5a3 3 0 0 0 2-2c.5-1.9.5-4.5.5-4.5s0-2.6-.5-4.5ZM10 15V9l5 3-5 3Z"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+      <a href="#" aria-label="Blog"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h13l3 3v13H4V4Zm2 4v10h12V8H6Zm2 2h8v2H8v-2Zm0 3h8v2H8v-2Z"/></svg></a>
+      <a href="#" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22 5.8a8 8 0 0 1-2.4.7 4 4 0 0 0 1.8-2.2 8 8 0 0 1-2.6 1A4 4 0 0 0 12 9.4a11.3 11.3 0 0 1-8.2-4.2 4 4 0 0 0 1.2 5.4 4 4 0 0 1-1.8-.5v.1a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 2 18.5 11.3 11.3 0 0 0 8.1 20c7.4 0 11.4-6.1 11.4-11.4v-.5A8 8 0 0 0 22 5.8Z"/></svg></a>
+    </div>
+
+    <div class="subscribe-text">
+      即刻訂閱 KKday EDM！搶先獲得用戶獨享優惠及最新門票體驗開賣資訊！
+      <small>訂閱即代表你同意我們的使用者條款和隱私權保護政策</small>
+    </div>
+
+    <form class="subscribe-form" onsubmit="event.preventDefault()">
+      <input type="email" placeholder="請輸入您的電子郵件" aria-label="email" />
+      <button type="submit">訂閱</button>
+    </form>
+  </div>
+
+  <div class="footer-divider"></div>
+
+  <div class="footer-cols">
+    <div>
+      <div class="footer-col__title">認識 KKday</div>
+      <ul class="footer-col__list">
+        <li><a href="#">關於 KKday</a></li>
+        <li><a href="#">使用者條款</a></li>
+        <li><a href="#">隱私權保護政策</a></li>
+        <li><a href="#">常見問題與幫助</a></li>
+        <li><a href="#">媒體報導</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col__title">給旅人</div>
+      <ul class="footer-col__list">
+        <li><a href="#">三大保證</a></li>
+        <li><a href="#">合作夥伴</a></li>
+        <li><a href="#">官方部落格</a></li>
+        <li><a href="#">KKday Points 介紹</a></li>
+        <li><a href="#">會員好禮</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col__title">KKday 合作夥伴</div>
+      <ul class="footer-col__list">
+        <li><a href="#">駐站特派員</a></li>
+        <li><a href="#">成為供應商</a></li>
+        <li><a href="#">成為商城商家</a></li>
+        <li><a href="#">供應商登入</a></li>
+        <li><a href="#">同業合作</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col__title">付款方式</div>
+      <div class="pay-icons">
+        <div class="pay-icon">VISA</div>
+        <div class="pay-icon">MC</div>
+        <div class="pay-icon">JCB</div>
+        <div class="pay-icon">AMEX</div>
+        <div class="pay-icon">PAY</div>
+        <div class="pay-icon">GPay</div>
+        <div class="pay-icon">Line</div>
+        <div class="pay-icon">ATM</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Copyright -->
+<footer class="copyright">
+  <div class="copyright__inner">
+    <div class="copyright__col">
+      <p>旅遊產品由 酷遊天國際旅行社股份有限公司 提供</p>
+      <p>統一編號：24527417</p>
+      <p>代表人：蘇民哲</p>
+      <p>地址：台北市中山區南京東路二段 96 號 11 樓</p>
+      <p>觀光局註冊編號：交觀甲第 7287 號</p>
+    </div>
+    <div class="copyright__col">
+      <p>客服信箱：service@kkday.com</p>
+      <p>客服電話：02-7741-7400 或 0800-122-778</p>
+      <p>傳真電話：02-8792-4937</p>
+    </div>
+    <div class="copyright__col copyright__right">
+      <p>COPYRIGHT © 2021 KKday All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>KKday — 我的天，超好玩</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css" />
+<style>
+  :root {
+    --container: 1140px;
+    --page-pad: 150px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: var(--kk-font-family-base);
+    color: var(--kk-color-text-darker);
+    background: var(--kk-color-white);
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+  img { display: block; max-width: 100%; }
+
+  /* ============ Top function bar ============ */
+  .top-bar {
+    height: 60px;
+    background: var(--kk-color-white);
+    border-bottom: 1px solid var(--kk-color-border-lighter);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .top-bar__inner {
+    width: var(--container);
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .top-bar__left { display: flex; align-items: center; gap: var(--kk-spacing-300); }
+  .logo {
+    font-family: "Noto Sans TC", sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: -1px;
+    color: var(--kk-color-background-primary-button);
+    line-height: 40px;
+    width: 100px;
+  }
+  .header-search {
+    width: 400px;
+    height: 42px;
+    background: var(--kk-color-background-surface-light);
+    border-radius: var(--kk-radius-circle);
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-100);
+    padding: var(--kk-spacing-100) var(--kk-spacing-200);
+    color: var(--kk-color-text-medium);
+    font-size: var(--kk-font-body-lg-size);
+    line-height: var(--kk-font-body-lg-line);
+  }
+  .header-search svg { flex: none; }
+
+  .top-bar__right { display: flex; align-items: stretch; }
+  .top-bar__right > * {
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-050);
+    padding: 19px 15px;
+  }
+  .download-app { color: var(--kk-color-text-primary-darker); }
+  .download-app, .lang, .currency { font-size: var(--kk-font-body-md-size); }
+  .lang, .currency { color: var(--kk-color-text-dark); }
+  .icon-arrow-down { width: 18px; height: 18px; }
+  .cart { padding: 19px 15px; }
+
+  .points { padding: 0 var(--kk-spacing-200); }
+  .points__chip {
+    display: inline-flex; align-items: center;
+    gap: var(--kk-spacing-075);
+    height: var(--kk-spacing-400);
+    border-radius: var(--kk-radius-circle);
+  }
+  .points__num {
+    font-weight: var(--kk-font-subtitle-md-weight);
+    font-size: var(--kk-font-subtitle-md-size);
+    line-height: var(--kk-font-subtitle-md-line);
+  }
+
+  .avatar-wrap { position: relative; padding: 9px; }
+  .avatar {
+    width: var(--kk-spacing-500); height: var(--kk-spacing-500);
+    border-radius: var(--kk-radius-circle);
+    background: var(--kk-color-background-surface-medium);
+    overflow: hidden;
+  }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .badge {
+    position: absolute;
+    width: var(--kk-spacing-200); height: var(--kk-spacing-200);
+    right: 9px; bottom: 9px;
+  }
+  .badge img { width: 100%; height: 100%; }
+
+  /* ============ Category bar ============ */
+  .cat-bar {
+    height: 60px;
+    background: var(--kk-color-white);
+    padding: var(--kk-spacing-250) var(--page-pad);
+  }
+  .cat-bar__list { display: flex; align-items: center; }
+  .cat-bar__item {
+    display: flex; align-items: center;
+    gap: var(--kk-spacing-100);
+    padding: 0 var(--kk-spacing-200);
+    border-right: 1px solid var(--kk-color-border-lighter);
+    font-size: var(--kk-font-body-md-size);
+    line-height: var(--kk-font-body-md-line);
+    color: var(--kk-color-text-darker);
+    white-space: nowrap;
+  }
+  .cat-bar__item:last-child { border-right: 0; }
+  .cat-bar__item:hover { color: var(--kk-color-text-primary-darker); cursor: pointer; }
+
+  /* ============ Hero ============ */
+  .hero {
+    position: relative;
+    padding: 120px var(--page-pad);
+    display: flex; flex-direction: column; align-items: center;
+    gap: var(--kk-spacing-400);
+    background-image: url('https://www.figma.com/api/mcp/asset/57c30fd7-565f-4c60-b77c-9ee2f08ac851');
+    background-size: cover;
+    background-position: center;
+    color: var(--kk-color-white);
+    min-height: 480px;
+  }
+  .hero__title {
+    margin: 0;
+    width: 800px; max-width: 100%;
+    font-size: var(--kk-font-h1-size);
+    font-weight: var(--kk-font-h1-weight);
+    line-height: 1.2;
+    text-align: center;
+    text-shadow: 0 4px 24px rgba(38,50,56,.4);
+  }
+  .hero-search {
+    width: 640px; max-width: 100%;
+    height: 64px;
+    background: var(--kk-color-white);
+    border: 2px solid var(--kk-color-border-lighter);
+    border-radius: var(--kk-radius-circle);
+    display: flex; align-items: center;
+    padding: var(--kk-spacing-100) var(--kk-spacing-100) var(--kk-spacing-100) var(--kk-spacing-300);
+    box-shadow: var(--kk-elevation-action);
+  }
+  .hero-search input {
+    flex: 1; min-width: 0;
+    border: 0; outline: 0;
+    font: inherit;
+    font-size: var(--kk-font-body-lg-size);
+    line-height: var(--kk-font-body-lg-line);
+    color: var(--kk-color-text-darker);
+    background: transparent;
+  }
+  .hero-search input::placeholder { color: var(--kk-color-text-medium); }
+  .hero-search__btn {
+    width: 56px; height: var(--kk-spacing-600);
+    background: var(--kk-color-background-primary-button);
+    border-radius: var(--kk-radius-circle);
+    display: grid; place-items: center;
+    color: var(--kk-color-white);
+    transition: background .15s;
+  }
+  .hero-search__btn:hover { background: var(--kk-color-background-primary-dark); }
+
+  /* ============ Icons (kkday-style-dictionary) ============ */
+  .ic { display: inline-block; vertical-align: middle; flex: none; }
+  .ic--14 { width: 14px; height: 14px; }
+  .ic--16 { width: var(--kk-spacing-200); height: var(--kk-spacing-200); }
+  .ic--18 { width: 18px; height: 18px; }
+  .ic--20 { width: var(--kk-spacing-250); height: var(--kk-spacing-250); }
+  .ic--22 { width: 22px; height: 22px; }
+  .ic--24 { width: var(--kk-spacing-300); height: var(--kk-spacing-300); }
+  .ic--white { filter: brightness(0) invert(1); }
+  .ic--primary {
+    filter: invert(45%) sepia(99%) saturate(2031%) hue-rotate(157deg) brightness(91%) contrast(96%);
+  }
+
+  /* ============ Sections ============ */
+  .section { padding: 0 var(--page-pad); background: var(--kk-color-white); }
+  .section__inner {
+    width: var(--container);
+    margin: 0 auto;
+    display: flex; flex-direction: column;
+    gap: 28px;
+  }
+  .section--hot   { padding-top: var(--kk-spacing-600); padding-bottom: var(--kk-spacing-300); }
+  .section--promo { padding-top: var(--kk-spacing-300); padding-bottom: var(--kk-spacing-600); position: relative; }
+  .section--cities{ padding-top: var(--kk-spacing-300); padding-bottom: var(--kk-spacing-300); }
+  .section h2 {
+    margin: 0;
+    font-size: var(--kk-font-h4-size);
+    line-height: var(--kk-font-h4-line);
+    font-weight: var(--kk-font-h4-weight);
+  }
+
+  /* hot category cards */
+  .hotcat {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--kk-spacing-150);
+  }
+  .hotcat__card {
+    background: var(--kk-color-white);
+    border-radius: var(--kk-radius-md);
+    overflow: hidden;
+    filter: drop-shadow(var(--kk-elevation-card));
+    cursor: pointer;
+    transition: transform .15s;
+  }
+  .hotcat__card:hover { transform: translateY(-2px); }
+  .hotcat__img {
+    width: 100%; height: 133px;
+    object-fit: cover; display: block;
+  }
+  .hotcat__label {
+    padding: 14px var(--kk-spacing-150);
+    font-weight: var(--kk-font-subtitle-md-weight);
+    font-size: var(--kk-font-subtitle-md-size);
+    line-height: var(--kk-font-subtitle-md-line);
+  }
+
+  /* promo banners */
+  .promo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--kk-spacing-150);
+  }
+  .promo__card {
+    height: 165px;
+    border-radius: var(--kk-radius-lg);
+    overflow: hidden;
+    background: var(--kk-color-background-surface-medium);
+  }
+  .promo__card img { width: 100%; height: 100%; object-fit: cover; }
+  .promo__next {
+    position: absolute;
+    right: calc(var(--page-pad) - 50px);
+    top: 50%;
+    width: 44px; height: 44px;
+    background: var(--kk-color-white);
+    border-radius: var(--kk-radius-circle);
+    display: grid; place-items: center;
+    box-shadow: var(--kk-elevation-fixed);
+    cursor: pointer;
+  }
+
+  /* cities */
+  .cities { display: flex; gap: 15px; }
+  .city {
+    position: relative;
+    height: 270px;
+    border-radius: var(--kk-radius-md);
+    overflow: hidden;
+    flex: none;
+  }
+  .city--lg { width: 360px; }
+  .city--sm { width: 180px; }
+  .city img { width: 100%; height: 100%; object-fit: cover; }
+  .city__name {
+    position: absolute;
+    left: var(--kk-spacing-200); bottom: var(--kk-spacing-500);
+    margin: 0;
+    color: var(--kk-color-white);
+    font-size: var(--kk-font-h5-size);
+    line-height: var(--kk-font-h5-line);
+    font-weight: var(--kk-font-h5-weight);
+    text-shadow: 0 2px 14px rgba(0,0,0,.5);
+  }
+  .city--sm .city__name { bottom: var(--kk-spacing-200); }
+  .city__chips {
+    position: absolute;
+    left: var(--kk-spacing-200); bottom: var(--kk-spacing-200);
+    display: flex; gap: var(--kk-spacing-100);
+  }
+  .city__chip {
+    padding: var(--kk-spacing-025) var(--kk-spacing-150);
+    border: .5px solid var(--kk-color-white);
+    border-radius: var(--kk-radius-circle);
+    color: var(--kk-color-white);
+    font-size: var(--kk-font-body-sm-size);
+    line-height: var(--kk-font-body-sm-line);
+    white-space: nowrap;
+  }
+  .city__chip--filled {
+    background: rgba(255,255,255,.2);
+    border-color: transparent;
+  }
+
+  @media (max-width: 1200px) {
+    :root { --page-pad: var(--kk-spacing-300); --container: 100%; }
+    .top-bar__inner { width: auto; padding: 0 var(--kk-spacing-300); }
+    .header-search { width: 280px; }
+    .hotcat { grid-template-columns: repeat(3, 1fr); }
+    .cities { flex-wrap: wrap; }
+  }
+  @media (max-width: 720px) {
+    .hotcat { grid-template-columns: repeat(2, 1fr); }
+    .promo { grid-template-columns: 1fr; }
+    .hero__title { font-size: var(--kk-font-h3-size); line-height: var(--kk-font-h3-line); }
+    .download-app, .lang, .currency, .points { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top function bar -->
+<header class="top-bar">
+  <div class="top-bar__inner">
+    <div class="top-bar__left">
+      <div class="logo">KKday</div>
+      <div class="header-search" role="search">
+        <img class="ic ic--18" src="assets/icons/ic_search_line.svg" alt="" />
+        <span>搜尋景點、地區或城市</span>
+      </div>
+    </div>
+
+    <nav class="top-bar__right" aria-label="user">
+      <a class="download-app" href="#">
+        <img class="ic ic--18 ic--primary" src="assets/icons/ic_phone_line.svg" alt="" />
+        下載 App 享優惠
+      </a>
+      <a class="lang" href="#">
+        繁體中文
+        <img class="ic ic--18" src="assets/icons/ic_arrowDown_line.svg" alt="" />
+      </a>
+      <a class="currency" href="#">
+        TWD
+        <img class="ic ic--18" src="assets/icons/ic_arrowDown_line.svg" alt="" />
+      </a>
+      <a class="cart" href="#" aria-label="購物車">
+        <img class="ic ic--22" src="assets/icons/ic_shoppingCart_line.svg" alt="" />
+      </a>
+      <div class="points">
+        <div class="points__chip">
+          <img class="ic ic--24" src="assets/icons/ic_kkdayPoints_color.svg" alt="" />
+          <div class="points__num">999</div>
+        </div>
+      </div>
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <img src="https://www.figma.com/api/mcp/asset/4a986638-c536-4bed-a05e-f2cbf0da6a16" alt="使用者頭像" onerror="this.style.display='none'" />
+        </div>
+        <div class="badge" title="Silver"><img src="assets/icons/ic_loyaltySilver_colorwborder.svg" alt="Silver" /></div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- Category bar -->
+<nav class="cat-bar" aria-label="分類">
+  <ul class="cat-bar__list" style="list-style:none;margin:0;padding:0;">
+    <li class="cat-bar__item">
+      <img class="ic ic--16" src="assets/icons/ic_location_line.svg" alt="" />
+      目的地
+    </li>
+    <li class="cat-bar__item">最新優惠</li>
+    <li class="cat-bar__item"><a href="tour-ticket.html" style="color:inherit;display:flex;align-items:center;gap:8px;">門票/體驗</a></li>
+    <li class="cat-bar__item">機票+</li>
+    <li class="cat-bar__item">eSIM/WiFi</li>
+    <li class="cat-bar__item">交通</li>
+    <li class="cat-bar__item">租車</li>
+    <li class="cat-bar__item">住宿</li>
+    <li class="cat-bar__item">美食</li>
+    <li class="cat-bar__item">台灣高鐵</li>
+    <li class="cat-bar__item">郵輪</li>
+    <li class="cat-bar__item">旅行服務</li>
+    <li class="cat-bar__item">購物</li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <h1 class="hero__title">我的天，超好玩</h1>
+  <form class="hero-search" onsubmit="event.preventDefault()">
+    <input type="text" placeholder="東京迪士尼" aria-label="搜尋" />
+    <button class="hero-search__btn" type="submit" aria-label="搜尋">
+      <img class="ic ic--20 ic--white" src="assets/icons/ic_search_line.svg" alt="" />
+    </button>
+  </form>
+</section>
+
+<!-- Hot category -->
+<section class="section section--hot">
+  <div class="section__inner">
+    <h2>KKday 熱門活動分類</h2>
+    <div class="hotcat">
+      <a class="hotcat__card" href="#">
+        <img class="hotcat__img" src="https://www.figma.com/api/mcp/asset/079b3c9d-e093-432a-93d8-45e59bba93ef" alt="" />
+        <div class="hotcat__label">KKday 專屬團</div>
+      </a>
+      <a class="hotcat__card" href="#">
+        <img class="hotcat__img" src="https://www.figma.com/api/mcp/asset/390bb94b-9653-4d48-8f1c-a919efc3b194" alt="" />
+        <div class="hotcat__label">全台展覽地圖</div>
+      </a>
+      <a class="hotcat__card" href="#">
+        <img class="hotcat__img" src="https://www.figma.com/api/mcp/asset/5109f29c-f260-4af9-a3e4-13e587469f52" alt="" />
+        <div class="hotcat__label">旅遊攻略</div>
+      </a>
+      <a class="hotcat__card" href="#">
+        <img class="hotcat__img" src="https://www.figma.com/api/mcp/asset/0bf268fd-b5c1-402a-bd14-cdd35aaeb3d0" alt="" />
+        <div class="hotcat__label">航空自由行、機票</div>
+      </a>
+      <a class="hotcat__card" href="#">
+        <img class="hotcat__img" src="https://www.figma.com/api/mcp/asset/a4ed9c50-0fdd-44cf-b2f2-5af7402e8956" alt="" />
+        <div class="hotcat__label">會員商城</div>
+      </a>
+      <a class="hotcat__card" href="#">
+        <img class="hotcat__img" src="https://www.figma.com/api/mcp/asset/a6f81445-3461-4238-8db5-66737690e253" alt="" />
+        <div class="hotcat__label">銀行優惠</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Promo banners -->
+<section class="section section--promo">
+  <div class="section__inner">
+    <h2>KKday 最新旅遊優惠</h2>
+    <div class="promo">
+      <div class="promo__card"><img src="https://www.figma.com/api/mcp/asset/9d676ed5-2467-41bd-9610-c3dcf7273856" alt="" /></div>
+      <div class="promo__card"><img src="https://www.figma.com/api/mcp/asset/80fd90fe-321e-4d37-bcb7-b6f8e5360891" alt="" /></div>
+      <div class="promo__card"><img src="https://www.figma.com/api/mcp/asset/d0fb6d8b-4b19-4d27-b0c0-050e68c146bb" alt="" /></div>
+    </div>
+  </div>
+  <button class="promo__next" aria-label="下一個">
+    <img class="ic ic--24" src="assets/icons/ic_arrowRight_line.svg" alt="" />
+  </button>
+</section>
+
+<!-- Cities -->
+<section class="section section--cities">
+  <div class="section__inner">
+    <h2>探索 KKday 熱門城市</h2>
+    <div class="cities">
+      <div class="city city--lg">
+        <img src="https://www.figma.com/api/mcp/asset/4f1966c6-85f1-43a2-a209-ecf1566ee30b" alt="首爾" />
+        <h3 class="city__name">首爾</h3>
+        <div class="city__chips">
+          <span class="city__chip">交通&旅遊必備</span>
+          <span class="city__chip">熱門票卷</span>
+          <span class="city__chip city__chip--filled">更多在地體驗</span>
+        </div>
+      </div>
+      <div class="city city--sm">
+        <img src="https://www.figma.com/api/mcp/asset/abae8c9c-7bab-482d-b444-75242cb42d09" alt="京都" />
+        <h3 class="city__name">京都</h3>
+      </div>
+      <div class="city city--sm">
+        <img src="https://www.figma.com/api/mcp/asset/f8fa5177-c6be-4c8b-bc4f-31d7d36b0c85" alt="濟州島" />
+        <h3 class="city__name">濟州島</h3>
+      </div>
+      <div class="city city--sm">
+        <img src="https://www.figma.com/api/mcp/asset/c766e4c0-a36d-4a7a-b373-47892532b919" alt="倫敦" />
+        <h3 class="city__name">倫敦</h3>
+      </div>
+      <div class="city city--sm">
+        <img src="https://www.figma.com/api/mcp/asset/b62033a3-de84-4ea1-a30f-bb0d64fa96f3" alt="曼谷" />
+        <h3 class="city__name">曼谷</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

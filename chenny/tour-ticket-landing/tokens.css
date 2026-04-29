@@ -1,0 +1,116 @@
+/**
+ * KKday Design Tokens (subset)
+ * Mirrors the output of kkday-style-dictionary `pnpm build` (web/css)
+ * Source: github.com/kkday/kkday-style-dictionary — tokens/{color,spacing,radius}.js
+ * Prefix: --kk-
+ */
+:root {
+  /* ---------- Base color (private, exposed for reference) ---------- */
+  --kk-color-white: #FFFFFF;
+  --kk-color-black-10: #000000;
+
+  /* ---------- Color · Text ---------- */
+  --kk-color-text-lighter: #D5D6DB;   /* neutral.4 */
+  --kk-color-text-light:   #BABBBE;   /* neutral.5 */
+  --kk-color-text-medium:  #9C9DA0;   /* neutral.6 */
+  --kk-color-text-dark:    #727272;   /* neutral.7 */
+  --kk-color-text-darker:  #212121;   /* neutral.10 */
+
+  --kk-color-text-primary-lighter: #CEF0F3; /* cyan.2 */
+  --kk-color-text-primary-light:   #ADE6EB; /* cyan.3 */
+  --kk-color-text-primary-medium:  #26BEC9; /* cyan.6 */
+  --kk-color-text-primary-dark:    #13A3B6; /* cyan.8 */
+  --kk-color-text-primary-darker:  #068B9F; /* cyan.9 */
+
+  --kk-color-text-critical-medium: #EF7A70; /* red.7 */
+  --kk-color-text-critical-darker: #D14330; /* red.9 */
+
+  --kk-color-text-warning-medium:  #F5B53D; /* yellow.7 */
+  --kk-color-text-highlight-medium: #FFB400; /* amber.7 */
+
+  /* ---------- Color · Background ---------- */
+  --kk-color-background-surface-lighter: #F7FAFC; /* neutral.1 */
+  --kk-color-background-surface-light:   #F1F4F8; /* neutral.2 */
+  --kk-color-background-surface-medium:  #E6E9ED; /* neutral.3 */
+  --kk-color-background-surface-dark:    #D5D6DB; /* neutral.4 */
+  --kk-color-background-surface-darker:  #9C9DA0; /* neutral.6 */
+
+  --kk-color-background-primary-lighter: #F0FAFB; /* cyan.1 */
+  --kk-color-background-primary-light:   #CEF0F3; /* cyan.2 */
+  --kk-color-background-primary-medium:  #26BEC9; /* cyan.6 */
+  --kk-color-background-primary-dark:    #13A3B6; /* cyan.8 */
+  --kk-color-background-primary-darker:  #03748A; /* cyan.10 */
+  --kk-color-background-primary-button:  #1AB6C1; /* cyan.7 */
+
+  --kk-color-background-critical-light:  #FAC2C0; /* red.4 */
+  --kk-color-background-critical-medium: #EF7A70; /* red.7 */
+  --kk-color-background-critical-dark:   #E65F50; /* red.8 */
+
+  --kk-color-background-warning-lighter: #FFFEE0; /* yellow.1 */
+  --kk-color-background-warning-light:   #FFFBC3; /* yellow.2 */
+  --kk-color-background-warning-medium:  #FEE269; /* yellow.5 */
+
+  /* ---------- Color · Loyalty (Silver / Gold / Platinum / Diamond) ---------- */
+  --kk-color-text-loyalty-silver-lighter: #91C8FF; /* silver.3 */
+  --kk-color-text-loyalty-silver-light:   #2E97FF; /* silver.5 */
+  --kk-color-text-loyalty-silver-medium:  #0080FF; /* silver.6 */
+  --kk-color-text-loyalty-silver-dark:    #005BB5; /* silver.8 */
+  --kk-color-text-loyalty-silver-darker:  #003A73; /* silver.10 */
+  --kk-color-text-loyalty-silver-kv-primary:    #005BB5;
+  --kk-color-text-loyalty-silver-kv-secondary:  #006DD9;
+  --kk-color-text-loyalty-silver-kv-tertiary:   #2E97FF;
+  --kk-color-text-loyalty-silver-kv-quaternary: #5EAFFF;
+  --kk-color-text-loyalty-silver-kv-quinary:    #91C8FF;
+
+  /* ---------- Color · Border ---------- */
+  --kk-color-border-lighter: #E6E9ED; /* neutral.3 */
+  --kk-color-border-light:   #D5D6DB; /* neutral.4 */
+  --kk-color-border-medium:  #BABBBE; /* neutral.5 */
+  --kk-color-border-dark:    #727272; /* neutral.7 */
+
+  /* ---------- Spacing ---------- */
+  --kk-spacing-025: 2px;
+  --kk-spacing-050: 4px;
+  --kk-spacing-075: 6px;
+  --kk-spacing-100: 8px;
+  --kk-spacing-150: 12px;
+  --kk-spacing-200: 16px;
+  --kk-spacing-250: 20px;
+  --kk-spacing-300: 24px;
+  --kk-spacing-400: 32px;
+  --kk-spacing-500: 40px;
+  --kk-spacing-600: 48px;
+
+  /* ---------- Radius ---------- */
+  --kk-radius-xs: 2px;
+  --kk-radius-sm: 4px;
+  --kk-radius-md: 8px;
+  --kk-radius-lg: 12px;
+  --kk-radius-xl: 16px;
+  --kk-radius-circle: 999px;
+
+  /* ---------- Elevation (shadow) ---------- */
+  --kk-elevation-action: 0 1px 4px 0 rgba(38, 50, 56, .12);
+  --kk-elevation-card:   0 4px 12px 0 rgba(38, 50, 56, .12);
+  --kk-elevation-fixed:  0 4px 24px 0 rgba(38, 50, 56, .12);
+
+  /* ---------- Typography (PingFang TC stack) ---------- */
+  --kk-font-family-base: "PingFang TC", "Noto Sans TC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --kk-font-family-price: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+
+  /* Body */
+  --kk-font-body-sm-size: 12px;   --kk-font-body-sm-line: 16px;
+  --kk-font-body-md-size: 14px;   --kk-font-body-md-line: 20px;
+  --kk-font-body-lg-size: 16px;   --kk-font-body-lg-line: 24px;
+
+  /* Subtitle */
+  --kk-font-subtitle-md-size: 14px; --kk-font-subtitle-md-line: 20px; --kk-font-subtitle-md-weight: 600;
+  --kk-font-subtitle-lg-size: 16px; --kk-font-subtitle-lg-line: 24px; --kk-font-subtitle-lg-weight: 600;
+
+  /* Headings */
+  --kk-font-h5-size: 22px; --kk-font-h5-line: 28px; --kk-font-h5-weight: 600;
+  --kk-font-h4-size: 24px; --kk-font-h4-line: 30px; --kk-font-h4-weight: 600;
+  --kk-font-h3-size: 32px; --kk-font-h3-line: 40px; --kk-font-h3-weight: 600;
+  --kk-font-h2-size: 40px; --kk-font-h2-line: 48px; --kk-font-h2-weight: 600;
+  --kk-font-h1-size: 48px; --kk-font-h1-line: 58px; --kk-font-h1-weight: 600;
+}
